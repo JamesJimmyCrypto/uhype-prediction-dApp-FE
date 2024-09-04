@@ -41,4 +41,5 @@ yarn-error.log*
 /playwright-report/
 /playwright/.cache/
 
-.nexx
+.next
+.vscode

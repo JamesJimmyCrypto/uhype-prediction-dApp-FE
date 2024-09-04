@@ -7,7 +7,7 @@ const VERSION = process.env["NEXT_PUBLIC_SANITY_VERSION"];
 const DATASET = environment === "production" ? "mainnet" : "bsr";
 
 const config: ClientConfig = {
-  projectId: PROJECT_ID,
+  projectId: "4wbnjof1",
   dataset: DATASET,
   useCdn: true, // set to `false` to bypass the edge cache
   apiVersion: VERSION, // use current date (YYYY-MM-DD) to target the latest API version
