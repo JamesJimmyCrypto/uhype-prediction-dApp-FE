@@ -74,7 +74,7 @@ const DefaultLayout: FC<PropsWithChildren> = ({ children }) => {
                     Migrating to Solana
                   </div>
                   <Image
-                    src="/polkadot_icon.png"
+                    src="/solana.png"
                     alt="Solana Logo"
                     width={300}
                     height={300}

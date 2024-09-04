@@ -73,7 +73,7 @@ export const graphQlEndpoints: EndpointOption[] = [
   },
   {
     value: "https://zeitgeist-squid-mainnet.stellate.sh/",
-    label: "Polkadot (Live)",
+    label: "Solana (Live)",
     environment: "production",
   },
   // {
