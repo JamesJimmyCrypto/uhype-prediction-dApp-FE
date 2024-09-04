@@ -202,7 +202,7 @@ export const DesktopOnboardingModal = (props: {
     <TextSection
       children={<ButtonList setStep={setStep} buttonList={exchangeList} />}
       headerText="Wallet Successfully Installed"
-      bodyText="It's time to get ZTG so that you can start trading!"
+      bodyText="It's time to get DHP so that you can start trading!"
       leftButton={{
         text: "Back",
         onClick: () => setStep(0),

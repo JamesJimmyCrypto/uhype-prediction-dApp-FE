@@ -57,7 +57,7 @@ const PortfolioIdentity = ({ address }: { address: string }) => {
             <div className="hidden gap-4 text-sm sm:block md:text-base">
               <Link
                 className="flex items-center gap-2 hover:text-ztg-blue"
-                href={`https://zeitgeist.subscan.io/account/${address}`}
+                href={`https://solscan.io/account/${address}`}
                 target="_blank"
               >
                 <span>{address}</span>
@@ -67,7 +67,7 @@ const PortfolioIdentity = ({ address }: { address: string }) => {
             <div className="text-sm sm:hidden">
               <Link
                 className="flex items-center gap-2 hover:text-ztg-blue"
-                href={`https://zeitgeist.subscan.io/account/${address}`}
+                href={`https://solscan.io/account/${address}`}
                 target="_blank"
               >
                 <span> {shortenAddress(address, 12, 26)}</span>

@@ -422,8 +422,8 @@ const CourtPage: NextPage = ({
                       rel="noopener"
                       href={
                         payout.extrinsic?.name === "Court.reassign_court_stakes"
-                          ? `https://zeitgeist.subscan.io/extrinsic/${payout.extrinsic?.hash}`
-                          : `https://zeitgeist.subscan.io/block/${payout?.blockNumber}?tab=event`
+                          ? `https://solscan.io/extrinsic/${payout.extrinsic?.hash}`
+                          : `https://solscan.io/block/${payout?.blockNumber}?tab=event`
                       }
                     >
                       <div className="scale-75">

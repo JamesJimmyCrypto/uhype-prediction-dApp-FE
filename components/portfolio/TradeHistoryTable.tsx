@@ -73,7 +73,7 @@ const TradeHistoryTable = ({ address }: { address: string }) => {
             target="_blank"
             referrerPolicy="no-referrer"
             rel="noopener"
-            href={`https://zeitgeist.subscan.io/extrinsic/${trade?.extrinsic?.hash}`}
+            href={`https://solscan.io/extrinsic/${trade?.extrinsic?.hash}`}
           >
             <SubScanIcon />
           </a>

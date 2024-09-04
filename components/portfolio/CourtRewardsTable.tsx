@@ -80,7 +80,7 @@ const CourtRewardsTable = ({ address }: { address: string }) => {
           target="_blank"
           referrerPolicy="no-referrer"
           rel="noopener"
-          href={`https://zeitgeist.subscan.io/block/${mint?.blockNumber}?tab=event`}
+          href={`https://solscan.io/block/${mint?.blockNumber}?tab=event`}
         >
           <div className="">
             <SubScanIcon />

@@ -84,7 +84,7 @@ const AddressInspectContent = ({
         </a>
         <a
           className="flex"
-          href={`https://zeitgeist.subscan.io/account/${address}`}
+          href={`https://solscan.io/account/${address}`}
           target="_blank"
           rel="noreferrer"
         >

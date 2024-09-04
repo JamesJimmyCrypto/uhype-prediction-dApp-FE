@@ -32,7 +32,7 @@ export const HeroBanner = ({
           </h2>
           <div className="mb-14 flex gap-4">
             <Link
-              href="https://zeitgeist.pm/"
+              href="https://openverse.tech"
               target="_blank"
               className="flex-1 rounded-md border-2 border-vermilion bg-vermilion px-6 py-3 text-white sm:flex-none"
             >
