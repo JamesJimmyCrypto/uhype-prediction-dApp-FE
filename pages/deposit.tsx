@@ -169,15 +169,15 @@ const DotDeposit = ({ address }: { address: string }) => {
 
   const balance = balances?.find((b) => b.symbol === "SOL");
 
-  const dotBalance = new Decimal(balance?.balance.toString() ?? 0).div(ZTG);
+  const solBalance = new Decimal(balance?.balance.toString() ?? 0).div(ZTG);
   const existentialDeposit = new Decimal(balance?.existentialDeposit ?? 0).div(
     ZTG,
   );
 
-  const maxTransferAmount = dotBalance.minus(feeEstimate);
+  const maxTransferAmount = solBalance.minus(feeEstimate);
   const amount = watch("amount");
   const amountDecimal: Decimal = amount ? new Decimal(amount) : new Decimal(0);
-  const remainingSourceBalance = dotBalance
+  const remainingSourceBalance = solBalance
     .minus(amountDecimal)
     .minus(feeEstimate);
   const isLoading = false;
@@ -223,9 +223,9 @@ const DotDeposit = ({ address }: { address: string }) => {
             alt="Solana currency"
           />
         </div>
-        <div className="text-lg font-medium">DOT</div>
+        <div className="text-lg font-medium">SOL</div>
         <div className="ml-10 flex-grow">
-          Your Balance: {dotBalance.toFixed(4)}
+          Your Balance: {solBalance.toFixed(4)}
         </div>
         <div className="flex flex-col">
           <Input
@@ -369,7 +369,7 @@ const DepositPage: NextPage = () => {
                 },
                 {
                   label: "CEX",
-                  url: "https://www.binance.com/en/trade/DOT_USDT",
+                  url: "https://www.binance.com/en/trade/SOL_USDT",
                 },
               ]}
             />
@@ -413,8 +413,8 @@ const DepositPage: NextPage = () => {
           )}
         {currency === "dot" && method === "buy" && (
           <div className="mt-2">
-            After purchasing DOT return to this page and select the Deposit tab
-            to move it to your account on Zeitgeist
+            After purchasing return to this page and select the Deposit tab to
+            move it to your account on Dehype
           </div>
         )}
       </div>
@@ -442,7 +442,7 @@ const DepositPage: NextPage = () => {
                 {
                   {
                     ztg: "Copy your address above or from the QR code and transfer ZTG to your address.",
-                    dot: "Copy your address above or from the QR code and transfer DOT to your address. If you already DOT on your wallet you can go to the Deposit section below.",
+                    dot: "Copy your address above or from the QR code and transfer SOL to your address. If you already SOL on your wallet you can go to the Deposit section below.",
                   }[currency]
                 }
                 {

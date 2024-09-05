@@ -1,7 +1,7 @@
-import { FC } from "react";
 import Logo from "../icons/ZeitgeistIcon";
+import Link from "next/link";
 
-const MenuLogo: FC<{}> = () => {
+const MenuLogo = () => {
   return (
     <div className="flex items-center gap-4">
       <Logo variant={"light"} />

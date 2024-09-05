@@ -4,7 +4,6 @@ export const prodTags = [
   "Politics",
   "Crypto",
   "Dotsama",
-  "Zeitgeist",
   "Technology",
   "Science",
   "News",

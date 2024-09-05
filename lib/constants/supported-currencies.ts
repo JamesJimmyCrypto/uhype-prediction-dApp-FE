@@ -15,14 +15,14 @@ export const supportedCurrencies = [
     name: "DHP" as const,
     description:
       "Create market with the native Dehype token as the base asset.",
-    image: "/currencies/ztg.svg",
+    image: "/currencies/solana.svg",
     twColor: "ztg-blue",
     assetId: { Ztg: null } as const,
   } satisfies CurrencyMetadata,
   {
     name: "SOL" as const,
-    description: "Create market with DOT as the base asset.",
-    image: "/currencies/dot_filled.png",
+    description: "Create market with SOL as the base asset.",
+    image: "/currencies/solana.png",
     twColor: "solana",
     assetId: { ForeignAsset: 0 } as const,
   } satisfies CurrencyMetadata,

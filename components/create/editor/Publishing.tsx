@@ -356,7 +356,7 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
                             </h4>
                             <div className="center gap-1 font-semibold">
                               <div className="text-ztg-blue">
-                                {ztgCost.toFixed(3)} ZTG
+                                {ztgCost.toFixed(3)} DHP
                               </div>
                               {foreignCurrencyCost && (
                                 <>
