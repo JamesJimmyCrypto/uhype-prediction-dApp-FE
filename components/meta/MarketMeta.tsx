@@ -11,7 +11,7 @@ export const MarketMeta = ({
     <>
       <OgHead
         title={market.question ?? ""}
-        description="The application interface for Zeitgeist Prediction Markets. Built on Polkadot, Zeitgeist is the leader in decentralized prediction markets."
+        description="The application interface for Dehype Prediction Markets. Built on Solana, Dehype.fun is the leader in decentralized prediction markets."
         image={
           new URL(
             `/api/og/generate?marketId=${market.marketId}`,

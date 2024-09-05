@@ -43,26 +43,62 @@ const ZtgIcon = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const DotIcon = (props: SVGProps<SVGSVGElement>) => (
+const SolIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
+    xmlnsXlink="http://www.w3.org/1999/xlink"
     width={40}
     height={40}
     fill="none"
     {...props}
+    viewBox="-2.2 0 402.1 311.7"
   >
-    <g
-      fill={props.fill ?? "#e6007a"}
-      clipPath="url(#a)"
-      transform="matrix(1.1765 0 0 1.14295 0 -.571)"
-    >
-      <path d="M16.997 7.841c3.6 0 6.52-1.643 6.52-3.67 0-2.028-2.92-3.671-6.52-3.671-3.601 0-6.52 1.643-6.52 3.67 0 2.028 2.919 3.671 6.52 3.671zM16.997 35.497c3.6 0 6.52-1.643 6.52-3.67s-2.92-3.67-6.52-3.67c-3.601 0-6.52 1.643-6.52 3.67s2.919 3.67 6.52 3.67zM7.91 12.922c1.8-3.019 1.79-6.288-.026-7.302C6.07 4.606 3.14 6.23 1.338 9.25c-1.8 3.018-1.789 6.288.026 7.302 1.815 1.014 4.746-.61 6.546-3.63ZM32.656 26.748c1.8-3.018 1.79-6.287-.024-7.3-1.814-1.014-4.743.611-6.544 3.63-1.8 3.018-1.79 6.287.024 7.3 1.814 1.014 4.744-.612 6.544-3.63zM7.884 30.378c1.815-1.015 1.827-4.284.026-7.302-1.8-3.019-4.73-4.644-6.546-3.63-1.815 1.015-1.826 4.284-.026 7.303 1.8 3.018 4.731 4.643 6.546 3.629zM32.632 16.552c1.813-1.014 1.824-4.283.024-7.301s-4.73-4.644-6.544-3.63c-1.814 1.013-1.825 4.282-.024 7.3 1.8 3.019 4.73 4.644 6.544 3.63z" />
-    </g>
-    <defs>
-      <clipPath id="a">
-        <path fill="#fff" d="M0 .5h34v35H0z" />
-      </clipPath>
-    </defs>
+    <linearGradient id="a">
+      <stop offset="0" stop-color="#00ffa3" />
+      <stop offset="1" stop-color="#dc1fff" />
+    </linearGradient>
+    <linearGradient
+      id="b"
+      gradientTransform="matrix(1 0 0 -1 0 314)"
+      gradientUnits="userSpaceOnUse"
+      x1="360.879"
+      x2="141.213"
+      xlinkHref="#a"
+      y1="351.455"
+      y2="-69.294"
+    />
+    <linearGradient
+      id="c"
+      gradientTransform="matrix(1 0 0 -1 0 314)"
+      gradientUnits="userSpaceOnUse"
+      x1="264.829"
+      x2="45.163"
+      xlinkHref="#a"
+      y1="401.601"
+      y2="-19.148"
+    />
+    <linearGradient
+      id="d"
+      gradientTransform="matrix(1 0 0 -1 0 314)"
+      gradientUnits="userSpaceOnUse"
+      x1="312.548"
+      x2="92.882"
+      xlinkHref="#a"
+      y1="376.688"
+      y2="-44.061"
+    />
+    <path
+      d="m64.6 237.9c2.4-2.4 5.7-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8h-317.4c-5.8 0-8.7-7-4.6-11.1z"
+      fill="url(#b)"
+    />
+    <path
+      d="m64.6 3.8c2.5-2.4 5.8-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8h-317.4c-5.8 0-8.7-7-4.6-11.1z"
+      fill="url(#c)"
+    />
+    <path
+      d="m333.1 120.1c-2.4-2.4-5.7-3.8-9.2-3.8h-317.4c-5.8 0-8.7 7-4.6 11.1l62.7 62.7c2.4 2.4 5.7 3.8 9.2 3.8h317.4c5.8 0 8.7-7 4.6-11.1z"
+      fill="url(#d)"
+    />
   </svg>
 );
 
@@ -93,7 +129,7 @@ const DepositMethodLabels: Record<DepositMethod, string> = {
   deposit: "Deposit from a Wallet or an Exchange",
 };
 
-const DepositCurrencyItems = ["ztg", "dot", "usdt"] as const;
+const DepositCurrencyItems = ["DHP", "SOL", "USDC"] as const;
 const ss58PrefixLookup = { ztg: 73, dot: 0, usdt: 0 };
 type DepositCurrency = (typeof DepositCurrencyItems)[number];
 
@@ -106,9 +142,9 @@ const DepositCurrencyLabels: Record<DepositCurrency, string> =
   );
 
 const DepositCurrencyIcons: Record<DepositCurrency, React.FC> = {
-  ztg: ZtgIcon,
-  dot: DotIcon,
-  usdt: UsdtIcon,
+  DHP: ZtgIcon,
+  SOL: SolIcon,
+  USDC: UsdtIcon,
 };
 
 const DepositPaymentMethodItems = ["card", "crypto"] as const;
@@ -280,7 +316,7 @@ const DepositPage: NextPage = () => {
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString() || "";
   const [method, setMethod] = useState<DepositMethod | undefined>("buy");
-  const [currency, setCurrency] = useState<DepositCurrency | undefined>("ztg");
+  const [currency, setCurrency] = useState<DepositCurrency | undefined>("SOL");
   const [paymentMethod, setPaymentMethod] = useState<
     DepositPaymentMethod | undefined
   >("crypto");
@@ -288,13 +324,13 @@ const DepositPage: NextPage = () => {
   const disabledPaymentMethods = useMemo<
     DepositPaymentMethod[] | undefined
   >(() => {
-    if (currency === "ztg") {
+    if (currency === "DHP") {
       return ["card"];
     }
   }, [currency]);
 
   useEffect(() => {
-    if (currency === "ztg" && method === "buy" && paymentMethod === "card") {
+    if (currency === "SOL" && method === "buy" && paymentMethod === "card") {
       setPaymentMethod(undefined);
     }
   }, [currency, method, paymentMethod]);
@@ -326,7 +362,7 @@ const DepositPage: NextPage = () => {
           selected={currency}
           icons={DepositCurrencyIcons}
           onChange={setCurrency}
-          disabled={["usdt"]}
+          disabled={["USDC"]}
           className="h-36"
           itemClassName="flex flex-col sm:flex-row gap-3 items-center center outline-none rounded-lg bg-white"
           disabledItemClassName="!bg-misty-harbor text-sky-600"
@@ -346,7 +382,7 @@ const DepositPage: NextPage = () => {
           />
         )}
         {method === "buy" &&
-          currency === "ztg" &&
+          currency === "DHP" &&
           paymentMethod === "crypto" && (
             <ResultButtons
               items={[
@@ -354,12 +390,12 @@ const DepositPage: NextPage = () => {
                   label: "Hydra DX",
                   url: "https://app.hydradx.io/trade?assetIn=5&assetOut=12",
                 },
-                { label: "Gate.io", url: "https://www.gate.io/trade/ZTG_USDT" },
+                { label: "Gate.io", url: "https://www.gate.io/trade/SOL_USDT" },
               ]}
             />
           )}
         {method === "buy" &&
-          currency === "dot" &&
+          currency === "SOL" &&
           paymentMethod === "crypto" && (
             <ResultButtons
               items={[
@@ -375,7 +411,7 @@ const DepositPage: NextPage = () => {
             />
           )}
         {method === "buy" &&
-          currency === "dot" &&
+          currency === "SOL" &&
           paymentMethod === "card" &&
           encodedAddress && (
             <div className={"grid gap-3 " + `grid-cols-1`}>
@@ -390,7 +426,7 @@ const DepositPage: NextPage = () => {
               <div className="mt-7 flex flex-col gap-2 md:flex-row">
                 <div className="item-center flex gap-2">
                   <Image
-                    src="/currencies/dot.png"
+                    src="/currencies/solana.png"
                     width={25}
                     height={25}
                     alt="Solana currency"
@@ -411,7 +447,7 @@ const DepositPage: NextPage = () => {
               </div>
             </div>
           )}
-        {currency === "dot" && method === "buy" && (
+        {currency === "SOL" && method === "buy" && (
           <div className="mt-2">
             After purchasing return to this page and select the Deposit tab to
             move it to your account on Dehype
@@ -466,7 +502,7 @@ const DepositPage: NextPage = () => {
           .
         </div>
       )}
-      {method === "deposit" && publicKey && currency === "dot" && (
+      {method === "deposit" && publicKey && currency === "SOL" && (
         <DotDeposit address={pubKey} />
       )}
       {/* TODO: Update href attribute */}

@@ -7,7 +7,7 @@ export type OgProps = {
 };
 
 const defaultDescription =
-  "The application interface for Zeitgeist Prediction Markets. Built on Polkadot, Zeitgeist is the leader in decentralized prediction markets.";
+  "The application interface for Dehype Prediction Markets. Built on Solana, Dehype.fun is the leader in decentralized prediction markets.";
 
 export const OgHead = ({ title, description, image }: OgProps) => {
   description ??= defaultDescription;
