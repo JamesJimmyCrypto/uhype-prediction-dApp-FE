@@ -15,7 +15,7 @@ export const supportedCurrencies = [
     name: "DHP" as const,
     description:
       "Create market with the native Dehype token as the base asset.",
-    image: "/currencies/solana.svg",
+    image: "/currencies/solana.png",
     twColor: "ztg-blue",
     assetId: { Ztg: null } as const,
   } satisfies CurrencyMetadata,

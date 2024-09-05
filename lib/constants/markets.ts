@@ -3,7 +3,7 @@ import { EMarketStatus, MarketStatus } from "lib/types/markets";
 export const prodTags = [
   "Politics",
   "Crypto",
-  "Dotsama",
+  "Solana",
   "Technology",
   "Science",
   "News",
