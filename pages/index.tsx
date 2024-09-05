@@ -263,7 +263,7 @@ const IndexPage: NextPage<{
             <TrendingMarketsCompact markets={trendingMarkets} />
           </div>
 
-          <div className="flex w-full flex-col gap-y-6">
+          {/* <div className="flex w-full flex-col gap-y-6">
             <div className="flex items-center ">
               <div className="text-xl font-bold">Latest Trades</div>
               <Link
@@ -274,7 +274,7 @@ const IndexPage: NextPage<{
               </Link>
             </div>
             <LatestTradesCompact />
-          </div>
+          </div> */}
         </div>
 
         <div className="mb-12">
