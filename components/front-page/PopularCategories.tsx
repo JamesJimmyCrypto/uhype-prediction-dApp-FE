@@ -11,7 +11,6 @@ export const CATEGORIES = [
   { name: "Science", imagePath: "/category/science.png" },
   { name: "News", imagePath: "/category/news.png" },
   { name: "Solana", imagePath: "/category/solana.png" },
-  { name: "Zeitgeist", imagePath: "/category/zeitgeist.png" },
   { name: "Entertainment", imagePath: "/category/entertainment.png" },
   { name: "Finance", imagePath: "/category/finance.png" },
 ] as const;
