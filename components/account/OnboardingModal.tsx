@@ -25,13 +25,13 @@ interface ButtonListProps {
 
 const exchangeList = [
   {
-    title: "Purchase ZTG with Crypto or Fiat (CEX)",
+    title: "Purchase DHP with Crypto or Fiat (CEX)",
     disabled: false,
     onClick: () =>
       window.open("https://blog.zeitgeist.pm/how-to-buy-ztg-on-gateio/"),
   },
   {
-    title: "Trade for ZTG with Crypto (DEX)",
+    title: "Trade for DHP with Crypto (DEX)",
     disabled: false,
     onClick: () => {
       window.open(
