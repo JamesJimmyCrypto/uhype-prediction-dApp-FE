@@ -1,5 +1,4 @@
 import { ZeitgeistPrimitivesMarketMarketCreation } from "@polkadot/types/lookup";
-import { encodeAddress } from "@polkadot/util-crypto";
 import { tryCatch } from "@zeitgeistpm/utility/dist/option";
 import { ChainTime } from "@zeitgeistpm/utility/dist/time";
 import { defaultTags } from "lib/constants/markets";
@@ -267,7 +266,7 @@ export const IOPeriodOption = z.union([
 
 export const IOOracle = z
   .string()
-  .refine((oracle) => !tryCatch(() => validateSolanaAddress(oracle, 74)).isNone(), {
+  .refine((oracle) => !tryCatch(() => validateSolanaAddress(oracle)).isNone(), {
     message: "Oracle must be a valid Solana address",
   });
 
