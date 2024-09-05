@@ -10,7 +10,7 @@ const config: ClientConfig = {
   projectId: "4wbnjof1",
   dataset: DATASET,
   useCdn: true, // set to `false` to bypass the edge cache
-  apiVersion: VERSION, // use current date (YYYY-MM-DD) to target the latest API version
+  apiVersion: "1", // use current date (YYYY-MM-DD) to target the latest API version
 };
 
 export const sanity = createClient(config);
