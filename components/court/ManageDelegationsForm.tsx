@@ -26,7 +26,7 @@ export type ManageDelegationsFormProps = {
 };
 
 const ManageDelegationsForm = (props: ManageDelegationsFormProps) => {
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   const { data: participants } = useCourtParticipants();
   const connectedParticipant = useConnectedCourtParticipant();

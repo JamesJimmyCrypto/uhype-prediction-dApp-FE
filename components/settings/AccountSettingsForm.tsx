@@ -48,7 +48,7 @@ const AcccountSettingsForm: React.FC<AcccountSettingsFormProps> = ({
   const twitterHandle = watch("twitter");
   const displayName = watch("displayName");
 
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   const indetityCost =
     constants?.identity?.basicDeposit ??

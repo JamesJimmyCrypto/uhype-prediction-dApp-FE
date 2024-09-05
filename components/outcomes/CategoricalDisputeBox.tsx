@@ -31,8 +31,7 @@ const CategoricalDisputeBox = ({
   const { data: disputes } = useMarketDisputes(market);
   const notificationStore = useNotifications();
   const queryClient = useQueryClient();
-  const { data: constants, isLoading: isConstantsLoading } =
-    useChainConstants();
+  const constants = useChainConstants();
 
   const outcomeAssets = market.outcomeAssets
     .map(
@@ -46,8 +45,7 @@ const CategoricalDisputeBox = ({
   const disputeBond = constants?.markets.disputeBond;
   const tokenSymbol = constants?.tokenSymbol;
 
-  const bondAmount =
-    disputes && isConstantsLoading === false ? disputeBond : undefined;
+  const bondAmount = disputes ? disputeBond : undefined;
 
   const {
     send: dispute,

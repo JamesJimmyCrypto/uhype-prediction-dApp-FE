@@ -38,7 +38,7 @@ const PoolDeployer = ({
   marketId: number;
   onPoolDeployed?: () => void;
 }) => {
-  let { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString() ?? "";
   const { data: poolId } = useMarketPoolId(marketId);

@@ -16,7 +16,7 @@ const ScalarDisputeBox = ({
 }) => {
   const [sdk] = useSdkv2();
   const notificationStore = useNotifications();
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   const disputeBond = constants?.markets.disputeBond;
   const tokenSymbol = constants?.tokenSymbol;

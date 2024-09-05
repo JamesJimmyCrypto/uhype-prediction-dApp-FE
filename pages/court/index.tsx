@@ -64,7 +64,7 @@ const CourtPage: NextPage = ({
 
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString() ?? "";
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const connectedParticipant = useConnectedCourtParticipant();
   const { data: ztgPrice } = useZtgPrice();
   const stakeShare = useCourtStakeSharePercentage();
@@ -445,7 +445,7 @@ const Stats = () => {
   const { publicKey } = useWallet();
   const { data: courtCases } = useCourtCases();
   const connectedParticipant = useConnectedCourtParticipant();
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const { data: yearlyInflationAmount } = useCourtYearlyInflationAmount();
   const { data: participants } = useCourtParticipants();
 

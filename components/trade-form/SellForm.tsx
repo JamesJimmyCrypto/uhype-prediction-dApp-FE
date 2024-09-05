@@ -52,7 +52,7 @@ const SellForm = ({
     amountIn: Decimal,
   ) => void;
 }) => {
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const {
     register,
     handleSubmit,

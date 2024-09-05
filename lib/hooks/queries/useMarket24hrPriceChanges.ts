@@ -20,7 +20,7 @@ export const useMarket24hrPriceChanges = (marketId: number) => {
   const [debouncedBlockNumber, setDebouncedBlockNumber] = useState<number>();
 
   const chainTime = useChainTime();
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   useEffect(() => {
     if (!chainTime) return;

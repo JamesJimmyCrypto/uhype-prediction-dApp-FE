@@ -20,7 +20,7 @@ import { IoIosInformation, IoIosWarning } from "react-icons/io";
 
 const JoinCourtAsJurorButton = ({ className }: { className?: string }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const {
     register,
     handleSubmit,

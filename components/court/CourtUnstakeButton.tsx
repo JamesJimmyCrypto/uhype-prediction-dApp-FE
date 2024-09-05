@@ -15,7 +15,7 @@ import { useState } from "react";
 
 const CourtUnstakeButton = ({ className }: { className?: string }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const [sdk, id] = useSdkv2();
   const notificationStore = useNotifications();
   const { publicKey } = useWallet();

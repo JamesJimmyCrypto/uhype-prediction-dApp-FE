@@ -26,7 +26,6 @@ import { useChainConstants } from "../../lib/hooks/queries/useChainConstants";
 import { DesktopOnboardingModal } from "./OnboardingModal";
 import SettingsModal from "components/settings/SettingsModal";
 import CopyIcon from "../ui/CopyIcon";
-import { useSolanaTokenBalance } from "lib/hooks/solana";
 import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
 
 const BalanceRow = ({
@@ -84,7 +83,7 @@ const AccountButton: FC<{
   const { publicKey, disconnect: disconnectWallet } = useWallet();
   const { data: activeBalance } = useZtgBalance(publicKey?.toString());
   // const { data: solanaBalance } = useSolanaTokenBalance(publicKey);
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   const handleMouseEnter = () => {
     setHovering(true);

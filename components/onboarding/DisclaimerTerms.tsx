@@ -327,7 +327,7 @@ const DisclaimerTerms = () => {
         requisite information necessary to populate a market with information
         (posing a question, providing outcomes, designating an oracle and
         setting an end date) users creating a market will be required to post a
-        bond in the form of ZTG. Permissionless markets (which do not receive
+        bond in the form of DHP. Permissionless markets (which do not receive
         authorization in advance of the posting of the market on the
         Marketplace) often require a higher bond. You agree that by accessing
         the Marketplace and posting bond to create a market, you will forfeit
@@ -392,8 +392,8 @@ const DisclaimerTerms = () => {
         published in a currency other than your Payable Currency; if this
         happens, we may convert such fees into your Payable Currency in the same
         manner as described above. Please note, there is no guaranteed rate of
-        conversion of ZTG into any other fungible currency and that all
-        transfers and transactions of ZTG will be based on the market prices at
+        conversion of DHP into any other fungible currency and that all
+        transfers and transactions of DHP will be based on the market prices at
         the time of transfer on the medium transacted.
       </p>
       <p>
@@ -868,17 +868,17 @@ const DisclaimerTerms = () => {
         </strong>
       </p>
       <p>
-        When interacting in the Marketplace by exchanging ZTG for outcome
+        When interacting in the Marketplace by exchanging DHP for outcome
         tokens, you agree to comply with Company&rsquo;s standards for market
         interaction, set forth below:
       </p>
       <p>
         ● You are responsible for reading all information provided by in each
-        Market before exchanging ZTG for outcome tokens in any particular
+        Market before exchanging DHP for outcome tokens in any particular
         market.
       </p>
       <p>
-        ● You enter into a legally binding contract to exchange ZTG tokens for
+        ● You enter into a legally binding contract to exchange DHP tokens for
         outcome tokens, and understand that you accept the risk that outcome
         tokens may be slashed or worthless depending on the market resolution.
       </p>

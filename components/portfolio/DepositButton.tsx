@@ -78,7 +78,7 @@ const DepositModal = ({
     reValidateMode: "onChange",
     mode: "onChange",
   });
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const notificationStore = useNotifications();
   const { publicKey } = useWallet();
   const { chain } = useChain(sourceChain);

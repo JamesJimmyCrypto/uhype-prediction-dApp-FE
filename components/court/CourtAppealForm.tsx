@@ -16,7 +16,7 @@ import { AiOutlineEye } from "react-icons/ai";
 export const CourtAppealForm = ({ caseId }: { caseId: number }) => {
   const [sdk, id] = useSdkv2();
   const queryClient = useQueryClient();
-  const { data: chainConstants } = useChainConstants();
+  const constants = useChainConstants();
   const { data: courtCase } = useCourtCase(caseId);
 
   const { send, isReady, isLoading, isBroadcasting } = useExtrinsic(
@@ -35,10 +35,10 @@ export const CourtAppealForm = ({ caseId }: { caseId: number }) => {
 
   const bond = useMemo(() => {
     const appealRound = (courtCase?.appeals.length ?? 0) + 1;
-    return new Decimal(chainConstants?.court.appealBond ?? 0)
+    return new Decimal(constants?.court.appealBond ?? 0)
       .mul(Math.pow(2, appealRound))
       .toNumber();
-  }, [courtCase, chainConstants]);
+  }, [courtCase, constants]);
 
   return (
     <div className="overflow-hidden rounded-xl shadow-lg">
@@ -58,7 +58,7 @@ export const CourtAppealForm = ({ caseId }: { caseId: number }) => {
           <div>
             When you appeal you have to bond{" "}
             <b>
-              {bond} {chainConstants?.tokenSymbol}
+              {bond} {constants?.tokenSymbol}
             </b>
             .
           </div>

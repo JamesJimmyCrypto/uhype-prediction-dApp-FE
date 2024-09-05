@@ -41,7 +41,7 @@ const CourtRewardsTable = ({ address }: { address: string }) => {
     account: address,
   });
   const { data: ztgPrice } = useZtgPrice();
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   const { data: courtPayout } = useCourtNextPayout();
 

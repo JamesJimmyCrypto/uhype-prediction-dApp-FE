@@ -46,7 +46,7 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
   const notifications = useNotifications();
   const [isTransacting, setIsTransacting] = useState(false);
   const [totalCostIsOpen, setTotalCostIsOpen] = useState(false);
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   const feesEnabled = !(
     !sdk ||

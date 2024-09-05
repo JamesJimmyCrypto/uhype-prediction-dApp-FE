@@ -29,7 +29,7 @@ export const useFeePayingAsset = (
   const { data: nativeBalance } = useZtgBalance(pubKey);
   const { data: foreignAssetBalances } = useForeignAssetBalances(
     pubKey)
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const { data: assetMetadata } = useAllAssetMetadata();
   const { assetSelection } = useFeePayingAssetSelection();
   const enabled =

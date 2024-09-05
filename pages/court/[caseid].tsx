@@ -149,7 +149,7 @@ const CasePage: NextPage = ({
 
   const { data: courtCase } = useCourtCase(caseId);
   const { data: selectedDraws } = useCourtVoteDrawsForCase(caseId);
-  const { data: chainConstants } = useChainConstants();
+  const constants = useChainConstants();
 
   const { data: marketId } = useCaseMarketId(caseId);
 
@@ -200,7 +200,7 @@ const CasePage: NextPage = ({
 
   const totalSlashableStake = calculateSlashableStake(
     courtCase?.appeals.length ?? 0,
-    chainConstants?.court.minJurorStake ?? 0,
+    constants?.court.minJurorStake ?? 0,
   );
 
   const onClickRecastVote = async () => {
@@ -377,7 +377,7 @@ const CasePage: NextPage = ({
                     : "-"}
                 </HeaderStat>
                 <HeaderStat
-                  label={`Slashable ${chainConstants?.tokenSymbol}`}
+                  label={`Slashable ${constants?.tokenSymbol}`}
                   border={false}
                 >
                   {formatNumberCompact(totalSlashableStake)}

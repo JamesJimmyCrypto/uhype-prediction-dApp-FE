@@ -31,7 +31,7 @@ export const isPayoutEligible = (
 export const useCourtNextPayout = () => {
   const [sdk, id] = useSdkv2();
   const now = useChainTime();
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const { publicKey } = useWallet();
 
   const enabled = isIndexedSdk(sdk) && now && constants && publicKey;

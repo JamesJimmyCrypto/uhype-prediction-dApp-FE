@@ -16,7 +16,7 @@ import { AiOutlineEye } from "react-icons/ai";
 export const CourtReassignForm = ({ caseId }: { caseId: number }) => {
   const [sdk, id] = useSdkv2();
   const queryClient = useQueryClient();
-  const { data: chainConstants } = useChainConstants();
+  const constants = useChainConstants();
   const { data: courtCase } = useCourtCase(caseId);
 
   const { send, isReady, isLoading, isBroadcasting } = useExtrinsic(

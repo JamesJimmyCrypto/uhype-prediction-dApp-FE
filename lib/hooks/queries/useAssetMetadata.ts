@@ -23,7 +23,7 @@ export const assetMetadataRootKey = "asset-metadata";
 
 export const useAssetMetadata = (assetId?: AssetId) => {
   const [sdk, id] = useSdkv2();
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   const query = useQuery(
     [id, assetMetadataRootKey, assetId, constants?.tokenSymbol],
@@ -79,7 +79,7 @@ export const allAssetMetadataRootKey = "all-asset-metadata";
 
 export const useAllAssetMetadata = () => {
   const [sdk, id] = useSdkv2();
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   const enabled = sdk && isRpcSdk(sdk) && constants?.tokenSymbol;
 

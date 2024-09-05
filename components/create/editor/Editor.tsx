@@ -64,7 +64,7 @@ export const MarketEditor = () => {
 
   const chainTime = useChainTime();
   const { isFetched } = useMarketDeadlineConstants();
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   const timezone = form?.timeZone;
 

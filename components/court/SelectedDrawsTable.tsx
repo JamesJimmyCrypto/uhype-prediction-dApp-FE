@@ -70,7 +70,7 @@ export const SelectedDrawsTable: React.FC<SelectedDrawsTableProps> = ({
   stage,
 }) => {
   const { publicKey } = useWallet();
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   const data: TableData[] | undefined = useMemo(() => {
     return selectedDraws?.map((draw) => {

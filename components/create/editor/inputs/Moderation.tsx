@@ -30,7 +30,7 @@ export const ModerationModeSelect: React.FC<ModerationModeSelectProps> = ({
   onChange,
   onBlur,
 }) => {
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   const handleSelect = (mode: Moderation) => () => {
     onChange({ target: { name, value: mode }, type: "change" });
@@ -61,7 +61,7 @@ export const ModerationModeSelect: React.FC<ModerationModeSelectProps> = ({
                   {option.mode === "Permissionless"
                     ? constants?.markets.validityBond
                     : constants?.markets.advisoryBond}
-                  ZTG
+                  DHP
                 </span>
               </p>
             </div>

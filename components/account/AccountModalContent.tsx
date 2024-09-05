@@ -10,7 +10,7 @@ import { formatNumberLocalized } from "lib/util";
 const AccountModalContent: FC = () => {
   const { publicKey, disconnect: disconnectWallet } = useWallet();
   const { data: activeBalance } = useZtgBalance(publicKey?.toString());
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   return (
     <div className="flex flex-col">

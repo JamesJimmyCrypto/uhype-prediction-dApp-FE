@@ -151,7 +151,7 @@ const DotDeposit = ({ address }: { address: string }) => {
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString() || "";
   const notificationStore = useNotifications();
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
 
   const dotAddress = publicKey && encodeAddress(pubKey, 0);
 

@@ -32,7 +32,7 @@ const RedeemPoolButton = ({
   const [sdk] = useSdkv2();
   const { publicKey } = useWallet();
   const { data: pool } = usePool({ poolId });
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const { data: userPoolShares } = useBalance(publicKey?.toString(), {
     PoolShare: poolId,
   });

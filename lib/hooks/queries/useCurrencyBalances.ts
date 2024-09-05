@@ -34,7 +34,7 @@ export const currencyBalanceRootKey = "currency-balances";
 
 export const useCurrencyBalances = (address: string) => {
   const [sdk, id] = useSdkv2();
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const { data: foreignAssetBalances } = useForeignAssetBalances(address);
 
   const enabled =

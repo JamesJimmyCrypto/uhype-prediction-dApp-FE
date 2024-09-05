@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 
 const DelegateButton = ({ address }: { address: string }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const {
     register,
     handleSubmit,

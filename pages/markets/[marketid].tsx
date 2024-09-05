@@ -858,7 +858,7 @@ const ReportForm = ({ market }: { market: FullMarketFragment }) => {
 
   const pubKey = publicKey?.toString();
   const { data: stage } = useMarketStage(market);
-  const { data: chainConstants } = useChainConstants();
+  const constants = useChainConstants();
 
   const connectedWalletIsOracle = market.oracle === pubKey;
 
@@ -888,8 +888,8 @@ const ReportForm = ({ market }: { market: FullMarketFragment }) => {
                 Oracle failed to report. Reporting is now open to all.
               </p>
               <p className="mb-6 text-sm">
-                Bond cost: {chainConstants?.markets.outsiderBond}{" "}
-                {chainConstants?.tokenSymbol}
+                Bond cost: {constants?.markets.outsiderBond}{" "}
+                {constants?.tokenSymbol}
               </p>
             </>
           )}

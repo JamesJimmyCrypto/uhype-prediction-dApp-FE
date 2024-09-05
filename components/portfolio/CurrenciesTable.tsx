@@ -121,7 +121,7 @@ const MoveButton = ({
 
 const CurrenciesTable = ({ address }: { address: string }) => {
   const { data: allBalances, isFetched } = useCurrencyBalances(address);
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const wasFetched = usePrevious(isFetched);
 
   const balances = useMemo(() => {

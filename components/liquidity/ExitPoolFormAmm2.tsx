@@ -25,7 +25,7 @@ const ExitPoolForm = ({
   baseAssetTicker?: string;
   onSuccess?: () => void;
 }) => {
-  const { data: constants } = useChainConstants();
+  const constants = useChainConstants();
   const {
     register,
     watch,
