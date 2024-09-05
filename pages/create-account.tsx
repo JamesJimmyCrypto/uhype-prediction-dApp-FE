@@ -14,7 +14,7 @@ const CreateAccountPage: NextPage = () => {
         <p className="mt-3">
           Congrats! You're a few steps away from making predictions on the App.
           Make a few simple steps to create an account and install your first
-          Solân friendly wallet.
+          Solana friendly wallet.
         </p>
         <p>
           The first thing any Web3 user needs is a crypto wallet to interact
