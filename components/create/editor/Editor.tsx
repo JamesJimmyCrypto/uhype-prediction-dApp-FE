@@ -468,7 +468,7 @@ export const MarketEditor = () => {
                   out to be wrong according to a dispute, you will lose your
                   bonded oracle deposit of{" "}
                   <span className="font-bold">
-                    {constants?.markets.oracleBond} ZTG
+                    {constants?.markets.oracleBond} DHP
                   </span>
                 </p>
               </div>

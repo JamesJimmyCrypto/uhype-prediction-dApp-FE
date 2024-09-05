@@ -17,6 +17,7 @@ import {
 import { minBaseLiquidity } from "../constants/currency";
 import { MarketFormData } from "./form";
 import { timelineAsBlocks } from "./timeline";
+import { validateSolanaAddress } from "lib/util";
 
 export type MarketValidationDependencies = {
   form: Partial<MarketFormData>;
@@ -266,7 +267,7 @@ export const IOPeriodOption = z.union([
 
 export const IOOracle = z
   .string()
-  .refine((oracle) => !tryCatch(() => encodeAddress(oracle, 74)).isNone(), {
+  .refine((oracle) => !tryCatch(() => validateSolanaAddress(oracle, 74)).isNone(), {
     message: "Oracle must be a valid Solana address",
   });
 

@@ -1,5 +1,4 @@
-import { decodeAddress, encodeAddress } from "@polkadot/keyring";
-import { hexToU8a, isHex } from "@polkadot/util";
+import { PublicKey } from "@solana/web3.js";
 
 export const shortenAddress = (
   address: string,
@@ -37,4 +36,14 @@ export const formatNumberLocalized = (
   if (num === 0 || num === 0n) num = 0;
 
   return new Intl.NumberFormat(locale, { maximumFractionDigits }).format(num);
+};
+
+export const validateSolanaAddress = async (addr: string) => {
+  let publicKey: PublicKey;
+  try {
+    publicKey = new PublicKey(addr);
+    return await PublicKey.isOnCurve(publicKey.toBytes());
+  } catch (err) {
+    return false;
+  }
 };
