@@ -267,7 +267,7 @@ export const IOPeriodOption = z.union([
 export const IOOracle = z
   .string()
   .refine((oracle) => !tryCatch(() => encodeAddress(oracle, 74)).isNone(), {
-    message: "Oracle must be a valid polkadot address",
+    message: "Oracle must be a valid Solana address",
   });
 
 export const IODescription = z.string().optional();
