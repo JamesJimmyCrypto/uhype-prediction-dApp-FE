@@ -10,7 +10,7 @@ export const CATEGORIES = [
   { name: "Crypto", imagePath: "/category/crypto.png" },
   { name: "Science", imagePath: "/category/science.png" },
   { name: "News", imagePath: "/category/news.png" },
-  { name: "Dotsama", imagePath: "/category/dotsama.png" },
+  { name: "Solana", imagePath: "/category/solana.png" },
   { name: "Zeitgeist", imagePath: "/category/zeitgeist.png" },
   { name: "Entertainment", imagePath: "/category/entertainment.png" },
   { name: "Finance", imagePath: "/category/finance.png" },
