@@ -3,7 +3,7 @@ import Script from "next/script";
 
 export default function Document() {
   const useAnalytics =
-    process.env.NEXT_PUBLIC_SITE_URL === "https://app.zeitgeist.pm";
+    process.env.NEXT_PUBLIC_SITE_URL === "https://dehype.fun";
 
   return (
     <Html>

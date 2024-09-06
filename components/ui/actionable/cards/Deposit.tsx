@@ -7,7 +7,7 @@ export const DepositActionableCard = ({
 }) => (
   <ActionableCard
     title="Deposit Tokens"
-    description="Use one of several methods to deposit crypto tokens on Dehype.fun to start trading. Trade on your beliefs."
+    description="Choose from several methods to deposit crypto tokens on Dehype.fun and start trading."
     link="/deposit"
     linkText="Make a Deposit"
     img="/learn/deposit.png"

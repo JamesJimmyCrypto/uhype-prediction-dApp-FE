@@ -25,10 +25,11 @@ export const HeroBanner = ({
       <div className="relative flex flex-col-reverse md:flex-row md:gap-8">
         <div className="md:w-[890px] md:pt-8 lg:w-[690px]">
           <h1 className="mb-8 text-5xl leading-tight">
-            Welcome to the Future of Betting
+            Welcome to the Future of Predictions
           </h1>
           <h2 className="mb-8 text-xl leading-6">
-            Dehype is an innovative platform for predicting future events
+            Where prediction market mixed with memecoin launchpad and
+            marketplace
           </h2>
           <div className="mb-14 flex gap-4">
             <Link

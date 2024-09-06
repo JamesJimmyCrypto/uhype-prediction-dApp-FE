@@ -7,7 +7,7 @@ export const StartTradingActionableCard = ({
 }) => (
   <ActionableCard
     title="Start Trading"
-    description="Our system is at your full disposal. View markets and start trading on your beliefs."
+    description="Our platform provides all you need. Explore markets and place trades based on your predictions."
     link="/markets"
     linkText="Make Predictions"
     img="/learn/start_trading.png"

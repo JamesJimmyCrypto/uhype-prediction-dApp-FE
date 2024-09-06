@@ -14,7 +14,6 @@ import { hotjar } from "react-hotjar";
 
 // font optimization from @next/font
 import { inter, kanit, roboto_mono } from "lib/util/fonts";
-import { useWallet } from "@solana/wallet-adapter-react";
 import { AppWalletProvider } from "components/account/Wallet";
 
 // environment variables set in .env.local or vercel interface
@@ -27,7 +26,6 @@ const isProduction =
 const MyApp = ({ Component, pageProps }) => {
   const Layout = Component.Layout ? Component.Layout : React.Fragment;
   const router = useRouter();
-  const { publicKey } = useWallet();
 
   useEffect(() => {
     if (!isProduction) {

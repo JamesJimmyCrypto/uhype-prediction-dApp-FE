@@ -7,7 +7,7 @@ export const CreateAccountActionableCard = ({
 }) => (
   <ActionableCard
     title="Create an Account"
-    description="Make a few simple steps to create an account and install your first Solana friendly wallet."
+    description="Follow a few simple steps to create an account and set up your first Solana-friendly wallet."
     link="/create-account"
     linkText="Create an Account"
     img="/learn/create_account.png"
