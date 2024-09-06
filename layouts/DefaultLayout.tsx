@@ -8,7 +8,6 @@ import Footer from "components/ui/Footer";
 import NotificationCenter from "components/ui/NotificationCenter";
 import GrillChat from "components/grillchat";
 import { TradeItem, TradeItemContext } from "lib/hooks/trade";
-import { useSubscribeBlockEvents } from "lib/hooks/useSubscribeBlockEvents";
 import { useRouter } from "next/router";
 
 import { Account } from "components/account/Account";
@@ -35,7 +34,6 @@ const greyBackgroundPageRoutes = [
 
 const DefaultLayout: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
-  useSubscribeBlockEvents();
   const [tradeItem, setTradeItem] = useState<TradeItem | null>(null);
 
   const {

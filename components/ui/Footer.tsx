@@ -3,7 +3,6 @@ import axios from "axios";
 import Link from "next/link";
 import { useNotifications } from "lib/state/notifications";
 import { useForm } from "react-hook-form";
-import { endpointOptions } from "lib/constants";
 import Input from "./Input";
 
 const FooterNewsletterSub: FC<{ title: string }> = ({ title }) => {
