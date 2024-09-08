@@ -47,7 +47,7 @@ const QuillEditor = dynamic(() => import("components/ui/QuillEditor"), {
 export const MarketEditor = () => {
   const { publicKey } = useWallet();
   const editor = useMarketDraftEditor();
-
+  const chainTime = useChainTime();
   const headerRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -62,7 +62,7 @@ export const MarketEditor = () => {
     mergeFormData,
   } = editor;
 
-  const chainTime = useChainTime();
+  // const chainTime = useChainTime();
   const { isFetched } = useMarketDeadlineConstants();
   const constants = useChainConstants();
 
@@ -97,10 +97,10 @@ export const MarketEditor = () => {
   const showLiquidityWarning =
     fieldsState.liquidity.isTouched && form.liquidity?.deploy && isWizard;
 
-  const isLoaded = Boolean(chainTime && isFetched);
+  const isLoaded = Boolean(isFetched);
 
   const creationParams =
-    editor.isValid && chainTime && publicKey
+    editor.isValid && publicKey
       ? marketFormDataToExtrinsicParams(editor.form, publicKey, chainTime)
       : undefined;
 

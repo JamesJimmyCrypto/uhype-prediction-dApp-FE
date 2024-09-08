@@ -122,7 +122,6 @@ export const marketFormDataToExtrinsicParams = (
   form: ValidMarketFormData,
   signer: PublicKey,
   chainTime: ChainTime,
-  proxy?: PublicKey,
 ): CreateMarketParams<RpcContext<MetadataStorage>, MetadataStorage> => {
   const baseCurrencyMetadata = getMetadataForCurrency(form.currency);
   const timeline = timelineAsBlocks(form, chainTime).unwrap();

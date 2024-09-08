@@ -1,35 +1,67 @@
-import { isRpcSdk } from "@zeitgeistpm/sdk";
-import { ChainTime } from "@zeitgeistpm/utility/dist/time";
 import { atom, getDefaultStore, useAtom } from "jotai";
-import { sdkAtom } from "lib/hooks/useSdkv2";
 import { Subscription } from "rxjs";
+import { Connection, clusterApiUrl } from "@solana/web3.js";
 
-export const chainTimeAtom = atom<ChainTime | false>(false);
+// Create an atom to store the chain time, default is `null`
+export const chainTimeAtom = atom<number | null>(null);
 
 const store = getDefaultStore();
 
-let sub: Subscription;
+let sub: Subscription | null = null;
 
-const onSdkChange = () => {
-  const sdk = store.get(sdkAtom);
-  if (sub) sub.unsubscribe();
-  if (isRpcSdk(sdk)) {
-    sub = sdk.model.time.now.$().subscribe((time) => {
-      store.set(chainTimeAtom, time);
-    });
+const connection = new Connection(clusterApiUrl("mainnet-beta")); // Connect to Solana cluster
+
+/**
+ * Fetches the latest block time from Solana blockchain.
+ */
+const fetchChainTime = async () => {
+  try {
+    // Step 1: Get the latest slot
+    const slot = await connection.getSlot();
+
+    // Step 2: Get the block time (timestamp) for the slot
+    const blockTime = await connection.getBlockTime(slot);
+
+    // Update the atom with the latest block time
+    if (blockTime !== null) {
+      store.set(chainTimeAtom, blockTime * 1000); // Convert to milliseconds for consistency with JS Date
+    }
+  } catch (error) {
+    console.error("Error fetching Solana chain time:", error);
   }
 };
 
 /**
- * In dev the subscription is sometimes not set up on first render.
- * So we need to check if the sdk is already set up and if so update the chaintime atom.
+ * Set up the subscription to regularly fetch chain time.
  */
-const sdk = store.get(sdkAtom);
-if (sdk) onSdkChange();
+const onSdkChange = () => {
+  // Unsubscribe from previous subscription, if it exists
+  if (sub) {
+    sub.unsubscribe();
+    sub = null;
+  }
 
-store.sub(sdkAtom, onSdkChange);
+  // Create a new subscription to poll the chain time
+  sub = new Subscription();
 
-export const useChainTime = (): ChainTime | null => {
+  // Example: Poll the chain time every 10 seconds
+  const intervalId = setInterval(fetchChainTime, 10000);
+
+  // Add to the subscription so it can be unsubscribed later
+  sub.add({
+    unsubscribe: () => clearInterval(intervalId),
+  });
+};
+
+/**
+ * Initialize SDK subscription if not already set up.
+ */
+onSdkChange();
+
+/**
+ * Hook to use chain time in a component.
+ */
+export const useChainTime = (): number | null => {
   const [chainTime] = useAtom(chainTimeAtom);
   return chainTime || null;
 };
