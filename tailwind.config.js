@@ -271,7 +271,7 @@ module.exports = {
         "fog-of-war": "#0F1A2D",
         "provincial-pink": "#FEF2F2",
         mariner: "#3056D3",
-        polkadot: "rgb(230, 0, 122)",
+        solana: "rgb(230, 0, 122)",
         usdc: "#2775ca",
         platinum: "#DFE0E6",
         powderblue: "#ECFAFF",

@@ -157,6 +157,10 @@ export const useMarketDraftEditor = (): MarketDraftEditor => {
     if (!validator) return FieldsState.empty();
 
     const parsed = validator.safeParse(draft.form);
+    console.log("Parsed:", parsed);
+    if (parsed?.success !== true) {
+      console.log("Validation Errors:", parsed?.error.issues);
+    }
 
     const fieldsState = marketCreationFormKeys.reduce<FieldsState.FieldsState>(
       (fieldsState, key) => {
@@ -173,6 +177,8 @@ export const useMarketDraftEditor = (): MarketDraftEditor => {
             isValid = false;
           }
         }
+        console.log(`Field: ${key}, isValid: ${isValid}, errors:`, errors);
+
 
         return {
           ...fieldsState,
@@ -197,6 +203,7 @@ export const useMarketDraftEditor = (): MarketDraftEditor => {
     const reached = draft.stepReachState[step.label] || false;
     const isValid = keys.every((key) => fieldsState[key].isValid);
     const isTouched = keys.some((key) => draft.touchState[key]);
+    console.log(`Step: ${step.label}, isValid: ${isValid}`);
 
     return { ...step, isValid, isTouched, reached };
   });
@@ -262,6 +269,8 @@ export const useMarketDraftEditor = (): MarketDraftEditor => {
         mode = "onChange";
       }
     }
+
+    console.log("Currency Field State:", fieldsState["currency"]);
 
     return {
       name: key,

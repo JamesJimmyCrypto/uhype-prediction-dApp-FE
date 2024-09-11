@@ -2,7 +2,7 @@ import { COIN_GECKO_API_KEY } from "lib/constants";
 import { NextApiRequest, NextApiResponse } from "next";
 
 //discourage others from using this endpoint as proxy for coingecko
-const allowedAssets = ["Dehype", "tether", "usd"];
+const allowedAssets = ["dhp", "solana", "usdc"];
 
 export default async function handler(
   request: NextApiRequest,

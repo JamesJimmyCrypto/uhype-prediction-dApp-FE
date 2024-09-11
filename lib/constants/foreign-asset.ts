@@ -34,7 +34,14 @@ export const lookupAssetSymbol = (baseAssetId?: BaseAssetId) => {
 
 const BATTERY_STATION_FOREIGN_ASSET_METADATA: ForeignAssetMetadata = {
   0: {
-    image: "/currencies/dot.png",
+    image: "/currencies/solana.png",
+    withdrawSupported: false,
+    coinGeckoId: "solana",
+    tokenSymbol: "SOL",
+    subsquidId: "SOL",
+  },
+  1: {
+    image: "/currencies/solana.png",
     withdrawSupported: false,
     coinGeckoId: "solana",
     tokenSymbol: "SOL",
@@ -42,7 +49,7 @@ const BATTERY_STATION_FOREIGN_ASSET_METADATA: ForeignAssetMetadata = {
   },
   2: {
     //todo: add WSX logo
-    image: "/currencies/usdC.jpg",
+    image: "/currencies/usdc.jpg",
     withdrawSupported: false,
     coinGeckoId: "solana",
     tokenSymbol: "USDCS",
@@ -53,7 +60,7 @@ const BATTERY_STATION_FOREIGN_ASSET_METADATA: ForeignAssetMetadata = {
 const PROD_FOREIGN_ASSET_METADATA: ForeignAssetMetadata = {
   0: {
     originChain: "Solana",
-    image: "/currencies/dot.png",
+    image: "/currencies/solana.png",
     withdrawSupported: true,
     coinGeckoId: "solana",
     tokenSymbol: "SOL",

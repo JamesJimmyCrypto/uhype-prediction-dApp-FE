@@ -1,9 +1,9 @@
 import { atom, getDefaultStore, useAtom } from "jotai";
 import { Subscription } from "rxjs";
 import { Connection, clusterApiUrl } from "@solana/web3.js";
-
+import { ChainTime } from 'lib/types';
 // Create an atom to store the chain time, default is `null`
-export const chainTimeAtom = atom<number | null>(null);
+export const chainTimeAtom = atom<ChainTime | null>(null);
 
 const store = getDefaultStore();
 
@@ -22,9 +22,18 @@ const fetchChainTime = async () => {
     // Step 2: Get the block time (timestamp) for the slot
     const blockTime = await connection.getBlockTime(slot);
 
-    // Update the atom with the latest block time
+    // Step 3: Get the block production time (period)
+    const epochInfo = await connection.getEpochInfo();
+    const period = epochInfo.slotsInEpoch / epochInfo.epoch; // Example calculation, adjust as needed
+
+    // Update the atom with the latest chain time
     if (blockTime !== null) {
-      store.set(chainTimeAtom, blockTime * 1000); // Convert to milliseconds for consistency with JS Date
+      const chainTime: ChainTime = {
+        now: blockTime * 1000, // Convert to milliseconds for consistency with JS Date
+        block: slot,
+        period: period,
+      };
+      store.set(chainTimeAtom, chainTime);
     }
   } catch (error) {
     console.error("Error fetching Solana chain time:", error);
@@ -45,7 +54,7 @@ const onSdkChange = () => {
   sub = new Subscription();
 
   // Example: Poll the chain time every 10 seconds
-  const intervalId = setInterval(fetchChainTime, 10000);
+  const intervalId = setInterval(fetchChainTime, 30000);
 
   // Add to the subscription so it can be unsubscribed later
   sub.add({
@@ -61,7 +70,7 @@ onSdkChange();
 /**
  * Hook to use chain time in a component.
  */
-export const useChainTime = (): number | null => {
+export const useChainTime = (): ChainTime | null => {
   const [chainTime] = useAtom(chainTimeAtom);
-  return chainTime || null;
+  return chainTime;
 };

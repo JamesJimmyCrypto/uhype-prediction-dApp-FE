@@ -30,7 +30,6 @@ const Avatar = ({
 
   const blueFirst =
     addressArray.length > 10 ? parseInt(addressArray[10], 16) % 2 : 0;
-  console.log(address,addressArray, blueIndex, redIndex, blue, red, blueFirst, "ok");
   return (
     <div
       className="z-0"

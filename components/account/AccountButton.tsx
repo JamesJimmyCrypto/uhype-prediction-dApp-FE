@@ -214,7 +214,7 @@ const AccountButton: FC<{
                             <button
                               className={`group flex w-full items-center rounded-md px-2 py-2 text-sm font-semibold`}
                             >
-                              Get ZTG
+                              Get Dehype & Solana
                             </button>
                           </div>
                         )}

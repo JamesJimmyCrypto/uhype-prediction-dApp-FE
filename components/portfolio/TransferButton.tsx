@@ -16,11 +16,9 @@ import {
 } from "lib/constants/foreign-asset";
 import { useAllAssetMetadata } from "lib/hooks/queries/useAssetMetadata";
 import { useBalance } from "lib/hooks/queries/useBalance";
-import { useExtrinsicFee } from "lib/hooks/queries/useExtrinsicFee";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { formatNumberLocalized } from "lib/util";
-import { useChainConstants } from "lib/hooks/queries/useChainConstants";
 import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useNotifications } from "lib/state/notifications";
 import { formatNumberCompact } from "lib/util/format-compact";

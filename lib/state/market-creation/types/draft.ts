@@ -57,7 +57,7 @@ export const empty = (): MarketDraftState => ({
     reached: true,
   },
   form: {
-    currency: "ZTG",
+    currency: "SOL",
     answers: {
       type: "categorical",
       answers: ["", ""],

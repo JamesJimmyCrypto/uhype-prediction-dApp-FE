@@ -104,9 +104,6 @@ const PROD_CHAINS: Chain[] = [
     depositFee: new Decimal(0.064).mul(ZTG), // informed from testing
     endpoints: [
       "wss://rpc.polkadot.io",
-      "wss://polkadot-rpc.dwellir.com",
-      "wss://polkadot.public.curie.radiumblock.co/ws",
-      "wss://1rpc.io/dot",
     ],
     fetchCurrencies: async (api, address) => {
       const { data } = await api.query.system.account(address);

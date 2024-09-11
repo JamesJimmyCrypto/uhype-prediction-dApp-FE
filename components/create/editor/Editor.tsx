@@ -62,7 +62,6 @@ export const MarketEditor = () => {
     mergeFormData,
   } = editor;
 
-  // const chainTime = useChainTime();
   const { isFetched } = useMarketDeadlineConstants();
   const constants = useChainConstants();
 
@@ -101,7 +100,7 @@ export const MarketEditor = () => {
 
   const creationParams =
     editor.isValid && publicKey
-      ? marketFormDataToExtrinsicParams(editor.form, publicKey, chainTime)
+      ? marketFormDataToExtrinsicParams(editor.form, publicKey, chainTime!)
       : undefined;
 
   return (

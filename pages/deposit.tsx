@@ -1,4 +1,3 @@
-import { encodeAddress } from "@polkadot/keyring";
 import { ZTG } from "@zeitgeistpm/sdk";
 import CopyIcon from "components/ui/CopyIcon";
 import FormTransactionButton from "components/ui/FormTransactionButton";
@@ -9,8 +8,6 @@ import { StartTradingActionableCard } from "components/ui/actionable/cards/Start
 import Decimal from "decimal.js";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
 import { useCurrencyBalances } from "lib/hooks/queries/useCurrencyBalances";
-import { useCrossChainExtrinsic } from "lib/hooks/useCrossChainExtrinsic";
-import { useChain } from "lib/state/cross-chain";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { shortenAddress } from "lib/util";
@@ -189,8 +186,6 @@ const DotDeposit = ({ address }: { address: string }) => {
   const notificationStore = useNotifications();
   const constants = useChainConstants();
 
-  const dotAddress = publicKey && encodeAddress(pubKey, 0);
-
   const fee = 0;
   const feeEstimate = new Decimal(0).div(ZTG); //add 1% buffer to feeQ
   //assumes source chain fee is paid in currency that is being transferred
@@ -297,7 +292,7 @@ const DotDeposit = ({ address }: { address: string }) => {
           ) && (
             <>{`Warning! The remaining ${formatNumberCompact(
               remainingSourceBalance.toNumber(),
-            )} SO on Polkadot network will be lost`}</>
+            )} SO on Solana network will be lost`}</>
           )}
       </div>
       <FormTransactionButton
@@ -336,7 +331,7 @@ const DepositPage: NextPage = () => {
   }, [currency, method, paymentMethod]);
 
   const encodedAddress =
-    publicKey && currency && encodeAddress(pubKey, ss58PrefixLookup[currency]);
+  pubKey 
 
   return (
     <>

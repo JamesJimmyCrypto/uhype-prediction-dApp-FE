@@ -1,6 +1,5 @@
 import { decodeAddress, encodeAddress } from "@polkadot/keyring";
 import { useNotifications } from "lib/state/notifications";
-import { usePolkadotApi } from "lib/state/polkadot-api";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { extrinsicCallback, signAndSend } from "lib/util/tx";
 import { NextPage } from "next";
@@ -57,7 +56,7 @@ const ClaimPage: NextPage = () => {
               <div className="relative flex w-full flex-col">
                 <input
                   className="w-full rounded-md bg-white p-2"
-                  placeholder="Enter Polkadot address"
+                  placeholder="Enter Solana address"
                   spellCheck={false}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     setSolanaAddress(event.target.value);
@@ -109,7 +108,6 @@ const Eligibility = ({
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString();
   const notifications = useNotifications();
-  const { api } = usePolkadotApi();
 
   const [claimAddress, setClaimAddress] = useState<string | null>(null);
 
@@ -118,46 +116,46 @@ const Eligibility = ({
   );
 
   const isValid = claimAddress === null || validateAddress(claimAddress);
-  const tx = api?.tx.system.remark(`${AIRDROP_REMARK_PREFIX}-${claimAddress}`);
+  const tx = `${AIRDROP_REMARK_PREFIX}-${claimAddress}`;
 
   const connectedWalletMatchesSolanaAddress = addressesMatch(
     solanaAddress,
     pubKey ?? "",
   );
 
-  const txHex = tx?.toHex();
+  // const txHex = tx?.toHex();
 
   const submitClaim = () => {
-    if (!tx || !api) return;
+    if (!tx) return;
     if (!publicKey) return;
-
-    signAndSend(
-      tx,
-      publicKey,
-      extrinsicCallback({
-        api: api,
-        notifications,
-        broadcastCallback: () => {
-          notifications?.pushNotification("Broadcasting transaction...", {
-            autoRemove: true,
-          });
-        },
-        successCallback: (data) => {
-          notifications?.pushNotification(`Successfully claimed`, {
-            autoRemove: true,
-            type: "Success",
-          });
-        },
-        failCallback: (error) => {
-          notifications.pushNotification(error, { type: "Error" });
-        },
-      }),
-    ).catch((error) => {
-      notifications.pushNotification(error?.toString() ?? "Unknown Error", {
-        type: "Error",
-      });
-    });
   };
+  //   signAndSend(
+  //     tx,
+  //     publicKey,
+  //     extrinsicCallback({
+  //       api: api,
+  //       notifications,
+  //       broadcastCallback: () => {
+  //         notifications?.pushNotification("Broadcasting transaction...", {
+  //           autoRemove: true,
+  //         });
+  //       },
+  //       successCallback: (data) => {
+  //         notifications?.pushNotification(`Successfully claimed`, {
+  //           autoRemove: true,
+  //           type: "Success",
+  //         });
+  //       },
+  //       failCallback: (error) => {
+  //         notifications.pushNotification(error, { type: "Error" });
+  //       },
+  //     }),
+  //   ).catch((error) => {
+  //     notifications.pushNotification(error?.toString() ?? "Unknown Error", {
+  //       type: "Error",
+  //     });
+  //   });
+  // };
 
   return (
     <>
@@ -205,7 +203,7 @@ const Eligibility = ({
               </button>
             </div>
             <a
-              href={`https://solscan.io/tx/${txHex}`}
+              href={`https://solscan.io/tx/${"TOBEUPDATED"}`}
               target="_blank"
               rel="noreferrer"
               className="mt-3 text-sm text-blue-700"

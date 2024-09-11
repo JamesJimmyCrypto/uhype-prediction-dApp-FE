@@ -1,16 +1,12 @@
 // mostly taken from https://unified.jup.ag/
-import {
-  UnifiedWalletProvider,
-  UnifiedWalletButton,
-  WalletAdapterNetwork,
-} from "@jup-ag/wallet-adapter";
+import { UnifiedWalletProvider } from "@jup-ag/wallet-adapter";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { TipLinkWalletAdapter } from "@tiplink/wallet-adapter";
 import { TipLinkWalletAutoConnectV2 } from "@tiplink/wallet-adapter-react-ui";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
-const TIPLINK_CLIENT_ID = "869efb89-faec-4ba8-8fe2-6578bb7006f7";
+const TIPLINK_CLIENT_ID = process.env.NEXT_PUBLIC_TIPLINK_CLIENT_ID;
 export function AppWalletProvider({ children }: { children: React.ReactNode }) {
   const { query, isReady } = useRouter();
 
@@ -30,9 +26,9 @@ export function AppWalletProvider({ children }: { children: React.ReactNode }) {
     // add TipLinkWalletAdapter to adapters
     walletAdapters.push(
       new TipLinkWalletAdapter({
-        title: "TipLink Sample dApp",
+        title: "Dehype",
         // ask us if you don't have a client id already
-        clientId: TIPLINK_CLIENT_ID,
+        clientId: TIPLINK_CLIENT_ID!,
         theme: "dark",
       }),
     );

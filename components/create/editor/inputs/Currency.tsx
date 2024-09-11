@@ -13,13 +13,13 @@ export type CurrencySelectProps = {
   options: Array<SupportedCurrencyTag>;
 };
 
-export const CurrencySelect: React.FC<CurrencySelectProps> = ({
+export const CurrencySelect = ({
   name,
   options,
   value,
   onChange,
   onBlur,
-}) => {
+}: CurrencySelectProps) => {
   const handleSelect = (tag: SupportedCurrencyTag) => () => {
     onChange({ target: { name, value: tag }, type: "change" });
     onBlur({ target: { name, value: tag }, type: "blur" });
