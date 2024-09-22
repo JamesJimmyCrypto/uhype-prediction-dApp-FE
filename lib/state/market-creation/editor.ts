@@ -145,7 +145,10 @@ export type MarketDraftEditorConfig = {
 
 const createMarketStateAtom = persistentAtom<MarketDraft.MarketDraftState>({
   key: "market-creation-form",
-  defaultValue: MarketDraft.empty(),
+  defaultValue: {
+    ...MarketDraft.empty(),
+    isWizard: false,
+  },
   migrations: [() => MarketDraft.empty(), () => MarketDraft.empty()],
 });
 
@@ -270,14 +273,14 @@ export const useMarketDraftEditor = (): MarketDraftEditor => {
       }
     }
 
-    console.log("Currency Field State:", fieldsState["currency"]);
+    console.log("Currency Field State:", fieldsState[key], key);
 
     return {
       name: key,
       value: draft.form?.[key],
       fieldState: fieldsState[key],
       onChange: (event: FormEvent<MarketFormData[K]>) => {
-        if (mode === "onBlur") return;
+        // if (mode === "onBlur") return;
         let newDraft = {
           ...draft,
           form: { ...draft.form, [key]: event.target.value },
@@ -290,7 +293,7 @@ export const useMarketDraftEditor = (): MarketDraftEditor => {
         update(newDraft);
       },
       onBlur: (event: FormEvent<MarketFormData[K]>) => {
-        if (mode === "onChange") return;
+        // if (mode === "onChange") return;
         let newDraft = {
           ...draft,
           form: { ...draft.form, [key]: event.target.value },
@@ -385,7 +388,7 @@ export const useMarketDraftEditor = (): MarketDraftEditor => {
 
   const editor: BaseMarketDraftEditor = {
     currentStep: draft.currentStep,
-    isWizard: draft.isWizard,
+    isWizard: false,
     isPublished: draft.isPublished,
     marketId: draft.marketId,
     steps,

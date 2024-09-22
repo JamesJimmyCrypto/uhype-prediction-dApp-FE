@@ -2,10 +2,8 @@ import { Dialog } from "@headlessui/react";
 import { useQuery } from "@tanstack/react-query";
 import { PollingTimeout, poll } from "@zeitgeistpm/avatara-util";
 import {
-  CreateMarketParams,
   IOForeignAssetId,
   IOZtgAssetId,
-  RpcContext,
   ZTG,
   isFullSdk,
 } from "@zeitgeistpm/sdk";
@@ -32,10 +30,11 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { LuFileWarning } from "react-icons/lu";
 import { RiSendPlaneLine } from "react-icons/ri";
+import { CreateMarketParams } from "lib/state/market-creation/types/form";
 
 export type PublishingProps = {
   editor: MarketDraftEditor;
-  creationParams?: CreateMarketParams<RpcContext>;
+  creationParams?: CreateMarketParams;
 };
 
 export const Publishing = ({ editor, creationParams }: PublishingProps) => {
@@ -61,9 +60,10 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
       if (!feesEnabled) {
         return new Decimal(0);
       }
-      const paymentInfo =
-        await sdk.model.markets.create.calculateFees(creationParams);
-      return new Decimal(paymentInfo.partialFee.toString() ?? 0).div(ZTG);
+      // const paymentInfo =
+      //   await sdk.model.markets.create.calculateFees(creationParams);
+      // return new Decimal(paymentInfo.partialFee.toString() ?? 0).div(ZTG);
+      return new Decimal(0).div(ZTG);
     },
     {
       initialData: new Decimal(0),
@@ -147,17 +147,17 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
           lifetime: 60,
         });
 
-        const result = await sdk.model.markets.create(
-          creationParams,
-          IOForeignAssetId.is(feeDetails?.assetId)
-            ? feeDetails?.assetId
-            : undefined,
-        );
+        // const result = await sdk.model.markets.create(
+        //   creationParams,
+        //   IOForeignAssetId.is(feeDetails?.assetId)
+        //     ? feeDetails?.assetId
+        //     : undefined,
+        // );
 
-        const { market } = result.saturate().unwrap();
-        const marketId = market.marketId;
+        // const { market } = result.saturate().unwrap();
+        // const marketId = market.marketId;
 
-        editor.published(marketId);
+        // editor.published(marketId);
 
         notifications.pushNotification(
           "Transaction successful! Awaiting indexer.",
@@ -168,30 +168,30 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
           },
         );
 
-        const indexedStatus = await poll(
-          async () => {
-            return checkMarketExists(sdk.indexer.client, marketId);
-          },
-          {
-            intervall: 1000,
-            timeout: 6 * 1000,
-          },
-        );
+        // const indexedStatus = await poll(
+        //   async () => {
+        //     return checkMarketExists(sdk.indexer.client, marketId);
+        //   },
+        //   {
+        //     intervall: 1000,
+        //     timeout: 6 * 1000,
+        //   },
+        // );
 
-        if (indexedStatus === PollingTimeout) {
-          router.push(`/markets/await/${marketId}`);
-        } else {
-          notifications.pushNotification(
-            "Market has been created and indexed! Redirecting to market page.",
-            {
-              autoRemove: true,
-              type: "Success",
-              lifetime: 15,
-            },
-          );
+        // if (indexedStatus === PollingTimeout) {
+        //   // router.push(`/markets/await/${marketId}`);
+        // } else {
+        //   notifications.pushNotification(
+        //     "Market has been created and indexed! Redirecting to market page.",
+        //     {
+        //       autoRemove: true,
+        //       type: "Success",
+        //       lifetime: 15,
+        //     },
+        //   );
 
-          router.push(`/markets/${marketId}`);
-        }
+        //   router.push(`/markets/${marketId}`);
+        // }
 
         setTimeout(() => {
           editor.reset();

@@ -1,9 +1,4 @@
 import {
-  CreateMarketParams,
-  MetadataStorage,
-  NoPool,
-  RpcContext,
-  WithPool,
   ZTG,
   swapFeeFromFloat,
 } from "@zeitgeistpm/sdk";
@@ -39,7 +34,6 @@ import {
   IOYesNoAnswers,
 } from "./validation";
 import { Keypair, PublicKey, Connection, Transaction, Signer } from '@solana/web3.js';
-import { KeyringPair } from '@polkadot/keyring/types';
 /**
  * This is the type of the full market creation form data that is used to create a market.
  * It is infered from the zod schema validation types below.
@@ -64,6 +58,42 @@ export type MarketFormData = {
   liquidity: Liquidity;
 };
 
+export type Category = { name: string; img?: string | undefined; ticker?: string | undefined; color?: string | undefined; }
+
+export type CreateMarketParams = {
+  signer: PublicKey;  // Solana public key
+  disputeMechanism: 'Authorized' | 'Court';
+  oracle: z.infer<typeof IOOracle>;
+  period: {
+    Timestamp: [number, number];  // Start and end time in Unix timestamps
+  };
+  deadlines: {
+    gracePeriod: number;  // Grace period in blocks
+    oracleDuration: number;  // Oracle reporting duration in blocks
+    disputeDuration: number;  // Dispute duration in blocks
+  };
+  creatorFee: string;  // Creator fee in string format to handle decimals
+  marketType: {
+    Scalar?: [string, string];  // Scalar market type with two bounds
+    Categorical?: number;  // Categorical market type with a number of options
+  };
+  metadata: {
+    __meta: string;
+    description: string;
+    question: string;
+    slug: string;
+    tags: z.infer<typeof IOTags>;
+    categories?: Category[];
+    scalarType?: NonNullable<"number" | "date"> | undefined;  // Optional scalar type
+  };
+  baseAsset: string;  // Base asset for the market
+  scoringRule?: 'Lmsr' | 'AmmCdaHybrid';  // Scoring rules for the market
+  pool?: {
+    amount: string;  // Pool amount in a string format to handle large numbers
+    swapFee: string;  // Swap fee for the pool
+    spotPrices: string[];  // Initial spot prices
+  };
+};
 export type ValidMarketFormData = DeepRequired<MarketFormData>;
 export type PartialMarketFormData = Partial<MarketFormData>;
 
@@ -92,7 +122,7 @@ export const marketCreationFormKeys = union<keyof MarketFormData>().exhaust([
  * They are infered from the individual field zod schema validation types below.
  *
  * @note - Because we are not in strict ts mode zod allways infers partial form fields
- * so we have to hardocde required for each field that can only be a fullu defined object like answers and periods.
+ * so we have to hardcode required for each field that can only be a fully defined object like answers and periods.
  */
 export type CurrencyTag = z.infer<typeof IOCurrency>;
 export type Question = z.infer<typeof IOQuestion>;
@@ -115,6 +145,19 @@ export type SwapFee = z.infer<typeof IOSwapFee>;
 export type Liquidity = z.infer<typeof IOLiquidity>;
 export type LiquidityRow = z.infer<typeof IOLiquidityRow>;
 
+export type WithPool = {
+  creationType?: undefined;
+  scoringRule: "Lmsr" | "AmmCdaHybrid";
+  pool: {
+    swapFee: string;
+    amount: string;
+    spotPrices: Array<string>;
+  };
+}
+
+export type NoPool = {
+
+}
 /**
  * Create a the needed params for the market creation extrinsic from the form data.
  */
@@ -122,7 +165,7 @@ export const marketFormDataToExtrinsicParams = (
   form: ValidMarketFormData,
   signer: PublicKey,
   chainTime: ChainTime,
-): CreateMarketParams<RpcContext<MetadataStorage>, MetadataStorage> => {
+): CreateMarketParams => {
   const baseCurrencyMetadata = getMetadataForCurrency(form.currency);
   const timeline = timelineAsBlocks(form, chainTime).unwrap();
 
@@ -148,7 +191,7 @@ export const marketFormDataToExtrinsicParams = (
       creationType: form.moderation,
     };
 
-  let disputeMechanism: CreateMarketParams<RpcContext>["disputeMechanism"] =
+  let disputeMechanism: CreateMarketParams["disputeMechanism"] =
     "Authorized";
 
   if (
@@ -158,11 +201,8 @@ export const marketFormDataToExtrinsicParams = (
     disputeMechanism = "Court";
   }
 
-  const params: CreateMarketParams<RpcContext> = {
-    signer: {
-      publicKey: signer as unknown as Uint8Array,
-
-    } as unknown as KeyringPair,
+  const params: CreateMarketParams = {
+    signer,
     disputeMechanism,
     oracle: form.oracle,
     period: {
@@ -195,7 +235,7 @@ export const marketFormDataToExtrinsicParams = (
       scalarType:
         form.answers?.type === "scalar" ? form.answers.numberType : undefined,
     },
-    baseAsset: baseCurrencyMetadata.assetId,
+    baseAsset: "TODO",
     ...poolParams,
   };
   return params;

@@ -67,7 +67,7 @@ export const MarketEditor = () => {
 
   const timezone = form?.timeZone;
 
-  const currencyMetadata = getMetadataForCurrency(form?.currency ?? "ZTG");
+  const currencyMetadata = getMetadataForCurrency(form?.currency ?? "DHP");
 
   const back = () => {
     const prevStep = prevStepFrom(steps, currentStep);
@@ -136,11 +136,11 @@ export const MarketEditor = () => {
           </div>
         </h2>
 
-        <div className="center mb-8 flex">
+        {/* <div className="center mb-8 flex">
           <div className="mr-3 font-light">One Page</div>
           <Toggle checked={isWizard} onChange={toggleWizard} />
           <div className="ml-3 font-light">Wizard</div>
-        </div>
+        </div> */}
 
         <div className="mb-8 md:mb-12">
           {isWizard && (

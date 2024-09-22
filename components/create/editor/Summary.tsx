@@ -7,6 +7,7 @@ import { useChainTime } from "lib/state/chaintime";
 import { MarketDraftEditor } from "lib/state/market-creation/editor";
 import {
   Answers,
+  CreateMarketParams,
   CurrencyTag,
   Liquidity,
   Moderation,
@@ -19,7 +20,6 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import React, { useMemo } from "react";
 import { LuFileWarning } from "react-icons/lu";
-import { CreateMarketParams, RpcContext } from "@zeitgeistpm/sdk";
 
 const QuillViewer = dynamic(() => import("components/ui/QuillViewer"), {
   ssr: false,
@@ -27,7 +27,7 @@ const QuillViewer = dynamic(() => import("components/ui/QuillViewer"), {
 
 export type MarketSummaryProps = {
   editor: MarketDraftEditor;
-  creationParams?: CreateMarketParams<RpcContext>;
+  creationParams?: CreateMarketParams;
 };
 
 export const MarketSummary = ({

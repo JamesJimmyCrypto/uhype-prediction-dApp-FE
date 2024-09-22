@@ -227,7 +227,7 @@ const AnswerInput = ({
             className=" rounded-md bg-white px-2 py-1"
             onClick={onClear}
           >
-            remove
+            Remove
           </button>
         </div>
       )}
