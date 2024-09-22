@@ -73,7 +73,7 @@ const AddressInspectContent = ({
       )}
 
       <div className="mb-ztg-5 mt-ztg-20 flex flex-col items-center gap-7 sm:flex-row">
-        <a
+        {/* <a
           className="flex"
           href={`https://sub.id/#/${address}`}
           target="_blank"
@@ -81,7 +81,7 @@ const AddressInspectContent = ({
         >
           <SubIdIcon />
           <span className="ml-ztg-10">Sub ID</span>
-        </a>
+        </a> */}
         <a
           className="flex"
           href={`https://solscan.io/account/${address}`}
@@ -89,7 +89,7 @@ const AddressInspectContent = ({
           rel="noreferrer"
         >
           <SubScanIcon />
-          <span className="ml-ztg-10">SubScan</span>
+          <span className="ml-ztg-10">SolScan</span>
         </a>
         <Link
           className="flex"
