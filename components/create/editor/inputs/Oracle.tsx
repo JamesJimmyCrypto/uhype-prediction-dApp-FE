@@ -102,9 +102,8 @@ export const OracleInput = forwardRef(
           `}
               >
                 <div
-                  className={`relative h-full flex-1 px-3 py-2 transition-all duration-300 ease-[cubic-bezier(.57,.42,.25,1.57)] ${
-                    isSelectedAccount ? "w-[120px]" : "w-[200px]"
-                  }`}
+                  className={`ease-[cubic-bezier(.51,.44,.4,1.35)] relative h-full flex-1 px-3 py-2 transition-all duration-300
+ ${isSelectedAccount ? "w-[120px]" : "w-[200px]"}`}
                 >
                   <div
                     className={`absolute left-0 top-[50%] translate-y-[-50%] ${

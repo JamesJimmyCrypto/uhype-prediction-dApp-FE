@@ -2,5 +2,8 @@
   "editor.formatOnSave": true,
   "prettier.configPath": ".prettierrc.js",
   "cSpell.enabled": true,
-  "cSpell.words": ["Excecution"]
+  "cSpell.words": [
+    "Excecution"
+  ],
+  "references.preferredLocation": "view"
 }

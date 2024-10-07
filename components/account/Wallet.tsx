@@ -42,7 +42,7 @@ export function AppWalletProvider({ children }: { children: React.ReactNode }) {
       wallets={wallets}
       config={{
         autoConnect: true,
-        env: "mainnet-beta",
+        env: "devnet",
         metadata: {
           name: "UnifiedWallet",
           description: "UnifiedWallet",

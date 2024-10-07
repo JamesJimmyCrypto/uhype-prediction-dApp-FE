@@ -98,10 +98,10 @@ export const MarketEditor = () => {
 
   const isLoaded = Boolean(isFetched);
 
-  const creationParams =
-    editor.isValid && publicKey
-      ? marketFormDataToExtrinsicParams(editor.form, publicKey, chainTime!)
-      : undefined;
+  //TO DO URGENT ADD editor.isValid &&
+  const creationParams = publicKey
+    ? marketFormDataToExtrinsicParams(editor.form, publicKey, chainTime!)
+    : undefined;
 
   return (
     <>

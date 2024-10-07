@@ -115,3 +115,6 @@ export const endpointOptions =
 export const LAST_MARKET_ID_BEFORE_ASSET_MIGRATION = Number(
   process.env.NEXT_PUBLIC_LAST_MARKET_ID_BEFORE_ASSET_MIGRATION,
 );
+
+// dehype constants
+export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;

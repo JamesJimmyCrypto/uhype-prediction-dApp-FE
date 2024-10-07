@@ -3,29 +3,31 @@ import "styles/index.css";
 
 import { Hydrate, QueryClientProvider } from "@tanstack/react-query";
 import * as Fathom from "fathom-client";
-
 import Devtools from "components/devtools";
 import DefaultLayout from "layouts/DefaultLayout";
 import { appQueryClient } from "lib/query-client";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { hotjar } from "react-hotjar";
 
 // font optimization from @next/font
 import { inter, kanit, roboto_mono } from "lib/util/fonts";
 import { AppWalletProvider } from "components/account/Wallet";
-
+import { ConnectionProvider } from "@jup-ag/wallet-adapter";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { clusterApiUrl } from "@solana/web3.js";
 // environment variables set in .env.local or vercel interface
 const fathomSiteId = process.env["NEXT_PUBLIC_FATHOM_SITE_ID"];
 const domain = process.env["NEXT_PUBLIC_DOMAIN"];
 const hotjarSiteId = process.env["NEXT_PUBLIC_HOTJAR_SITE_ID"];
-const isProduction =
-  process.env.NEXT_PUBLIC_SITE_URL === "https://dehype.openverse.tech";
+const isProduction = process.env.NEXT_PUBLIC_SITE_URL === "https://dehype.fun";
 
 const MyApp = ({ Component, pageProps }) => {
   const Layout = Component.Layout ? Component.Layout : React.Fragment;
   const router = useRouter();
+  const network = WalletAdapterNetwork.Devnet;
+  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
   useEffect(() => {
     if (!isProduction) {
@@ -69,21 +71,23 @@ const MyApp = ({ Component, pageProps }) => {
           }
         `}
       </style>
-      <AppWalletProvider>
-        <QueryClientProvider client={appQueryClient}>
-          <Hydrate state={pageProps.dehydratedState}>
-            <Head>
-              <title>Dehype - Prediction Markets</title>
-            </Head>
-            <DefaultLayout>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </DefaultLayout>
-            {/* <Devtools /> */}
-          </Hydrate>
-        </QueryClientProvider>
-      </AppWalletProvider>
+      <ConnectionProvider endpoint={endpoint}>
+        <AppWalletProvider>
+          <QueryClientProvider client={appQueryClient}>
+            <Hydrate state={pageProps.dehydratedState}>
+              <Head>
+                <title>Dehype - Prediction Markets</title>
+              </Head>
+              <DefaultLayout>
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </DefaultLayout>
+              {/* <Devtools /> */}
+            </Hydrate>
+          </QueryClientProvider>
+        </AppWalletProvider>
+      </ConnectionProvider>
     </div>
   );
 };

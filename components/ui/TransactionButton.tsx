@@ -39,19 +39,8 @@ const TransactionButton: FC<PropsWithChildren<TransactionButtonProps>> = ({
 }) => {
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString() ?? "";
-  const [sdk] = useSdkv2();
   const accountModals = useAccountModals();
   const { locationAllowed } = useUserLocation();
-
-  const extrinsicBase = useMemo(() => {
-    return extrinsic && isRpcSdk(sdk) && publicKey
-      ? sdk.api.tx.balances.transfer(pubKey, ZTG.toFixed(0))
-      : undefined;
-  }, [extrinsic, sdk]);
-
-  const { fee } = useExtrinsicFee(extrinsicBase);
-
-  const insufficientFeeBalance = fee?.sufficientBalance === false;
 
   const click = (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (preventDefault) {
@@ -65,25 +54,18 @@ const TransactionButton: FC<PropsWithChildren<TransactionButtonProps>> = ({
   };
 
   const isDisabled = useMemo(() => {
-    if (locationAllowed !== true || !isRpcSdk(sdk) || insufficientFeeBalance) {
+    if (locationAllowed !== true) {
       return true;
     } else if (!publicKey) {
       return false;
     }
     return disabled;
-  }, [locationAllowed, sdk, pubKey, insufficientFeeBalance]);
+  }, [locationAllowed, pubKey]);
 
-  const colorClass =
-    locationAllowed !== true || insufficientFeeBalance
-      ? "bg-vermilion"
-      : "bg-ztg-blue";
+  const colorClass = "bg-vermilion";
 
   const getButtonChildren = () => {
-    if (locationAllowed !== true) {
-      return "Location Blocked";
-    } else if (insufficientFeeBalance) {
-      return `Insufficient ${fee.symbol}`;
-    } else if (loading) {
+    if (loading) {
       return (
         <div className="center w-full rounded-full bg-inherit">
           <Loader variant={"Dark"} className="z-20 h-6 w-6" loading />

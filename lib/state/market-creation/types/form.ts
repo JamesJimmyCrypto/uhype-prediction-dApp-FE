@@ -59,41 +59,60 @@ export type MarketFormData = {
 };
 
 export type Category = { name: string; img?: string | undefined; ticker?: string | undefined; color?: string | undefined; }
-
 export type CreateMarketParams = {
-  signer: PublicKey;  // Solana public key
-  disputeMechanism: 'Authorized' | 'Court';
-  oracle: z.infer<typeof IOOracle>;
-  period: {
-    Timestamp: [number, number];  // Start and end time in Unix timestamps
-  };
-  deadlines: {
-    gracePeriod: number;  // Grace period in blocks
-    oracleDuration: number;  // Oracle reporting duration in blocks
-    disputeDuration: number;  // Dispute duration in blocks
-  };
-  creatorFee: string;  // Creator fee in string format to handle decimals
-  marketType: {
-    Scalar?: [string, string];  // Scalar market type with two bounds
-    Categorical?: number;  // Categorical market type with a number of options
-  };
+  signer: PublicKey; // Required for identifying the creator
+  disputeMechanism: 'Authorized' | 'Court'; // Defines how disputes will be handled
+  oracle: z.infer<typeof IOOracle>; // Oracle to determine outcomes
+  period: { Timestamp: [number, number]; }; // Event time window
+  creatorFee: string; // Fee for the market creator
+  marketType: { Scalar?: [string, string]; Categorical?: number; }; // Scalar or categorical market type
   metadata: {
-    __meta: string;
     description: string;
     question: string;
-    slug: string;
     tags: z.infer<typeof IOTags>;
-    categories?: Category[];
-    scalarType?: NonNullable<"number" | "date"> | undefined;  // Optional scalar type
-  };
-  baseAsset: string;  // Base asset for the market
-  scoringRule?: 'Lmsr' | 'AmmCdaHybrid';  // Scoring rules for the market
+  }; // Market details
+  baseAsset: string; // Base currency used in the market
+  scoringRule?: 'Lmsr' | 'AmmCdaHybrid'; // Scoring system used for outcomes
   pool?: {
-    amount: string;  // Pool amount in a string format to handle large numbers
-    swapFee: string;  // Swap fee for the pool
-    spotPrices: string[];  // Initial spot prices
-  };
+    amount: string;
+    swapFee: string;
+    spotPrices: string[];
+  }; // Liquidity pool for the market
 };
+// export type CreateMarketParams = {
+//   signer: PublicKey;  // Solana public key
+//   disputeMechanism: 'Authorized' | 'Court';
+//   oracle: z.infer<typeof IOOracle>;
+//   period: {
+//     Timestamp: [number, number];  // Start and end time in Unix timestamps
+//   };
+//   deadlines: {
+//     gracePeriod: number;  // Grace period in blocks
+//     oracleDuration: number;  // Oracle reporting duration in blocks
+//     disputeDuration: number;  // Dispute duration in blocks
+//   };
+//   creatorFee: string;  // Creator fee in string format to handle decimals
+//   marketType: {
+//     Scalar?: [string, string];  // Scalar market type with two bounds
+//     Categorical?: number;  // Categorical market type with a number of options
+//   };
+//   metadata: {
+//     __meta: string;
+//     description: string;
+//     question: string;
+//     slug: string;
+//     tags: z.infer<typeof IOTags>;
+//     categories?: Category[];
+//     scalarType?: NonNullable<"number" | "date"> | undefined;  // Optional scalar type
+//   };
+//   baseAsset: string;  // Base asset for the market
+//   scoringRule?: 'Lmsr' | 'AmmCdaHybrid';  // Scoring rules for the market
+//   pool?: {
+//     amount: string;  // Pool amount in a string format to handle large numbers
+//     swapFee: string;  // Swap fee for the pool
+//     spotPrices: string[];  // Initial spot prices
+//   };
+// };
 export type ValidMarketFormData = DeepRequired<MarketFormData>;
 export type PartialMarketFormData = Partial<MarketFormData>;
 
@@ -166,10 +185,11 @@ export const marketFormDataToExtrinsicParams = (
   signer: PublicKey,
   chainTime: ChainTime,
 ): CreateMarketParams => {
+  console.log({ cur: form.currency })
   const baseCurrencyMetadata = getMetadataForCurrency(form.currency);
   const timeline = timelineAsBlocks(form, chainTime).unwrap();
 
-  if (!baseCurrencyMetadata || !timeline) {
+  if (!baseCurrencyMetadata) {
     throw new Error("Invalid market creation form data");
   }
 
@@ -178,13 +198,13 @@ export const marketFormDataToExtrinsicParams = (
   const poolParams: WithPool | NoPool = hasPool
     ? {
       scoringRule: "Lmsr",
-      pool: {
-        amount: new Decimal(form.liquidity.amount).mul(ZTG).toFixed(0),
-        swapFee: swapFeeFromFloat(form.liquidity.swapFee?.value).toString(),
-        spotPrices: form.liquidity.rows.map((row) =>
-          new Decimal(row.price.price).mul(ZTG).toFixed(0),
-        ),
-      },
+      // pool: {
+      //   amount: new Decimal(form.liquidity.amount).mul(ZTG).toFixed(0),
+      //   swapFee: swapFeeFromFloat(form.liquidity.swapFee?.value).toString(),
+      //   spotPrices: form.liquidity.rows.map((row) =>
+      //     new Decimal(row.price.price).mul(ZTG).toFixed(0),
+      //   ),
+      // },
     }
     : {
       scoringRule: "AmmCdaHybrid",
@@ -208,11 +228,11 @@ export const marketFormDataToExtrinsicParams = (
     period: {
       Timestamp: [Date.now(), new Date(form.endDate).getTime()],
     },
-    deadlines: {
-      gracePeriod: timeline.grace.period,
-      oracleDuration: timeline.report.period,
-      disputeDuration: timeline.dispute.period,
-    },
+    // deadlines: {
+    //   gracePeriod: timeline.grace.period,
+    //   oracleDuration: timeline.report.period,
+    //   disputeDuration: timeline.dispute.period,
+    // },
     creatorFee: new Decimal(10).pow(7).mul(form.creatorFee.value).toString(),
     marketType:
       form.answers.type === "scalar"

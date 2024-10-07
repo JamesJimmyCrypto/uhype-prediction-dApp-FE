@@ -22,7 +22,7 @@ import { useFeePayingAsset } from "lib/hooks/queries/useFeePayingAsset";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { MarketDraftEditor } from "lib/state/market-creation/editor";
 import { NotificationType, useNotifications } from "lib/state/notifications";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { assetsAreEqual } from "lib/util/assets-are-equal";
 import { formatNumberCompact } from "lib/util/format-compact";
 import { isArray } from "lodash-es";
@@ -31,6 +31,8 @@ import { useState } from "react";
 import { LuFileWarning } from "react-icons/lu";
 import { RiSendPlaneLine } from "react-icons/ri";
 import { CreateMarketParams } from "lib/state/market-creation/types/form";
+import { Transaction } from "@solana/web3.js";
+import { BACKEND_URL } from "@/lib/constants";
 
 export type PublishingProps = {
   editor: MarketDraftEditor;
@@ -39,7 +41,9 @@ export type PublishingProps = {
 
 export const Publishing = ({ editor, creationParams }: PublishingProps) => {
   const [sdk] = useSdkv2();
-  const { publicKey } = useWallet();
+  const { publicKey, signTransaction, sendTransaction } = useWallet();
+  const { connection } = useConnection();
+  console.log({ connection });
   const pubKey = publicKey?.toString() ?? "";
   const router = useRouter();
   const notifications = useNotifications();
@@ -132,21 +136,88 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
     foreignCurrencyCost &&
     foreignAssetBalance?.div(ZTG).minus(foreignCurrencyCost);
 
-  const hasEnoughLiquidty =
-    ztgBalanceDelta?.gte(0) &&
-    (!foreignCurrencyCost || foreignAssetBalanceDelta?.gte(0));
+  const hasEnoughLiquidty = ztgBalanceDelta?.gte(0);
+
+  const createMarket = async () => {
+    if (!publicKey) {
+      alert("Please connect your wallet!");
+      return;
+    }
+    const response = await fetch(`${BACKEND_URL}/market/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        eventName: "Will SOL reach ATH this year?",
+        outcomeOptions: ["Yes", "No"],
+        userPublicKey: publicKey.toString(),
+      }),
+    });
+
+    const { transaction: transactionBase64 } = await response.json();
+    const transaction = Transaction.from(
+      Buffer.from(transactionBase64, "base64"),
+    );
+
+    console.log({ transaction });
+
+    try {
+      // Ensure signTransaction is available
+      if (!signTransaction) {
+        throw new Error("signTransaction function is not available");
+      }
+
+      const signedTransaction = await signTransaction(transaction);
+      console.log("Signed transaction:", signedTransaction);
+
+      // Ensure connection is available
+      if (!connection) {
+        throw new Error("Connection is not available");
+      }
+
+      // Debugging connection and endpoint
+      console.log("Connection object:", connection);
+      console.log("Endpoint:", connection.rpcEndpoint);
+
+      // Send the signed transaction
+      const signature = await sendTransaction(signedTransaction, connection);
+      console.log("Transaction signature:", signature);
+
+      // Confirm the transaction
+      const confirmation = await connection.confirmTransaction(
+        signature,
+        "confirmed",
+      );
+      console.log("Transaction confirmation:", confirmation);
+
+      if (confirmation.value.err) {
+        throw new Error("Transaction failed");
+      }
+
+      // Notify the user of success
+      notifications.pushNotification("Transaction successful!", {
+        autoRemove: true,
+        type: "Success",
+        lifetime: 15,
+      });
+    } catch (error) {
+      console.error("Error signing transaction:", error);
+    }
+  };
 
   const submit = async () => {
-    if (creationParams && isFullSdk(sdk)) {
+    console.log("before", { creationParams });
+    if (creationParams) {
       setIsTransacting(true);
-
+      console.log("Creating market with params:", creationParams);
       try {
         notifications.pushNotification("Transacting...", {
           autoRemove: true,
           type: "Info",
           lifetime: 60,
         });
-
+        createMarket();
         // const result = await sdk.model.markets.create(
         //   creationParams,
         //   IOForeignAssetId.is(feeDetails?.assetId)
@@ -235,25 +306,15 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
               <div className="relative">
                 <TransactionButton
                   type="button"
-                  disabled={
-                    !editor.isValid ||
-                    isTransacting ||
-                    editor.isPublished ||
-                    !hasEnoughLiquidty
-                  }
                   className={`
                  center !h-auto !w-72 !gap-2 rounded-full !px-7 !py-4 !text-xl font-normal transition-all
               `}
                   onClick={submit}
                 >
                   <div className="flex-1">
-                    {!hasEnoughLiquidty
-                      ? "Insufficient Balance"
-                      : isTransacting
-                        ? "Transacting.."
-                        : "Publish Market"}
+                    {isTransacting ? "Transacting.." : "Publish Market"}
                   </div>
-                  <div className={`${isTransacting && "animate-ping"}`}>
+                  <div className={`${isTransacting && ""}`}>
                     <RiSendPlaneLine />
                   </div>
                 </TransactionButton>
