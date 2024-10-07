@@ -28,7 +28,7 @@ const AccountModalContent: FC = () => {
               <div className="center rounded-full bg-sky-100">
                 <div className="center h-6 w-6 rounded-full">
                   <img
-                    src="/currencies/ztg.svg"
+                    src="/currencies/solana.svg"
                     alt="Account balance"
                     style={{ marginTop: "-1px" }}
                   />

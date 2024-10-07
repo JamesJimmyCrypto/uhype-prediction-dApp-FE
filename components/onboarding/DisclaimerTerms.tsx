@@ -7,7 +7,7 @@ const DisclaimerTerms = () => {
         </strong>
       </p>
       <p>
-        These terms of use are entered into by and between You and Zeitgeist PM,
+        These terms of use are entered into by and between You and DeHype,
         LLC ("<strong>Company</strong>", "<strong>we</strong>" or "
         <strong>us</strong>"). The following terms and conditions, together with
         any documents they expressly incorporate by reference (collectively,
@@ -348,7 +348,7 @@ const DisclaimerTerms = () => {
         other defaults on your account may be reflected in your credit report.
         If you wish to dispute the information Company reported to a credit
         bureau (i.e., Experian&trade;, Equifax&trade; or TransUnion&trade;)
-        please contact us at support@zeitgeist.pm. If you wish to dispute the
+        please contact us at support@DeHype.pm. If you wish to dispute the
         information a collection agency reported to a credit bureau regarding
         your Company account, you must contact the collection agency directly.
       </p>
