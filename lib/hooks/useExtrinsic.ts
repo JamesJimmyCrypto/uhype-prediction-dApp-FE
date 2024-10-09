@@ -3,7 +3,6 @@ import { ISubmittableResult } from "@polkadot/types/types";
 import { IOForeignAssetId, isRpcSdk } from "@zeitgeistpm/sdk";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { extrinsicCallback, signAndSend } from "lib/util/tx";
 import { useMemo, useState } from "react";
 import { useSdkv2 } from "./useSdkv2";
 import { useExtrinsicFee } from "./queries/useExtrinsicFee";

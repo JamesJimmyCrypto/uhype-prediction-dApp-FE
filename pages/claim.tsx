@@ -1,7 +1,6 @@
 import { decodeAddress, encodeAddress } from "@polkadot/keyring";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { extrinsicCallback, signAndSend } from "lib/util/tx";
 import { NextPage } from "next";
 import { ChangeEvent, useState } from "react";
 import airdrop from "../public/airdrop.json";
