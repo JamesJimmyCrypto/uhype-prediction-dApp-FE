@@ -4,6 +4,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useMarketProgram } from "@/src/hooks";
 import { Market } from "@/src/types";
 import { BgBallGfx } from "components/front-page/BgBallFx";
+import FloatingCircles from "components/front-page/FloatingCircles";
 import { HeroBanner } from "components/front-page/HeroBanner";
 import NetworkStats from "components/front-page/NetworkStats";
 import MarketScroll from "components/markets/MarketScroll";

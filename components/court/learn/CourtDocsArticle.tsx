@@ -35,7 +35,7 @@ export const CourtDocsArticle = ({
         </p>
         <div className="flex items-center justify-end">
           <Link
-            href="https://docs.zeitgeist.pm/docs/learn/court"
+            href=""
             target="_blank"
             className="center relative z-20 cursor-pointer gap-2 rounded-md bg-purple-400 bg-opacity-90 px-6 py-2 text-white"
           >

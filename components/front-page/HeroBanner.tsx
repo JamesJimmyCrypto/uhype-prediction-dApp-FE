@@ -24,7 +24,13 @@ export const HeroBanner = ({
     <div className="main-container md:mt-18 z-2 relative mb-14 mt-12">
       <div className="relative flex flex-col-reverse md:flex-row md:gap-8">
         <div className="md:w-[890px] md:pt-8 lg:w-[690px]">
-          <h1 className="mb-8 text-5xl leading-tight">
+        <h1 className="mb-8 text-5xl leading-tight"
+            style={{
+              background: 'linear-gradient(90deg, #00BFFF, #8A2BE2)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}
+          >
             Welcome to the Future of Predictions
           </h1>
           <h2 className="mb-8 text-xl leading-6">
@@ -32,21 +38,30 @@ export const HeroBanner = ({
             marketplace
           </h2>
           <div className="mb-14 flex gap-4">
-            <Link
+          <Link
               href="https://openverse.tech"
               target="_blank"
               className="flex-1 rounded-md border-2 border-vermilion bg-vermilion px-6 py-3 text-white sm:flex-none"
+              style={{
+                fontWeight: 'bold',
+                background: 'linear-gradient(90deg, #FF1493, #FF8C00)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
             >
               Learn More
             </Link>
             <Link
               href="/create-account"
               className="flex-1 rounded-md border-2 border-black bg-transparent px-6 py-3 text-black sm:flex-none"
+              style={{
+                fontWeight: 'bold', // Đảm bảo sử dụng camelCase
+              }}
             >
               Get Started
             </Link>
           </div>
-          <a href="https://www.coingecko.com/en/coins/solana" target="_blank">
+          {/* <a href="https://www.coingecko.com/en/coins/solana" target="_blank">
             <div
               className="flex w-full gap-2 rounded-md px-4 py-3"
               style={{ backgroundColor: "rgba(28, 100, 242, 0.2)" }}
@@ -90,7 +105,7 @@ export const HeroBanner = ({
                 </div>
               )}
             </div>
-          </a>
+          </a> */}
         </div>
         <div className="relative mb-8 h-64 w-full overflow-hidden rounded-lg md:mb-0 md:h-auto">
           <Image
