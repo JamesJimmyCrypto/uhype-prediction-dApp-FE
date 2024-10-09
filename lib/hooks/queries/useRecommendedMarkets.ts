@@ -4,68 +4,47 @@ import {
   MarketStatus,
   ScoringRule,
 } from "@zeitgeistpm/indexer";
-import { isIndexedSdk } from "@zeitgeistpm/sdk";
-import { useSdkv2 } from "../useSdkv2";
-import { useMarket } from "./useMarket";
-import { searchMarketsText } from "./useMarketSearch";
 import { WHITELISTED_TRUSTED_CREATORS } from "lib/constants/whitelisted-trusted-creators";
+import { useMarketProgram } from "@/src/hooks";
 
 export const recommendedMarketsRootKey = "recommended-markets";
 
 export const useRecommendedMarkets = (marketId?: number, limit = 2) => {
-  const [sdk, id] = useSdkv2();
-  const { data: market } = useMarket(marketId ? { marketId } : undefined);
+  const { useGetMarketsQuery, useGetMarketQuery } = useMarketProgram();
+  const { data: market } = useGetMarketQuery(marketId?.toString());
 
-  const enabled = sdk && market && isIndexedSdk(sdk);
+  const { data: markets, isLoading, error } = useGetMarketsQuery();
 
   const query = useQuery(
-    [id, recommendedMarketsRootKey, market?.marketId],
+    [recommendedMarketsRootKey, market?.marketKey.toNumber()],
     async () => {
-      if (enabled) {
-        const similarMarkets = await searchMarketsText(
-          sdk.indexer,
-          market.question ?? "",
-        );
+      const similarMarkets = markets || [];
 
-        if (market.question && similarMarkets.length > 0) {
-          return {
-            markets: similarMarkets
-              .filter((m) => m.question !== market.question)
-              .slice(0, 2),
-            type: "similar" as const,
-          };
-        } else {
-          const { markets: popularMarkets } = await sdk.indexer.markets({
-            limit,
-            order: [MarketOrderByInput.VolumeDesc],
-            where: {
-              AND: [
-                {
-                  status_eq: MarketStatus.Active,
-                  marketId_not_eq: marketId,
-                  volume_gt: "0",
-                  scoringRule_not_eq: ScoringRule.Parimutuel,
-                },
-                {
-                  disputeMechanism_isNull: false,
-                  OR: [
-                    {
-                      creator_in: WHITELISTED_TRUSTED_CREATORS,
-                    },
-                  ],
-                },
-              ],
-            },
-          });
-          return {
-            markets: popularMarkets,
-            type: "popular" as const,
-          };
-        }
+      if (market?.title && similarMarkets.length > 0) {
+        return {
+          markets: similarMarkets
+            .filter((m) => m.title !== market.title)
+            .slice(0, limit),
+          type: "similar" as const,
+        };
+      } else {
+        const popularMarkets = similarMarkets
+
+        /// => popular mentric
+        //   m.status === MarketStatus.Active &&
+        // m.marketId !== marketId &&
+        // m.volume > 0 &&
+        // m.scoringRule !== ScoringRule.Parimutuel &&
+        // m.disputeMechanism !== null &&
+        // WHITELISTED_TRUSTED_CREATORS.includes(m.creator)
+        return {
+          markets: popularMarkets,
+          type: "popular" as const,
+        };
       }
     },
     {
-      enabled: Boolean(enabled),
+      enabled: Boolean(market),
       staleTime: Infinity,
     },
   );

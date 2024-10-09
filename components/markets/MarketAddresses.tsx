@@ -6,7 +6,6 @@ import ZeitgeistIconDark from "components/icons/ZeitgeistIconDark";
 import Avatar from "components/ui/Avatar";
 import CopyIcon from "components/ui/CopyIcon";
 import Link from "next/link";
-import { useIdentity } from "lib/hooks/queries/useIdentity";
 import { shortenAddress } from "lib/util";
 
 import dynamic from "next/dynamic";
@@ -113,12 +112,8 @@ export const AddressDetails = ({
   address: string;
 }) => {
   const [inspected, setInspected] = useState(false);
-  const { data: identity, isLoading } = useIdentity(address);
 
-  const displayName =
-    identity?.displayName?.length !== 0
-      ? identity?.displayName
-      : shortenAddress(address, 8, 8);
+  const displayName = shortenAddress(address, 8, 8);
 
   return (
     <>
@@ -132,11 +127,7 @@ export const AddressDetails = ({
             <Avatar address={address} size={30} />
             <div className="flex flex-col font-medium">
               <div className="text-[10px] text-sky-600">{title}</div>
-              {isLoading ? (
-                <Skeleton width={130} height={16} />
-              ) : (
-                <div className="text-xs">{displayName}</div>
-              )}
+              <div className="text-xs">{displayName}</div>
             </div>
           </div>
         </div>
@@ -144,19 +135,7 @@ export const AddressDetails = ({
 
       <Modal open={inspected} onClose={() => setInspected(false)}>
         <Dialog.Panel className="max-w-[95%] rounded-ztg-10 bg-white p-[15px]">
-          <div>
-            Address Details
-            {identity?.judgement && (
-              <AddressModalHeader
-                name={identity.displayName}
-                judgement={identity.judgement}
-              />
-            )}
-            <AddressInspectContent
-              address={address}
-              identity={identity ?? undefined}
-            />
-          </div>
+          <div>Address Details</div>
         </Dialog.Panel>
       </Modal>
     </>

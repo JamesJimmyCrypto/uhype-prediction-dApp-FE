@@ -38,7 +38,10 @@ import TimezoneSelect from "./inputs/TimezoneSelect";
 import { Loader } from "components/ui/Loader";
 import FeeSelect from "./inputs/FeeSelect";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { marketFormDataToExtrinsicParams } from "lib/state/market-creation/types/form";
+import {
+  marketFormDataToExtrinsicParams,
+  Oracle,
+} from "lib/state/market-creation/types/form";
 
 const QuillEditor = dynamic(() => import("components/ui/QuillEditor"), {
   ssr: false,
@@ -87,20 +90,64 @@ export const MarketEditor = () => {
 
   const handlePoolDeploymentToggle = (checked: boolean) => {
     mergeFormData({
-      liquidity: {
-        deploy: checked,
-      },
+      // liquidity: {
+      //   deploy: checked,
+      // },
     });
   };
 
-  const showLiquidityWarning =
-    fieldsState.liquidity.isTouched && form.liquidity?.deploy && isWizard;
+  const showLiquidityWarning = false;
+  // fieldsState.liquidity.isTouched && form.liquidity?.deploy && isWizard;
 
   const isLoaded = Boolean(isFetched);
 
-  //TO DO URGENT ADD editor.isValid &&
+  type FormValue = {
+    currency: string;
+    question: string;
+    tags: string[];
+    answers: {
+      type: "yes/no";
+      answers: ["Yes", "No"];
+    };
+    type: "yes/no";
+    timeZone: string;
+    endDate: string;
+    // gracePeriod?: PeriodOption;
+    // Add other properties as needed
+    oracle: Oracle;
+    creatorFee: {
+      type: "custom";
+      value: 0.01;
+    };
+    description: string;
+  };
+
+  const defaultformValue: FormValue = {
+    currency: "SOL",
+    question: "Is SOL reached ATH at the end of this year",
+    tags: ["Politics"],
+    answers: {
+      type: "yes/no",
+      answers: ["Yes", "No"],
+    },
+    type: "yes/no",
+    timeZone: "UTC",
+    endDate: "20/10/2024",
+    oracle: "Anp4eSYXvJ4unKmy9Ac5zZa1MZ3p8gAjYiCLx8iS7bKH",
+    creatorFee: {
+      type: "custom",
+      value: 0.01,
+    },
+    description: "ok",
+  };
+
+  const formValue = {
+    ...defaultformValue,
+    ...editor.form,
+  };
+  //TODO URGENT ADD editor.isValid &&
   const creationParams = publicKey
-    ? marketFormDataToExtrinsicParams(editor.form, publicKey, chainTime!)
+    ? marketFormDataToExtrinsicParams(formValue, publicKey, chainTime!)
     : undefined;
 
   return (
@@ -315,10 +362,10 @@ export const MarketEditor = () => {
             onClickNext={next}
             onClickBack={back}
             nextDisabled={
-              !fieldsState.endDate.isValid ||
-              !fieldsState.gracePeriod.isValid ||
-              !fieldsState.reportingPeriod.isValid ||
-              !fieldsState.disputePeriod.isValid
+              !fieldsState.endDate.isValid
+
+              //   || !fieldsState.reportingPeriod.isValid ||
+              // !fieldsState.disputePeriod.isValid
             }
           >
             <div className="mb-4 text-center md:mb-8">
@@ -396,7 +443,7 @@ export const MarketEditor = () => {
                     </InfoPopover>
                   </h2>
                 </div>
-                <div className="flex justify-center">
+                {/* <div className="flex justify-center">
                   <BlockPeriodPicker
                     disabled={!fieldsState.endDate.isValid}
                     isValid={fieldsState.reportingPeriod.isValid}
@@ -404,10 +451,10 @@ export const MarketEditor = () => {
                     chainTime={chainTime ?? undefined}
                     {...input("reportingPeriod", { mode: "all" })}
                   />
-                </div>
-                <div className="center mt-4 flex h-5 text-xs text-red-400">
+                </div> */}
+                {/* <div className="center mt-4 flex h-5 text-xs text-red-400">
                   <ErrorMessage field={fieldsState.reportingPeriod} />
-                </div>
+                </div> */}
               </div>
 
               <div className="mb-0">
@@ -430,7 +477,7 @@ export const MarketEditor = () => {
                     </InfoPopover>
                   </h2>
                 </div>
-                <div className="flex justify-center">
+                {/* <div className="flex justify-center">
                   <BlockPeriodPicker
                     disabled={!fieldsState.endDate.isValid}
                     isValid={fieldsState.disputePeriod.isValid}
@@ -441,7 +488,7 @@ export const MarketEditor = () => {
                 </div>
                 <div className="center mt-4 flex h-5 text-xs text-red-400">
                   <ErrorMessage field={fieldsState.disputePeriod} />
-                </div>
+                </div> */}
               </div>
             </div>
           </MarketFormSection>
@@ -512,7 +559,7 @@ export const MarketEditor = () => {
             </div>
           </MarketFormSection>
 
-          <MarketFormSection
+          {/* <MarketFormSection
             wizard={isWizard}
             isCurrent={currentStep.label == "Moderation"}
             onClickNext={next}
@@ -543,15 +590,16 @@ export const MarketEditor = () => {
                 </div>
               </div>
             </div>
-          </MarketFormSection>
+          </MarketFormSection> */}
 
-          <MarketFormSection
+          {/* <MarketFormSection
             wizard={isWizard}
             isCurrent={currentStep.label == "Liquidity"}
             onClickNext={next}
             onClickBack={back}
             nextDisabled={
-              !fieldsState.liquidity.isValid || !fieldsState.answers.isValid
+              // !fieldsState.liquidity.isValid ||
+              !fieldsState.answers.isValid
             }
           >
             {form.currency && (
@@ -664,7 +712,7 @@ export const MarketEditor = () => {
                 </div>
               </>
             )}
-          </MarketFormSection>
+          </MarketFormSection> */}
 
           <MarketFormSection
             wizard={isWizard}

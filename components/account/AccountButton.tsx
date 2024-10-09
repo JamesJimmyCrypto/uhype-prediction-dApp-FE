@@ -181,7 +181,7 @@ const AccountButton: FC<{
                     <div className="">
                       <div className="mb-3 flex flex-col gap-2 border-b-2 px-6 py-2">
                         <BalanceRow
-                          imgPath="/currencies/solana.jpg"
+                          imgPath="/currencies/solana.png"
                           units={constants?.tokenSymbol}
                           balance={activeBalance}
                         />

@@ -169,7 +169,7 @@ const CasePage: NextPage = ({
       ? market.report?.outcome.categorical
       : undefined;
 
-  const imagePath = lookupAssetImagePath(baseAsset);
+  const imagePath = lookupAssetImagePath();
 
   const connectedParticipantDraw = selectedDraws?.find(
     (draw) => draw.courtParticipant.toString() === pubKey,

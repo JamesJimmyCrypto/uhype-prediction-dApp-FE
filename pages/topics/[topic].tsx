@@ -1,3 +1,4 @@
+import { Market } from "@/src/types";
 import { PortableText, toPlainText } from "@portabletext/react";
 import { FullMarketFragment } from "@zeitgeistpm/indexer";
 import { ZeitgeistIpfs, create } from "@zeitgeistpm/sdk";
@@ -55,7 +56,7 @@ export async function getStaticProps({
 
 const TopicPage: NextPage<{
   cmsTopic: CmsTopicFull;
-  markets: { market: FullMarketFragment; stats: MarketStats }[];
+  markets: { market: Market; stats: MarketStats }[];
 }> = ({ cmsTopic, markets }) => {
   if (process.env.NEXT_PUBLIC_SHOW_TOPICS !== "true") {
     return <NotFoundPage />;
@@ -120,13 +121,13 @@ const TopicPage: NextPage<{
             <div className="mb-3 flex gap-3">
               <div className="-mr-1 flex w-2/3 flex-col gap-3">
                 <MarketCard
-                  key={marketOne.market.marketId}
+                  key={marketOne.market.marketKey.toString()}
                   market={marketOne.market}
                   liquidity={marketOne.stats.liquidity}
                   numParticipants={marketOne.stats.participants}
                 />
                 <MarketCard
-                  key={marketTwo.market.marketId}
+                  key={marketOne.market.marketKey.toString()}
                   market={marketTwo.market}
                   liquidity={marketTwo.stats.liquidity}
                   numParticipants={marketTwo.stats.participants}
@@ -134,13 +135,13 @@ const TopicPage: NextPage<{
               </div>
               <div className="flex w-1/3 flex-col gap-3 pl-1">
                 <MarketCard
-                  key={marketThree.market.marketId}
+                  key={marketThree.market.marketKey.toString()}
                   market={marketThree.market}
                   liquidity={marketThree.stats.liquidity}
                   numParticipants={marketThree.stats.participants}
                 />
                 <MarketCard
-                  key={marketFour.market.marketId}
+                  key={marketFour.market.marketKey.toString()}
                   market={marketFour.market}
                   liquidity={marketFour.stats.liquidity}
                   numParticipants={marketFour.stats.participants}
@@ -150,7 +151,7 @@ const TopicPage: NextPage<{
             <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
               {restMarkets.map(({ market, stats }) => (
                 <MarketCard
-                  key={market.marketId}
+                  key={market.marketKey.toString()}
                   market={market}
                   liquidity={stats.liquidity}
                   numParticipants={stats.participants}
@@ -162,7 +163,7 @@ const TopicPage: NextPage<{
           <div className="grid grid-cols-1  gap-3 md:grid-cols-3 lg:hidden">
             {markets.map(({ market, stats }) => (
               <MarketCard
-                key={market.marketId}
+                key={market.marketKey.toString()}
                 market={market}
                 numParticipants={stats.participants}
                 liquidity={stats.liquidity}
@@ -175,7 +176,7 @@ const TopicPage: NextPage<{
           <div className="grid grid-cols-1  gap-3 md:grid-cols-3">
             {markets.map(({ market, stats }) => (
               <MarketCard
-                key={market.marketId}
+                key={market.marketKey.toString()}
                 market={market}
                 numParticipants={stats.participants}
                 liquidity={stats.liquidity}

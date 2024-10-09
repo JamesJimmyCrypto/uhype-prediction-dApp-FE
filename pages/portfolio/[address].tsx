@@ -154,18 +154,19 @@ const Portfolio: NextPageWithLayout = () => {
                     if (marketPositions.length === 0) return <></>;
 
                     return (
-                      <MarketPositions
-                        key={market.marketId}
-                        className="mb-8"
-                        market={market}
-                        usdZtgPrice={ztgPrice}
-                        positions={
-                          marketPositions
-                          // .filter((position) =>
-                          // position.userBalance.gt(0),
-                          // )
-                        }
-                      />
+                      <div></div>
+                      // <MarketPositions
+                      //   key={market.marketId}
+                      //   className="mb-8"
+                      //   market={market}
+                      //   usdZtgPrice={ztgPrice}
+                      //   positions={
+                      //     marketPositions
+                      //     // .filter((position) =>
+                      //     // position.userBalance.gt(0),
+                      //     // )
+                      //   }
+                      // />
                     );
                   },
                 )

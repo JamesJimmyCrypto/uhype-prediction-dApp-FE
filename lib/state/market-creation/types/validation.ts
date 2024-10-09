@@ -227,7 +227,8 @@ export const IOScalarAnswers = z.object({
 });
 
 export const IOAnswers = z.union(
-  [IOYesNoAnswers, IOCategoricalAnswers, IOScalarAnswers],
+  //TODO-URGENT IOScalarAnswers removed,IOCategoricalAnswers
+  [IOYesNoAnswers, IOCategoricalAnswers],
   {
     errorMap: () => {
       return { message: "All fields are required" };

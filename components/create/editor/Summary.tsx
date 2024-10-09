@@ -42,16 +42,18 @@ export const MarketSummary = ({
     : moment;
 
   const timeline = useMemo(() => {
-    return !form || !chainTime
-      ? null
-      : timelineAsBlocks(form, chainTime).unwrap();
+    return null;
+    // !form || !chainTime
+    //   ?
+    // : timelineAsBlocks(form, chainTime).unwrap();
   }, [form, chainTime]);
 
   const currencyMetadata = getMetadataForCurrency(form.currency!);
 
   const { data: baseAssetPrice } = useAssetUsdPrice(currencyMetadata?.assetId);
 
-  const baseAmount = form.liquidity?.amount;
+  const baseAmount = 0;
+  // form.liquidity?.amount;
 
   return (
     <div className="flex-1 text-center">
@@ -78,8 +80,8 @@ export const MarketSummary = ({
               answers={form.answers!}
               baseAssetPrice={baseAssetPrice!}
               baseCurrency={form.currency!}
-              liquidity={form?.liquidity}
-              moderation={form.moderation!}
+              // liquidity={form?.liquidity}
+              // moderation={form.moderation!}
             />
           )}
         </div>
@@ -108,7 +110,7 @@ export const MarketSummary = ({
             </div>
           </div>
           <div>
-            {form?.liquidity?.deploy &&
+            {/* {form?.liquidity?.deploy &&
             form?.moderation === "Permissionless" ? (
               <>
                 <div className="mb-4 flex justify-center gap-4">
@@ -162,12 +164,12 @@ export const MarketSummary = ({
               </div>
             ) : (
               ""
-            )}
+            )} */}
           </div>
         </div>
       </div>
 
-      <div className="mb-10">
+      {/* <div className="mb-10">
         <div className="flex items-center justify-center gap-2">
           <Label>Moderation</Label> <div>{form.moderation}</div>
         </div>
@@ -177,7 +179,7 @@ export const MarketSummary = ({
             <div>{creationParams.disputeMechanism.toString()}</div>
           </div>
         )}
-      </div>
+      </div> */}
 
       <div className="mb-10">
         <Label className="mb-2">Oracle</Label>
@@ -220,21 +222,21 @@ export const MarketSummary = ({
           <div className="mb-2 flex items-center justify-center gap-2 md:mb-0">
             <Label>Reporting</Label>{" "}
             <div>
-              {timeline?.report
+              {/* {timeline?.report
                 ? timeline?.report.period > 0
                   ? blocksAsDuration(timeline?.report.period).humanize()
                   : "None"
-                : "--"}
+                : "--"} */}
             </div>
           </div>
           <div className="mb-2 flex items-center justify-center gap-2 md:mb-0">
             <Label>Dispute</Label>{" "}
             <div>
-              {timeline?.dispute
+              {/* {timeline?.dispute
                 ? timeline?.dispute.period > 0
                   ? blocksAsDuration(timeline?.dispute.period).humanize()
                   : "None"
-                : "--"}
+                : "--"} */}
             </div>
           </div>
         </div>
@@ -271,7 +273,7 @@ const AnswersDisplay = ({
   liquidity?: Liquidity;
   baseCurrency: CurrencyTag;
   baseAssetPrice?: Decimal;
-  moderation: Moderation;
+  moderation?: Moderation;
 }) => {
   return (
     <div

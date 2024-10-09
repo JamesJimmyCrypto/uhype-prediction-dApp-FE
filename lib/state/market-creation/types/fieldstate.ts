@@ -52,18 +52,18 @@ export const empty = (): FieldsState => ({
     isValid: false,
     isTouched: false,
   },
-  gracePeriod: {
-    isValid: false,
-    isTouched: false,
-  },
-  disputePeriod: {
-    isValid: false,
-    isTouched: false,
-  },
-  reportingPeriod: {
-    isValid: false,
-    isTouched: false,
-  },
+  // gracePeriod: {
+  //   isValid: false,
+  //   isTouched: false,
+  // },
+  // disputePeriod: {
+  //   isValid: false,
+  //   isTouched: false,
+  // },
+  // reportingPeriod: {
+  //   isValid: false,
+  //   isTouched: false,
+  // },
   oracle: {
     isValid: false,
     isTouched: false,
@@ -72,16 +72,16 @@ export const empty = (): FieldsState => ({
     isValid: false,
     isTouched: false,
   },
-  moderation: {
-    isValid: false,
-    isTouched: false,
-  },
+  // moderation: {
+  //   isValid: false,
+  //   isTouched: false,
+  // },
   creatorFee: {
     isValid: false,
     isTouched: false,
   },
-  liquidity: {
-    isValid: false,
-    isTouched: false,
-  },
+  // liquidity: {
+  //   isValid: false,
+  //   isTouched: false,
+  // },
 });

@@ -6,7 +6,6 @@ import SecondaryButton from "components/ui/SecondaryButton";
 import Decimal from "decimal.js";
 import { ChainName } from "lib/constants/chains";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
-import { useCrossChainExtrinsic } from "lib/hooks/useCrossChainExtrinsic";
 import { useChain } from "lib/state/cross-chain";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";

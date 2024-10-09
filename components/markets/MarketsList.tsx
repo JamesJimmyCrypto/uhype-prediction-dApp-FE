@@ -1,18 +1,15 @@
-import { ScalarRangeType } from "@zeitgeistpm/sdk";
 import React, { useEffect, useState } from "react";
-import Decimal from "decimal.js";
 import { useInView } from "react-intersection-observer";
 
 import Loader from "react-spinners/PulseLoader";
 import { X } from "react-feather";
 import { useRouter } from "next/router";
-import { useInfiniteMarkets } from "lib/hooks/queries/useInfiniteMarkets";
+import { useInfiniteMarkets } from "@/lib/hooks/queries/useInfiniteMarkets";
 import { MarketFilter, MarketsOrderBy } from "lib/types/market-filter";
 import MarketFilterSelection from "./market-filter";
 import MarketCard from "./market-card/index";
 import useMarketsUrlQuery from "lib/hooks/useMarketsUrlQuery";
 import { filterTypes } from "lib/constants/market-filter";
-import { ZTG } from "lib/constants";
 import { useMarketsStats } from "lib/hooks/queries/useMarketsStats";
 import { CmsTopicHeader } from "lib/cms/topics";
 import { Topics } from "components/front-page/Topics";
@@ -74,23 +71,20 @@ const MarketsList = ({ className = "" }: MarketsListProps) => {
     isLoading,
     hasNextPage,
     fetchNextPage,
-  } = useInfiniteMarkets(
-    queryState.ordering,
-    queryState.liquidityOnly,
-    queryState.filters,
-  );
+  } = useInfiniteMarkets();
 
   useEffect(() => {
     if (isLoadMarkerInView === true && hasNextPage === true) {
       fetchNextPage();
     }
-  }, [isLoadMarkerInView, hasNextPage]);
+  }, [isLoadMarkerInView, hasNextPage, fetchNextPage]);
 
-  const markets = marketsPages?.pages.flatMap((markets) => markets.data) ?? [];
-
+  const markets = marketsPages?.pages?.flatMap((market) => market) ?? [];
   const count = markets?.length ?? 0;
 
-  const { data: stats } = useMarketsStats(markets.map((m) => m.marketId));
+  const { data: stats } = useMarketsStats(
+    markets.map((m) => m?.marketKey.toNumber()),
+  );
 
   return (
     <div
@@ -106,11 +100,13 @@ const MarketsList = ({ className = "" }: MarketsListProps) => {
 
       <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3">
         {markets?.map((market) => {
-          const stat = stats?.find((s) => s.marketId === market.marketId);
+          const stat = stats?.find(
+            (s) => s.marketId === market.marketKey.toNumber(),
+          );
 
           return (
             <MarketCard
-              key={`market-${market.marketId}`}
+              key={`market-${market?.marketKey}`}
               market={market}
               numParticipants={stat?.participants}
               liquidity={stat?.liquidity}

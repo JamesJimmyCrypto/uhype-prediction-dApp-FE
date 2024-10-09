@@ -5,10 +5,9 @@ import { useMarketsStats } from "lib/hooks/queries/useMarketsStats";
 import { range } from "lodash-es";
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { useResizeDetector } from "react-resize-detector";
-import MarketCard from "./market-card/index";
+import MarketCard, { FullMarketFragment } from "./market-card/index";
 import { useDebouncedCallback } from "use-debounce";
 import { useHasMounted } from "lib/hooks/events/useHasMounted";
-import { FullMarketFragment } from "@zeitgeistpm/indexer";
 
 const MarketScroll = ({
   title,
@@ -29,7 +28,7 @@ const MarketScroll = ({
 
   const hasMounted = useHasMounted();
   const { data: marketsStats } = useMarketsStats(
-    markets.map((m) => m.marketId),
+    markets.map((m) => m.marketKey?.toNumber()),
   );
 
   const gap = 16;
@@ -113,7 +112,7 @@ const MarketScroll = ({
         >
           {markets.map((market, cardIndex) => {
             const stat = marketsStats?.find(
-              (s) => s.marketId === market.marketId,
+              (s) => s.marketId === market.marketKey.toNumber(),
             );
 
             const isShown =
@@ -121,7 +120,7 @@ const MarketScroll = ({
 
             return (
               <MarketCard
-                key={market.marketId}
+                key={market.marketKey?.toNumber()}
                 disableLink={!isShown}
                 className={`market-card rounded-ztg-10 transition duration-500 ease-in-out ${
                   isShown ? "opacity-1" : "opacity-0"

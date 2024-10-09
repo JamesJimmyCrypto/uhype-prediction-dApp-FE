@@ -13,9 +13,11 @@ export type MarketCreationStepType =
   | "Time Period"
   | "Oracle"
   | "Description"
-  | "Moderation"
-  | "Liquidity"
   | "Summary";
+// | "Liquidity"
+// | "Moderation"
+
+
 
 /**
  * Market creation step that extends the wizard stepper data by the market creation
@@ -36,8 +38,8 @@ export const marketCreationSteps = union<MarketCreationStep>()
     { label: "Time Period", isValid: false, isTouched: false, reached: false },
     { label: "Oracle", isValid: false, isTouched: false, reached: false },
     { label: "Description", isValid: false, isTouched: false, reached: false },
-    { label: "Moderation", isValid: false, isTouched: false, reached: false },
-    { label: "Liquidity", isValid: false, isTouched: false, reached: false },
+    // { label: "Moderation", isValid: false, isTouched: false, reached: false },
+    // { label: "Liquidity", isValid: false, isTouched: false, reached: false },
     { label: "Summary", isValid: false, isTouched: false, reached: false },
   ]);
 
@@ -55,25 +57,16 @@ export const stepFormKeys: Record<
   "Time Period": [
     "endDate",
     "timeZone",
-    "gracePeriod",
-    "reportingPeriod",
-    "disputePeriod",
   ],
   Oracle: ["oracle"],
   Description: ["description"],
-  Moderation: ["moderation"],
-  Liquidity: ["creatorFee", "liquidity"],
   Summary: [
     "currency",
     "question",
     "tags",
     "answers",
     "endDate",
-    "gracePeriod",
-    "reportingPeriod",
-    "disputePeriod",
     "oracle",
-    "moderation",
   ],
 });
 

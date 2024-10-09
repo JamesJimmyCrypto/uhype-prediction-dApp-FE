@@ -9,12 +9,13 @@ export const tickersForAnswers = (
 ): MarketMetadata["categories"] => {
   let metadataCategories: MarketMetadata["categories"] = [];
 
-  if (answers.type === "scalar") {
-    metadataCategories = [
-      { name: "Long", ticker: "LNG" },
-      { name: "Short", ticker: "SRT" },
-    ];
-  } else if (answers.type === "yes/no") {
+  //  if (answers.type === "scalar") {
+  //   metadataCategories = [
+  //     { name: "Long", ticker: "LNG" },
+  //     { name: "Short", ticker: "SRT" },
+  //   ];
+  // } els
+  if (answers.type === "yes/no") {
     metadataCategories = [
       { name: "Yes", ticker: "YES" },
       { name: "No", ticker: "NO" },

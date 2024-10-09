@@ -23,9 +23,9 @@ export const AnswersInput = ({
     const newValue: Answers =
       type === "yes/no"
         ? { type: "yes/no", answers: ["Yes", "No"] }
-        : type === "categorical"
-          ? { type: "categorical", answers: ["", ""] }
-          : { type: "scalar", numberType: "number", answers: [0, 1] };
+        : { type: "categorical", answers: ["", ""] }
+
+          // : { type: "scalar", numberType: "number", answers: [0, 1] };
 
     onChange({ target: { name, value: newValue }, type: "change" });
   };
@@ -67,7 +67,7 @@ export const AnswersInput = ({
           Categorical
         </button>
 
-        <button
+        {/* <button
           type="button"
           className={`rounded-full px-6 py-3 text-sm transition-all active:scale-95 md:px-8 md:py-4 ${
             value?.type === "scalar"
@@ -81,7 +81,7 @@ export const AnswersInput = ({
           onClick={handleSelectType("scalar")}
         >
           Scalar
-        </button>
+        </button> */}
       </div>
 
       <div>
@@ -93,7 +93,7 @@ export const AnswersInput = ({
             onChange={handleChange}
           />
         )}
-        {value?.type === "scalar" && (
+        {/* {value?.type === "scalar" && (
           <div className="mb-3">
             <ScalarAnswersInput
               name="scalar-answers"
@@ -102,7 +102,7 @@ export const AnswersInput = ({
               onChange={handleChange}
             />
           </div>
-        )}
+        )} */}
         {value?.type === "yes/no" && (
           <CategoricalAnswersInput
             name="categorical-answers"

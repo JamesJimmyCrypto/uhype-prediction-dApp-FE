@@ -1,4 +1,4 @@
-import { FullMarketFragment } from "@zeitgeistpm/indexer";
+import { Market } from "@/src/types";
 import { ScalarRangeType } from "@zeitgeistpm/sdk";
 import { TwitterBird } from "components/markets/TradeResult";
 import {
@@ -12,17 +12,17 @@ export const ReportResult = ({
   market,
   outcome,
 }: {
-  market: FullMarketFragment;
+  market: Market;
   outcome:
     | MarketCategoricalOutcome
     | (MarketScalarOutcome & { type: ScalarRangeType });
 }) => {
   const outcomeName = displayOutcome(market, outcome);
 
-  const marketUrl = `https://app.zeitgeist.pm/markets/${market.marketId}`;
+  const marketUrl = `https://app.zeitgeist.pm/markets/${market.marketKey.toString()}`;
 
   const twitterBaseUrl = "https://twitter.com/intent/tweet?text=";
-  const tweetUrl = `${twitterBaseUrl}I just reported the outcome of %40ZeitgeistPM market: "${market.question}" to be ${outcomeName}%0A%0ACheck out the market here%3A%0A&url=${marketUrl}`;
+  const tweetUrl = `${twitterBaseUrl}I just reported the outcome of market: "${market.title}" to be ${outcomeName}%0A%0ACheck out the market here%3A%0A&url=${marketUrl}`;
 
   return (
     <div className="flex flex-col items-center gap-3">

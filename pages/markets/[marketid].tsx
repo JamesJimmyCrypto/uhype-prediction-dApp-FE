@@ -33,7 +33,6 @@ import ReferendumSummary from "components/ui/ReferendumSummary";
 import Skeleton from "components/ui/Skeleton";
 import { ChartSeries } from "components/ui/TimeSeriesChart";
 import Toggle from "components/ui/Toggle";
-import Decimal from "decimal.js";
 import { GraphQLClient } from "graphql-request";
 import { PromotedMarket } from "lib/cms/get-promoted-markets";
 import {
@@ -82,6 +81,9 @@ import { AiOutlineFileAdd } from "react-icons/ai";
 import { BsFillChatSquareTextFill } from "react-icons/bs";
 import { CgLivePhoto } from "react-icons/cg";
 import { FaChevronUp, FaTwitch } from "react-icons/fa";
+import { useMarketProgram } from "@/src/hooks";
+import { PublicKey } from "@solana/web3.js";
+import type { Market } from "@/src/types";
 
 const TradeForm = dynamic(() => import("../../components/trade-form"), {
   ssr: false,
@@ -219,7 +221,6 @@ const Market: NextPage<MarketPageProps> = ({
     makerAccountId_eq: pubKey,
   });
 
-  const referendumChain = cmsMetadata?.referendumRef?.chain;
   const referendumIndex = cmsMetadata?.referendumRef?.referendumIndex;
 
   const tradeItem = useTradeItem();
@@ -247,14 +248,12 @@ const Market: NextPage<MarketPageProps> = ({
 
   const [poolDeployed, setPoolDeployed] = useState(false);
 
-  const { data: market, isLoading: marketIsLoading } = useMarket(
-    {
-      marketId,
-    },
-    {
-      refetchInterval: poolDeployed ? 1000 : false,
-    },
-  );
+  const { useGetMarketQuery } = useMarketProgram();
+  const {
+    data: market,
+    isLoading,
+    error,
+  } = useGetMarketQuery(new PublicKey(marketid!));
 
   const { data: disputes } = useMarketDisputes(marketId);
 
@@ -282,13 +281,11 @@ const Market: NextPage<MarketPageProps> = ({
 
   const token = metadata?.symbol;
 
-  const isOracle = market?.oracle === pubKey;
-  const canReport =
-    marketStage?.type === "OpenReportingPeriod" ||
-    (marketStage?.type === "OracleReportingPeriod" && isOracle);
+  // const isOracle = market?.oracle === pubKey;
+  const canReport = true;
 
   const lastDispute = useMemo(() => {
-    if (disputes && market?.status === "Disputed") {
+    if (disputes) {
       const lastDispute = disputes?.[disputes.length - 1];
       const at = lastDispute?.at!;
       const by = lastDispute?.by!;
@@ -300,24 +297,24 @@ const Market: NextPage<MarketPageProps> = ({
 
       return marketDispute;
     }
-  }, [market?.report, disputes]);
+  }, [market, disputes]);
 
   const report = useMemo(() => {
-    if (
-      market?.report &&
-      market?.status === "Reported" &&
-      isValidMarketReport(market.report)
-    ) {
-      const report: MarketReport = {
-        at: market.report.at,
-        by: market.report.by,
-        outcome: isMarketCategoricalOutcome(market.report.outcome)
-          ? { categorical: market.report.outcome.categorical }
-          : { scalar: market.report.outcome.scalar?.toString() },
-      };
-      return report;
-    }
-  }, [market?.report, disputes]);
+    // if (
+    //   market?.report &&
+    //   market?.status === "Reported" &&
+    //   isValidMarketReport(market.report)
+    // ) {
+    //   const report: MarketReport = {
+    //     at: market.report.at,
+    //     by: market.report.by,
+    //     outcome: isMarketCategoricalOutcome(market.report.outcome)
+    //       ? { categorical: market.report.outcome.categorical }
+    //       : { scalar: market.report.outcome.scalar?.toString() },
+    //   };
+    //   return report;
+    // }
+  }, [market, disputes]);
 
   const hasChart = Boolean(
     chartSeries && (indexedMarket?.pool || indexedMarket.neoPool),
@@ -348,7 +345,7 @@ const Market: NextPage<MarketPageProps> = ({
   const hasLiveTwitchStream =
     hasLiveTwitchStreamClient || hasLiveTwitchStreamServer;
 
-  const marketHasPool = market?.neoPool != null;
+  const marketHasPool = true;
 
   const poolCreationDate = new Date(
     indexedMarket.pool?.createdAt ?? indexedMarket.neoPool?.createdAt ?? "",
@@ -362,20 +359,20 @@ const Market: NextPage<MarketPageProps> = ({
 
           <MarketHeader
             market={indexedMarket}
-            resolvedOutcome={market?.resolvedOutcome ?? undefined}
-            report={report}
+            resolvedOutcome={undefined}
+            // report={report}
             disputes={lastDispute}
             token={token}
             marketStage={marketStage ?? undefined}
             promotionData={promotionData}
-            rejectReason={market?.rejectReason ?? undefined}
+            rejectReason={undefined}
           />
 
-          {market?.rejectReason && market.rejectReason.length > 0 && (
-            <div className="mt-[10px] text-ztg-14-150">
-              Market rejected: {market.rejectReason}
-            </div>
-          )}
+          {/* // {market?.rejectReason && market.rejectReason.length > 0 && (
+          //   <div className="mt-[10px] text-ztg-14-150">
+          //     Market rejected: {market.rejectReason}
+          //   </div>
+          // )} */}
 
           <div className="mt-4">
             <Tab.Group defaultIndex={hasLiveTwitchStream ? 1 : 0}>
@@ -488,7 +485,7 @@ const Market: NextPage<MarketPageProps> = ({
                 />
               </div>
             )}
-          {marketIsLoading === false && marketHasPool === false && (
+          {isLoading === false && (
             <div className="flex h-ztg-22 items-center rounded-ztg-5 bg-vermilion-light p-ztg-20 text-vermilion">
               <div className="h-ztg-20 w-ztg-20">
                 <AlertTriangle size={20} />
@@ -503,7 +500,7 @@ const Market: NextPage<MarketPageProps> = ({
             </div>
           )}
           <div className="my-8">
-            {indexedMarket?.marketType?.scalar !== null && (
+            {/* {indexedMarket?.marketType?.scalar !== null && (
               <div className="mx-auto mb-8 max-w-[800px]">
                 {marketIsLoading ||
                 (!spotPrices?.get(1) && indexedMarket.status !== "Proposed") ||
@@ -525,7 +522,7 @@ const Market: NextPage<MarketPageProps> = ({
                   />
                 )}
               </div>
-            )}
+            )} */}
             <MarketAssetDetails
               marketId={Number(marketid)}
               categories={indexedMarket.categories}
@@ -550,12 +547,12 @@ const Market: NextPage<MarketPageProps> = ({
             </div>
           )}
 
-          {marketHasPool === false && (
+          {/* {marketHasPool === false && (
             <PoolDeployer
               marketId={marketId}
               onPoolDeployed={handlePoolDeployed}
             />
-          )}
+          )} */}
 
           {market && (marketHasPool || poolDeployed) && (
             <div className="my-12">
@@ -582,7 +579,7 @@ const Market: NextPage<MarketPageProps> = ({
                 leaveTo="transform opacity-0 "
                 show={showLiquidity && Boolean(marketHasPool || poolDeployed)}
               >
-                <MarketLiquiditySection poll={poolDeployed} market={market} />
+                {/* <MarketLiquiditySection poll={poolDeployed} market={market} /> */}
               </Transition>
             </div>
           )}
@@ -597,7 +594,7 @@ const Market: NextPage<MarketPageProps> = ({
                   "linear-gradient(180deg, rgba(49, 125, 194, 0.2) 0%, rgba(225, 210, 241, 0.2) 100%)",
               }}
             >
-              {market?.status === MarketStatus.Active ? (
+              {/* {market?.status === MarketStatus.Active ? (
                 <>
                   <Amm2TradeForm marketId={marketId} />
                 </>
@@ -620,29 +617,28 @@ const Market: NextPage<MarketPageProps> = ({
               <div className="mb-12 animate-pop-in opacity-0">
                 <ReferendumSummary referendumIndex={referendumIndex} />
               </div>
-            )}
-            <SimilarMarketsSection market={market ?? undefined} />
+            )} */}
+              <SimilarMarketsSection market={market ?? undefined} />
+            </div>
           </div>
         </div>
+        {/* {market && <MobileContextButtons market={market} />} */}
       </div>
-      {market && <MobileContextButtons market={market} />}
     </div>
   );
 };
 
-const MobileContextButtons = ({ market }: { market: FullMarketFragment }) => {
+const MobileContextButtons = ({ market }: { market: Market }) => {
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString();
   const { data: marketStage } = useMarketStage(market);
-  const isOracle = market?.oracle === pubKey;
-  const canReport =
-    marketStage?.type === "OpenReportingPeriod" ||
-    (marketStage?.type === "OracleReportingPeriod" && isOracle);
+  // const isOracle = market?.oracle === pubKey;
+  const canReport = true;
 
-  const outcomeAssets = market.outcomeAssets.map(
-    (assetIdString) =>
-      parseAssetId(assetIdString).unwrap() as MarketOutcomeAssetId,
-  );
+  // const outcomeAssets = market.outcomeAssets.map(
+  //   (assetIdString) =>
+  //     parseAssetId(assetIdString).unwrap() as MarketOutcomeAssetId,
+  // );
 
   const { data: tradeItem, set: setTradeItem } = useTradeItem();
 
@@ -671,7 +667,7 @@ const MobileContextButtons = ({ market }: { market: FullMarketFragment }) => {
           open ? "translate-y-0" : "translate-y-full"
         }`}
       >
-        {market?.status === MarketStatus.Active ? (
+        {/* {market?.status === MarketStatus.Active ? (
           <Amm2TradeForm
             marketId={market.marketId}
             showTabs={false}
@@ -689,10 +685,10 @@ const MobileContextButtons = ({ market }: { market: FullMarketFragment }) => {
           </>
         ) : (
           <></>
-        )}
+        )} */}
       </div>
 
-      {(market?.status === MarketStatus.Active ||
+      {/* {(market?.status === MarketStatus.Active ||
         market?.status === MarketStatus.Closed ||
         market?.status === MarketStatus.Reported) && (
         <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
@@ -775,7 +771,7 @@ const MobileContextButtons = ({ market }: { market: FullMarketFragment }) => {
             )}
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 };
@@ -847,7 +843,7 @@ const DisputeForm = ({ market }: { market: FullMarketFragment }) => {
   );
 };
 
-const ReportForm = ({ market }: { market: FullMarketFragment }) => {
+const ReportForm = ({ market }: { market: Market }) => {
   const [reportedOutcome, setReportedOutcome] = useState<
     | MarketCategoricalOutcome
     | (MarketScalarOutcome & { type: ScalarRangeType })
@@ -860,10 +856,10 @@ const ReportForm = ({ market }: { market: FullMarketFragment }) => {
   const { data: stage } = useMarketStage(market);
   const constants = useChainConstants();
 
-  const connectedWalletIsOracle = market.oracle === pubKey;
+  // const connectedWalletIsOracle = market.oracle === pubKey;
 
-  const userCanReport =
-    stage?.type === "OpenReportingPeriod" || connectedWalletIsOracle;
+  const userCanReport = false;
+  // stage?.type === "OpenReportingPeriod" || connectedWalletIsOracle;
 
   return !userCanReport ? (
     <></>
@@ -882,7 +878,7 @@ const ReportForm = ({ market }: { market: FullMarketFragment }) => {
             Market has closed and the outcome can now be reported.
           </p>
 
-          {stage?.type === "OpenReportingPeriod" && (
+          {/* {stage?.type === "OpenReportingPeriod" && (
             <>
               <p className="-mt-3 mb-6 text-sm italic text-gray-500">
                 Oracle failed to report. Reporting is now open to all.
@@ -892,19 +888,19 @@ const ReportForm = ({ market }: { market: FullMarketFragment }) => {
                 {constants?.tokenSymbol}
               </p>
             </>
-          )}
+          )} */}
 
           <div className="mb-4">
-            {market.marketType?.scalar ? (
+            {/* {market.marketType?.scalar ? (
               <ScalarReportBox market={market} onReport={setReportedOutcome} />
-            ) : (
-              <>
-                <CategoricalReportBox
+            ) : ( */}
+            <>
+              {/* <CategoricalReportBox
                   market={market}
                   onReport={setReportedOutcome}
-                />
-              </>
-            )}
+                /> */}
+            </>
+            {/* )} */}
           </div>
         </>
       )}

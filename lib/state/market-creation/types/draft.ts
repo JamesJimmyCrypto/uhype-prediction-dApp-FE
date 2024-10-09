@@ -64,22 +64,22 @@ export const empty = (): MarketDraftState => ({
     },
     timeZone: moment.tz.guess(),
     oracle: "",
-    gracePeriod: gracePeriodOptions[0],
-    reportingPeriod: reportingPeriodOptions[1],
-    disputePeriod: disputePeriodOptions[0],
-    moderation: "Permissionless",
+    // gracePeriod: gracePeriodOptions[0],
+    // reportingPeriod: reportingPeriodOptions[1],
+    // disputePeriod: disputePeriodOptions[0],
+    // moderation: "Permissionless",
     creatorFee: {
       type: "preset",
       value: 0,
     },
-    liquidity: {
-      deploy: true,
-      rows: [],
-      swapFee: {
-        type: "preset",
-        value: 1,
-      },
-    },
+    // liquidity: {
+    //   deploy: true,
+    //   rows: [],
+    //   swapFee: {
+    //     type: "preset",
+    //     value: 1,
+    //   },
+    // },
   },
   touchState: {},
   stepReachState: {

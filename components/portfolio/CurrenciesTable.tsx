@@ -154,13 +154,7 @@ const CurrenciesTable = ({ address }: { address: string }) => {
           asset: (
             <ImageAndText
               name={balance.symbol}
-              imagePath={lookupAssetImagePath(
-                balance.foreignAssetId != null
-                  ? {
-                      ForeignAsset: balance.foreignAssetId,
-                    }
-                  : null,
-              )}
+              imagePath={lookupAssetImagePath()}
             />
           ),
           balance: amount.div(ZTG).toFixed(3),

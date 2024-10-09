@@ -9,7 +9,6 @@ import Decimal from "decimal.js";
 import { ZTG } from "lib/constants";
 import { ChainName } from "lib/constants/chains";
 import { useExtrinsicFee } from "lib/hooks/queries/useExtrinsicFee";
-import { useCrossChainExtrinsic } from "lib/hooks/useCrossChainExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useChain } from "lib/state/cross-chain";
 import { useNotifications } from "lib/state/notifications";
@@ -135,41 +134,41 @@ const WithdrawModal = ({
 
   const maxSendAmount = balance.minus(0);
 
-  const { send: transfer, isLoading } = useCrossChainExtrinsic(
-    () => {
-      if (isRpcSdk(sdk) && pubKey) {
-        const tx = createWithdrawExtrinsic(
-          sdk.api,
-          amountDecimal.toFixed(0),
-          pubKey,
-          foreignAssetId,
-        );
-        return tx;
-      }
-    },
-    "Solana",
-    toChain,
-    {
-      onSourceSuccess: () => {
-        notificationStore.pushNotification(
-          `Moving ${tokenSymbol} to ${toChain}`,
-          {
-            type: "Info",
-            autoRemove: true,
-          },
-        );
-      },
-      onDestinationSuccess: () => {
-        notificationStore.pushNotification(
-          `Successfully moved ${tokenSymbol} to ${toChain}`,
-          {
-            type: "Success",
-          },
-        );
-        onSuccess();
-      },
-    },
-  );
+  // const { send: transfer, isLoading } = useCrossChainExtrinsic(
+  //   () => {
+  //     if (isRpcSdk(sdk) && pubKey) {
+  //       const tx = createWithdrawExtrinsic(
+  //         sdk.api,
+  //         amountDecimal.toFixed(0),
+  //         pubKey,
+  //         foreignAssetId,
+  //       );
+  //       return tx;
+  //     }
+  //   },
+  //   "Solana",
+  //   toChain,
+  //   {
+  //     onSourceSuccess: () => {
+  //       notificationStore.pushNotification(
+  //         `Moving ${tokenSymbol} to ${toChain}`,
+  //         {
+  //           type: "Info",
+  //           autoRemove: true,
+  //         },
+  //       );
+  //     },
+  //     onDestinationSuccess: () => {
+  //       notificationStore.pushNotification(
+  //         `Successfully moved ${tokenSymbol} to ${toChain}`,
+  //         {
+  //           type: "Success",
+  //         },
+  //       );
+  //       onSuccess();
+  //     },
+  //   },
+  // );
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
@@ -198,7 +197,7 @@ const WithdrawModal = ({
   }, [watch, maxSendAmount]);
 
   const onSubmit = () => {
-    transfer();
+    // transfer();
   };
 
   return (
@@ -278,13 +277,13 @@ const WithdrawModal = ({
             {toChain} fee:
             <span className="ml-1 text-black">{0}</span>
           </div>
-          <FormTransactionButton
+          {/* <FormTransactionButton
             loading={isLoading}
             className="w-full max-w-[250px]"
             disabled={formState.isValid === false || isLoading}
           >
             Confirm Withdraw
-          </FormTransactionButton>
+          </FormTransactionButton> */}
         </form>
       </div>
     </Dialog.Panel>

@@ -37,65 +37,7 @@ interface Chain {
     parachainId: number,
   ) => SubmittableExtrinsic<"promise", ISubmittableResult>;
 }
-const BATTERY_STATION_CHAINS: Chain[] = [
-  {
-    name: "Solana",
-    isRelayChain: true,
-    withdrawFee: "0.01 ROC", // this is made up
-    depositFee: new Decimal(0.01).mul(ZTG), // this is made up
-    endpoints: ["wss://rococo-rpc.polkadot.io"],
-    fetchCurrencies: async (api, address) => {
-      const { data } = await api.query.system.account(address);
-      const free = calculateFreeBalance(
-        data.free.toString(),
-        //@ts-ignore
-        data.miscFrozen?.toString() ?? data.frozen?.toString(),
-        data.feeFrozen?.toString() ?? "0",
-      );
 
-      return [
-        {
-          symbol: "SOL",
-          balance: free,
-          chain: "Solana",
-          foreignAssetId: 1,
-          sourceChain: "Solana",
-          existentialDeposit: new Decimal(
-            api.consts.balances.existentialDeposit.toString(),
-          ),
-          decimals: 12,
-        },
-      ];
-    },
-    createDepositExtrinsic: (api, address, amount, parachainId) => {
-      const accountId = api.createType("AccountId32", address).toHex();
-
-      const destination = {
-        parents: 0,
-        interior: { X1: { Parachain: parachainId } },
-      };
-      const account = {
-        parents: 0,
-        interior: { X1: { AccountId32: { id: accountId } } },
-      };
-      const asset = [
-        {
-          id: { Concrete: { parents: 0, interior: "Here" } },
-          fun: { Fungible: amount },
-        },
-      ];
-
-      const tx = api.tx.xcmPallet.reserveTransferAssets(
-        { V3: destination },
-        { V3: account },
-        { V3: asset },
-        0,
-      );
-
-      return tx;
-    },
-  },
-];
 const PROD_CHAINS: Chain[] = [
   {
     name: "Solana",
@@ -159,9 +101,7 @@ const PROD_CHAINS: Chain[] = [
 ];
 
 export const CHAINS: Chain[] =
-  process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
-    ? PROD_CHAINS
-    : BATTERY_STATION_CHAINS;
+  PROD_CHAINS
 
 
 export const CHAIN_IMAGES: Record<ChainName, string> = {

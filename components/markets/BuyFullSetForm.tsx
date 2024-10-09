@@ -108,7 +108,7 @@ const BuyFullSetForm = ({
 
   useGlobalKeyPress("Enter", handleSignTransaction);
 
-  const imagePath = lookupAssetImagePath(baseAssetId);
+  const imagePath = lookupAssetImagePath("SOL");
 
   return (
     <div className="w-full">

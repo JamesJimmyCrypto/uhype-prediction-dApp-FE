@@ -1,12 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import { useQuery } from "@tanstack/react-query";
-import { PollingTimeout, poll } from "@zeitgeistpm/avatara-util";
-import {
-  IOForeignAssetId,
-  IOZtgAssetId,
-  ZTG,
-  isFullSdk,
-} from "@zeitgeistpm/sdk";
+import { IOZtgAssetId, ZTG } from "@zeitgeistpm/sdk";
 import { StorageError } from "@zeitgeistpm/web3.storage";
 import Modal from "components/ui/Modal";
 import TransactionButton from "components/ui/TransactionButton";
@@ -16,13 +10,10 @@ import {
   supportedCurrencies,
 } from "lib/constants/supported-currencies";
 import { checkMarketExists } from "lib/gql/markets";
-import { useBalance } from "lib/hooks/queries/useBalance";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
 import { useFeePayingAsset } from "lib/hooks/queries/useFeePayingAsset";
-import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { MarketDraftEditor } from "lib/state/market-creation/editor";
 import { NotificationType, useNotifications } from "lib/state/notifications";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { assetsAreEqual } from "lib/util/assets-are-equal";
 import { formatNumberCompact } from "lib/util/format-compact";
 import { isArray } from "lodash-es";
@@ -31,8 +22,10 @@ import { useState } from "react";
 import { LuFileWarning } from "react-icons/lu";
 import { RiSendPlaneLine } from "react-icons/ri";
 import { CreateMarketParams } from "lib/state/market-creation/types/form";
-import { Transaction } from "@solana/web3.js";
-import { BACKEND_URL } from "@/lib/constants";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useMarketProgram } from "@/src/hooks";
+import { getExplorerUrl } from "@/lib/util";
+import { BN } from "@coral-xyz/anchor";
 
 export type PublishingProps = {
   editor: MarketDraftEditor;
@@ -40,10 +33,9 @@ export type PublishingProps = {
 };
 
 export const Publishing = ({ editor, creationParams }: PublishingProps) => {
-  const [sdk] = useSdkv2();
+  const { createMarket } = useMarketProgram();
   const { publicKey, signTransaction, sendTransaction } = useWallet();
   const { connection } = useConnection();
-  console.log({ connection });
   const pubKey = publicKey?.toString() ?? "";
   const router = useRouter();
   const notifications = useNotifications();
@@ -51,23 +43,15 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
   const [totalCostIsOpen, setTotalCostIsOpen] = useState(false);
   const constants = useChainConstants();
 
-  const feesEnabled = !(
-    !sdk ||
-    !creationParams ||
-    !editor.isValid ||
-    !publicKey
-  );
+  const feesEnabled = !(!creationParams || !editor.isValid || !publicKey);
 
   const { data: baseFee } = useQuery(
     [creationParams?.metadata, publicKey],
     async () => {
-      if (!feesEnabled) {
-        return new Decimal(0);
-      }
+      return new Decimal(0);
       // const paymentInfo =
       //   await sdk.model.markets.create.calculateFees(creationParams);
       // return new Decimal(paymentInfo.partialFee.toString() ?? 0).div(ZTG);
-      return new Decimal(0).div(ZTG);
     },
     {
       initialData: new Decimal(0),
@@ -83,19 +67,12 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
     (a) => a.name === editor.form.currency,
   );
 
-  const { data: ztgBalance } = useBalance(pubKey, {
-    Ztg: null,
-  });
+  let hasEnoughLiquidty = true;
 
-  const { data: foreignAssetBalance } = useBalance(
-    pubKey,
-    baseCurrency?.assetId,
-  );
-
-  const bondCost =
-    editor.form.moderation === "Permissionless"
-      ? constants?.markets.validityBond
-      : constants?.markets.advisoryBond;
+  const bondCost = 0;
+  // editor.form.moderation === "Permissionless"
+  //   ? constants?.markets.validityBond
+  //   : constants?.markets.advisoryBond;
 
   const oracleBond = constants?.markets.oracleBond;
 
@@ -103,16 +80,16 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
     ? feeDetails?.amount
     : new Decimal(0);
 
-  const ztgCost = new Decimal(bondCost ?? 0)
-    .plus(oracleBond ?? 0)
-    .plus(
-      editor.form.moderation === "Permissionless" &&
-        editor.form.liquidity?.deploy &&
-        editor.form.currency === "ZTG"
-        ? new Decimal(editor.form.liquidity.amount || 0).toNumber()
-        : 0,
-    )
-    .plus(ztgTransactionFee ?? 0);
+  const ztgCost = new Decimal(bondCost ?? 0);
+  // .plus(oracleBond ?? 0)
+  // .plus(
+  //   editor.form.moderation === "Permissionless" &&
+  //     editor.form.liquidity?.deploy &&
+  //     editor.form.currency === "ZTG"
+  //     ? new Decimal(editor.form.liquidity.amount || 0).toNumber()
+  //     : 0,
+  // )
+  // .plus(ztgTransactionFee ?? 0);
 
   const baseCurrencyMetadata =
     editor.form.currency && getMetadataForCurrency(editor.form.currency);
@@ -124,85 +101,64 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
     ? feeDetails?.amount
     : new Decimal(0);
 
-  const foreignCurrencyCost =
-    editor.form.liquidity?.deploy && editor.form.currency !== "ZTG"
-      ? new Decimal(editor.form.liquidity.amount || 0)
-          .mul(2)
-          .plus(baseAssetTransactionFee ?? 0)
-      : null;
+  const foreignCurrencyCost = null;
+  //    editor.form.liquidity?.deploy && editor.form.currency !== "ZTG"
+  // ? new Decimal(editor.form.liquidity.amount || 0)
+  // .mul(2)
+  // .plus(baseAssetTransactionFee ?? 0)
 
-  const ztgBalanceDelta = ztgBalance?.div(ZTG).minus(ztgCost);
-  const foreignAssetBalanceDelta =
-    foreignCurrencyCost &&
-    foreignAssetBalance?.div(ZTG).minus(foreignCurrencyCost);
+  const foreignAssetBalanceDelta = foreignCurrencyCost;
 
-  const hasEnoughLiquidty = ztgBalanceDelta?.gte(0);
-
-  const createMarket = async () => {
+  const handleCreateMarket = async () => {
     if (!publicKey) {
       alert("Please connect your wallet!");
       return;
     }
-    const response = await fetch(`${BACKEND_URL}/market/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        eventName: "Will SOL reach ATH this year?",
-        outcomeOptions: ["Yes", "No"],
-        userPublicKey: publicKey.toString(),
-      }),
-    });
-
-    const { transaction: transactionBase64 } = await response.json();
-    const transaction = Transaction.from(
-      Buffer.from(transactionBase64, "base64"),
-    );
-
-    console.log({ transaction });
-
     try {
-      // Ensure signTransaction is available
-      if (!signTransaction) {
-        throw new Error("signTransaction function is not available");
-      }
+      // Create the market using the hook's createMarket mutation
+      const { signature } = await createMarket.mutateAsync({
+        title: "Will",
+        description: "ok",
+        coverUrl:
+          "https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png",
+        answers: ["Yes", "No"],
+        serviceFeePercentage: new BN(1),
+        creatorFeePercentage: new BN(2),
+      });
 
-      const signedTransaction = await signTransaction(transaction);
-      console.log("Signed transaction:", signedTransaction);
+      const explorerUrl = getExplorerUrl(signature, "devnet"); // Replace "devnet" with "mainnet-beta" for production
 
-      // Ensure connection is available
-      if (!connection) {
-        throw new Error("Connection is not available");
-      }
-
-      // Debugging connection and endpoint
-      console.log("Connection object:", connection);
-      console.log("Endpoint:", connection.rpcEndpoint);
-
-      // Send the signed transaction
-      const signature = await sendTransaction(signedTransaction, connection);
-      console.log("Transaction signature:", signature);
-
-      // Confirm the transaction
-      const confirmation = await connection.confirmTransaction(
-        signature,
-        "confirmed",
+      // Notify the user of success with a clickable transaction link
+      notifications.pushNotification(
+        <>
+          Market created successfully! View the transaction on{" "}
+          <a
+            href={explorerUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "#007bff",
+              fontWeight: "bold",
+              textDecoration: "underline",
+            }}
+          >
+            Explorer
+          </a>
+          .
+        </>,
+        {
+          autoRemove: true,
+          type: "Success",
+          lifetime: 15,
+        },
       );
-      console.log("Transaction confirmation:", confirmation);
-
-      if (confirmation.value.err) {
-        throw new Error("Transaction failed");
-      }
-
-      // Notify the user of success
-      notifications.pushNotification("Transaction successful!", {
+    } catch (error) {
+      console.error("Error creating market:", error);
+      notifications.pushNotification("Failed to create market.", {
         autoRemove: true,
-        type: "Success",
+        type: "Error",
         lifetime: 15,
       });
-    } catch (error) {
-      console.error("Error signing transaction:", error);
     }
   };
 
@@ -217,7 +173,7 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
           type: "Info",
           lifetime: 60,
         });
-        createMarket();
+        handleCreateMarket();
         // const result = await sdk.model.markets.create(
         //   creationParams,
         //   IOForeignAssetId.is(feeDetails?.assetId)
@@ -231,7 +187,7 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
         // editor.published(marketId);
 
         notifications.pushNotification(
-          "Transaction successful! Awaiting indexer.",
+          "Transaction is being processed! Thank you for your patience",
           {
             autoRemove: true,
             type: "Info",
@@ -319,14 +275,14 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
                   </div>
                 </TransactionButton>
                 <div className="absolute -bottom-8 left-[50%] translate-x-[-50%]">
-                  <div
+                  {/* <div
                     className={`w-40 cursor-pointer text-center text-sm font-semibold underline ${
                       hasEnoughLiquidty ? "text-ztg-blue" : "text-vermilion"
                     }`}
                     onClick={() => setTotalCostIsOpen(true)}
                   >
                     View Cost Breakdown
-                  </div>
+                  </div> */}
                   <Modal
                     open={totalCostIsOpen}
                     onClose={() => setTotalCostIsOpen(false)}
@@ -334,7 +290,7 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
                     <Dialog.Panel className="rounded-md bg-white p-8">
                       <h2 className="mb-4 text-lg">Cost Breakdown</h2>
                       <div className="mb-4">
-                        <div className="flex-1">
+                        {/* <div className="flex-1">
                           <h3 className="text-base font-normal text-black">
                             {editor.form.moderation} Bond
                           </h3>
@@ -344,9 +300,9 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
                                 ? "Returned if the market isn't deleted by the committee."
                                 : "Returned if the market is approved or ends before being approved by the committee."}
                             </h4>
-                            <div className="flex self-end ">{bondCost} ZTG</div>
+                            <div className="flex self-end ">{bondCost} DHP</div>
                           </div>
-                        </div>
+                        </div> */}
                       </div>
 
                       <div className="mb-4 flex">
@@ -364,7 +320,7 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
                         </div>
                       </div>
 
-                      {editor.form.moderation === "Permissionless" &&
+                      {/* {editor.form.moderation === "Permissionless" &&
                         editor.form.liquidity?.deploy && (
                           <div className="mb-4 mt-4 flex">
                             <div className="flex-1">
@@ -385,7 +341,7 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
                               </div>
                             </div>
                           </div>
-                        )}
+                        )} */}
 
                       <div className="flex">
                         <div className="flex-1">
@@ -425,8 +381,7 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
                                   <div
                                     className={`text-${baseCurrencyMetadata?.twColor}`}
                                   >
-                                    {foreignCurrencyCost.toNumber()}{" "}
-                                    {editor.form.currency}
+                                    {0} {editor.form.currency}
                                   </div>
                                 </>
                               )}
@@ -443,25 +398,16 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
                             <h4 className="flex-1 text-sm font-light text-gray-500">
                               Missing balance needed to create the market.
                             </h4>
-                            <div className="center gap-1 font-semibold">
-                              {ztgBalanceDelta &&
-                                ztgBalanceDelta.lessThan(0) && (
-                                  <div className="text-ztg-blue">
-                                    {ztgBalanceDelta.toFixed(1)} ZTG
-                                  </div>
-                                )}
-                            </div>
-                            {foreignCurrencyCost &&
-                              foreignAssetBalanceDelta?.lessThan(0) && (
-                                <>
-                                  <div
-                                    className={`text-${baseCurrencyMetadata?.twColor}`}
-                                  >
-                                    {foreignAssetBalanceDelta.toNumber()}{" "}
-                                    {editor.form.currency}
-                                  </div>
-                                </>
-                              )}
+                            <div className="center gap-1 font-semibold"></div>
+                            {foreignCurrencyCost && (
+                              <>
+                                <div
+                                  className={`text-${baseCurrencyMetadata?.twColor}`}
+                                >
+                                  {0} {editor.form.currency}
+                                </div>
+                              </>
+                            )}
                           </div>
                         </div>
                       )}
@@ -482,10 +428,10 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
                     }
                   `}
                     onClick={() => {
-                      editor.goToSection(
-                        firstInvalidStep?.label ?? "Liquidity",
-                      );
-                      window.scrollTo(0, 0);
+                      // editor.goToSection(
+                      //   firstInvalidStep?.label ?? "Liquidity",
+                      // );
+                      // window.scrollTo(0, 0);
                     }}
                     type="button"
                   >

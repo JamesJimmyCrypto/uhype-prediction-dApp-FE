@@ -1,5 +1,5 @@
+import { Market } from "@/src/types";
 import { QueryClient, dehydrate } from "@tanstack/react-query";
-import { FullMarketFragment } from "@zeitgeistpm/indexer";
 import { ZeitgeistIpfs, create } from "@zeitgeistpm/sdk";
 import { BgBallGfx } from "components/front-page/BgBallFx";
 import GettingStartedSection from "components/front-page/GettingStartedSection";
@@ -145,8 +145,8 @@ export async function getStaticProps() {
 
 const IndexPage: NextPage<{
   news: CmsNews[];
-  featuredMarkets: FullMarketFragment[];
-  trendingMarkets: FullMarketFragment[];
+  featuredMarkets: Market[];
+  trendingMarkets: Market[];
   categoryPlaceholders: string[];
   newsImagePlaceholders: string[];
   topicImagePlaceholders: string[];
@@ -157,7 +157,7 @@ const IndexPage: NextPage<{
   cmsTopics: CmsTopicHeader[];
   topicsMarkets: {
     topic: CmsTopicHeader;
-    markets: { market: FullMarketFragment; stats: MarketStats }[];
+    markets: { market: Market; stats: MarketStats }[];
   }[];
 }> = ({
   news,
@@ -212,7 +212,7 @@ const IndexPage: NextPage<{
                 <div className="mb-4 flex w-full flex-col gap-3 md:flex-row">
                   {topic.markets.map(({ market, stats }) => (
                     <MarketCard
-                      key={market.marketId}
+                      key={market.marketKey.toNumber()}
                       market={market}
                       numParticipants={stats.participants}
                       liquidity={stats.liquidity}

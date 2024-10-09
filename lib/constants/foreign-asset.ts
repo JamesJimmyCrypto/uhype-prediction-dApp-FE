@@ -13,12 +13,9 @@ type ForeignAssetMetadata = {
   };
 };
 
-export const lookupAssetImagePath = (assetId?: AssetId | null) => {
-  if (IOForeignAssetId.is(assetId)) {
-    return FOREIGN_ASSET_METADATA[assetId.ForeignAsset]?.image;
-  } else {
-    return "/currencies/ztg.svg";
-  }
+export const lookupAssetImagePath = (assetId?: string) => {
+
+  return "/currencies/solana.png";
 };
 
 export const lookupAssetSymbol = (baseAssetId?: BaseAssetId) => {
@@ -69,17 +66,8 @@ const PROD_FOREIGN_ASSET_METADATA: ForeignAssetMetadata = {
 };
 
 export const FOREIGN_ASSET_METADATA: ForeignAssetMetadata =
-  process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
-    ? PROD_FOREIGN_ASSET_METADATA
-    : BATTERY_STATION_FOREIGN_ASSET_METADATA;
+  BATTERY_STATION_FOREIGN_ASSET_METADATA;
 
 export const findAssetImageForSymbol = (symbol?: string): string => {
-  const foreignAssetId = Object.keys(FOREIGN_ASSET_METADATA).find(
-    (foreignAssetId) =>
-      FOREIGN_ASSET_METADATA[foreignAssetId].tokenSymbol === symbol,
-  );
-  if (symbol === undefined || foreignAssetId === undefined) {
-    return lookupAssetImagePath();
-  }
-  return lookupAssetImagePath({ ForeignAsset: Number(foreignAssetId) });
+  return lookupAssetImagePath("SOL");
 };

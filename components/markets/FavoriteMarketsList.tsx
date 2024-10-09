@@ -17,7 +17,7 @@ const FavoriteMarketsList = ({ className = "" }: FavoriteMarketsListProps) => {
   const count = markets?.length ?? 0;
 
   const { data: stats } = useMarketsStats(
-    markets?.map((m) => m.marketId) ?? [],
+    markets?.map((m) => m.marketKey.toNumber()) ?? [],
   );
 
   return (
@@ -32,10 +32,12 @@ const FavoriteMarketsList = ({ className = "" }: FavoriteMarketsListProps) => {
       </div>
       <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3">
         {markets?.map((market) => {
-          const stat = stats?.find((s) => s.marketId === market.marketId);
+          const stat = stats?.find(
+            (s) => s.marketId === market.marketKey.toNumber(),
+          );
           return (
             <MarketCard
-              key={market.marketId}
+              key={market.marketKey.toNumber()}
               market={market}
               numParticipants={stat?.participants}
               liquidity={stat?.liquidity}

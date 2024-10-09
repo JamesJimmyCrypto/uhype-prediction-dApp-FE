@@ -1,10 +1,5 @@
 import { SubmittableExtrinsic } from "@polkadot/api/types";
 import { ISubmittableResult } from "@polkadot/types/types";
-import { isRpcSdk } from "@zeitgeistpm/sdk";
-import { ZTG } from "lib/constants";
-import { useChainConstants } from "lib/hooks/queries/useChainConstants";
-import { useExtrinsicFee } from "lib/hooks/queries/useExtrinsicFee";
-import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useUserLocation } from "lib/hooks/useUserLocation";
 import { useAccountModals } from "lib/state/account";
 import { useWallet } from "@solana/wallet-adapter-react";

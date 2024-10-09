@@ -19,9 +19,8 @@
 // import Skeleton from "components/ui/Skeleton";
 // import Modal from "components/ui/Modal";
 // import { AnimatePresence, motion } from "framer-motion";
-// import { ZTG } from "lib/constants";
-// import { useIdentity } from "lib/hooks/queries/useIdentity";
-// import { useZtgBalance } from "lib/hooks/queries/useZtgBalance";
+// import { DHP } from "lib/constants";
+// import { useDHPBalance } from "lib/hooks/queries/useDHPBalance";
 // import { useLocalStorage } from "lib/hooks/useLocalStorage";
 // import { useSdkv2 } from "lib/hooks/useSdkv2";
 // import { useNotifications } from "lib/state/notifications";
@@ -54,17 +53,17 @@
 
 //   return (
 //     <Inner
-//       ztgEncodedAddress={zeitAddress.unwrap().unwrap()}
+//       DHPEncodedAddress={zeitAddress.unwrap().unwrap()}
 //       address={router.query.address as string}
 //     />
 //   );
 // };
 
 // const Inner = ({
-//   ztgEncodedAddress,
+//   DHPEncodedAddress,
 //   address,
 // }: {
-//   ztgEncodedAddress: string;
+//   DHPEncodedAddress: string;
 //   address: string;
 // }) => {
 //   const [sdk] = useSdkv2();
@@ -88,7 +87,7 @@
 
 //   const isOwner =
 //     publicKey === address ||
-//     publicKey === ztgEncodedAddress;
+//     publicKey === DHPEncodedAddress;
 
 //   const inventory = useInventoryManagement(
 //     (isOwner ? (wallet.activeAccount as ExtSigner) || address : address) as any,
@@ -150,9 +149,9 @@
 //           inventory.reset();
 //         }}
 //       >
-//         <Dialog.Panel className="bg-white w-[624px] rounded-ztg-10 p-[15px]">
+//         <Dialog.Panel className="bg-white w-[624px] rounded-DHP-10 p-[15px]">
 //           <div>
-//             <div className="font-bold text-ztg-16-150 text-black">
+//             <div className="font-bold text-DHP-16-150 text-black">
 //               <div className="ml-[15px] mt-[15px]">You have pending items!</div>
 //             </div>
 //             <PendingItemsModal address={address} />
@@ -167,9 +166,9 @@
 //           inventory.reset();
 //         }}
 //       >
-//         <Dialog.Panel className="bg-white w-[624px] rounded-ztg-10 p-[15px]">
+//         <Dialog.Panel className="bg-white w-[624px] rounded-DHP-10 p-[15px]">
 //           <div>
-//             <div className="font-bold text-ztg-16-150 text-black">
+//             <div className="font-bold text-DHP-16-150 text-black">
 //               <div className="ml-[15px] mt-[15px]">Inventory</div>
 //             </div>
 //             <InventoryModal address={address} />
@@ -178,9 +177,9 @@
 //       </Modal>
 
 //       <Modal open={claimOpen} onClose={() => setClaimOpen(false)}>
-//         <Dialog.Panel className="bg-white w-[680px] rounded-ztg-10 p-[15px]">
+//         <Dialog.Panel className="bg-white w-[680px] rounded-DHP-10 p-[15px]">
 //           <div>
-//             <div className="font-bold text-ztg-16-150 text-black">
+//             <div className="font-bold text-DHP-16-150 text-black">
 //               <div className="ml-[15px] mt-[15px]">Claim your avatar!</div>
 //             </div>
 //             <ClaimModal
@@ -197,7 +196,7 @@
 //         </Dialog.Panel>
 //       </Modal>
 
-//       <div className={"pt-ztg-46 "}>
+//       <div className={"pt-DHP-46 "}>
 //         <AnimatePresence>
 //           {showKsmInfo && (
 //             <motion.div
@@ -224,9 +223,9 @@
 //             </motion.div>
 //           )}
 //         </AnimatePresence>
-//         <div className="mb-ztg-40">
+//         <div className="mb-DHP-40">
 //           <div className="flex flex-col sm:flex-row gap-6">
-//             <div className="relative rounded-full mr-ztg-40">
+//             <div className="relative rounded-full mr-DHP-40">
 //               <div
 //                 style={{ overflow: "hidden" }}
 //                 className={`w-fit rounded-full overflow-hidden border-2 border-black ${
@@ -244,7 +243,7 @@
 //                   }}
 //                   fallback={
 //                     isOwner ? (
-//                       <div className="flex w-full z-ztg-14 h-full items-center justify-center">
+//                       <div className="flex w-full z-DHP-14 h-full items-center justify-center">
 //                         <button
 //                           disabled={loading || mintingAvatar}
 //                           className={`rounded-3xl text-black py-2 px-4 cursor-pointer ${
@@ -268,7 +267,7 @@
 
 //               {isOwner && true && (
 //                 <div
-//                   className="absolute rounded-full cursor-pointer bottom-3 z-ztg-6 right-3 bg-gray-900/70 flex justify-center items-center w-8 h-8"
+//                   className="absolute rounded-full cursor-pointer bottom-3 z-DHP-6 right-3 bg-gray-900/70 flex justify-center items-center w-8 h-8"
 //                   onClick={onClickSettingsButton}
 //                 >
 //                   <BsGearFill className="w-5 h-5" color="white" />
@@ -277,7 +276,7 @@
 
 //               {isOwner && hasPendingItems && (
 //                 <div
-//                   className="absolute bg-yellow-500 bottom-12 -right-1 z-ztg-6 rounded-full cursor-pointer"
+//                   className="absolute bg-yellow-500 bottom-12 -right-1 z-DHP-6 rounded-full cursor-pointer"
 //                   onClick={onClickPendingItemNotification}
 //                 >
 //                   <div className="absolute top-0 left-0 h-full w-full bg-orange-1 rounded-full animate-ping"></div>
@@ -296,16 +295,16 @@
 //               </h5>
 
 //               <div className="flex">
-//                 <div className="flex flex-row py-ztg-15">
+//                 <div className="flex flex-row py-DHP-15">
 //                   {identity?.twitter?.length > 0 ? (
 //                     <a
-//                       className="flex items-center mr-ztg-40"
+//                       className="flex items-center mr-DHP-40"
 //                       href={`https://twitter.com/${identity.twitter}`}
 //                       target="_blank"
 //                       rel="noreferrer"
 //                     >
 //                       <TwitterIcon />
-//                       <span className="ml-ztg-10 ">{identity.twitter}</span>
+//                       <span className="ml-DHP-10 ">{identity.twitter}</span>
 //                     </a>
 //                   ) : (
 //                     <></>
@@ -313,7 +312,7 @@
 //                   {identity?.discord?.length > 0 ? (
 //                     <div className="flex items-center">
 //                       <DiscordIcon />
-//                       <span className="ml-ztg-10">{identity.discord}</span>
+//                       <span className="ml-DHP-10">{identity.discord}</span>
 //                     </div>
 //                   ) : (
 //                     <></>
@@ -324,7 +323,7 @@
 //           </div>
 //         </div>
 //         <h2 className="mb-10 mr-1">Achievements</h2>
-//         <p className="text-gray-600 mb-ztg-12">
+//         <p className="text-gray-600 mb-DHP-12">
 //           All badges earned for this account.{" "}
 //           <i>
 //             Includes all badges this user has earned even if the NFT has been
@@ -332,7 +331,7 @@
 //           </i>
 //         </p>
 //         <Link href={"/badges"}>
-//           <div className="text-singular underline text-pink-600 cursor-pointer mb-ztg-38">
+//           <div className="text-singular underline text-pink-600 cursor-pointer mb-DHP-38">
 //             See all available badges.
 //           </div>
 //         </Link>
@@ -360,10 +359,10 @@
 
 //   const [hasCrossed, setHasCrossed] = useState(false);
 
-//   const { data: activeBalance } = useZtgBalance(publicKey);
+//   const { data: activeBalance } = useDHPBalance(publicKey);
 
 //   const balance = activeBalance;
-//   const hasEnoughBalance = balance?.greaterThan((props.burnAmount + fee) / ZTG);
+//   const hasEnoughBalance = balance?.greaterThan((props.burnAmount + fee) / DHP);
 
 //   const tx = useMemo(() => {
 //     if (isRpcSdk(sdk)) {
@@ -423,7 +422,7 @@
 //             api: sdk.api,
 //             notifications: notificationStore,
 //             broadcastCallback: () => {
-//               notificationStore.pushNotification("Burning ZTG.", {
+//               notificationStore.pushNotification("Burning DHP.", {
 //                 type: "Info",
 //                 autoRemove: true,
 //               });
@@ -476,14 +475,14 @@
 //             {props.isTarotHolder
 //               ? "Claim your avatar to be able to earn badges on the zeitgeist platform. It will be minted to the address you are logged in with."
 //               : `To claim your right to mint an avatar you have to pay the ferryman
-//               due respect, burning ${props.burnAmount / ZTG} ZTG.`}
+//               due respect, burning ${props.burnAmount / DHP} DHP.`}
 //           </p>
 //           {!hasCrossed ? (
 //             <div className="flex items-center">
 //               <div className="text-red-800 text-xs flex-1">
 //                 The amount will be burned(slashed) and not paid to any address.
-//                 Make sure you have {props.burnAmount / ZTG} + (fee {fee / ZTG})
-//                 ZTG in your wallet.
+//                 Make sure you have {props.burnAmount / DHP} + (fee {fee / DHP})
+//                 DHP in your wallet.
 //               </div>
 //             </div>
 //           ) : (
@@ -518,7 +517,7 @@
 //                     <span className="text-md">
 //                       {hasCrossed
 //                         ? "Claim"
-//                         : `Burn ${props.burnAmount / ZTG} ZTG`}
+//                         : `Burn ${props.burnAmount / DHP} DHP`}
 //                     </span>
 //                     <div className="ml-2">
 //                       <AiFillFire />
@@ -529,10 +528,10 @@
 //             </div>
 //             {!props.isTarotHolder && (
 //               <div className="text-center text-xs">
-//                 <div className=" h-ztg-18 px-ztg-8 text-ztg-12-150 font-bold text-sky-600">
-//                   <div className="flex px-ztg-8 justify-between">
+//                 <div className=" h-DHP-18 px-DHP-8 text-DHP-12-150 font-bold text-sky-600">
+//                   <div className="flex px-DHP-8 justify-between">
 //                     <span>Exchange Fee: </span>
-//                     <span className="font-mono">{(fee / ZTG).toFixed(4)}</span>
+//                     <span className="font-mono">{(fee / DHP).toFixed(4)}</span>
 //                   </div>
 //                   {!hasEnoughBalance && (
 //                     <div className="mt-2">
@@ -585,10 +584,10 @@
 //               )}
 //             />
 //             <div className="w-full">
-//               <h4 className="mb-ztg-8  text-ztg-16-150 font-semibold">
+//               <h4 className="mb-DHP-8  text-DHP-16-150 font-semibold">
 //                 {item.metadata_properties.badge.value.name}
 //               </h4>
-//               <p className="text-ztg-14-110 mb-4">
+//               <p className="text-DHP-14-110 mb-4">
 //                 {item.metadata_properties.badge.value.description}
 //               </p>
 //             </div>
@@ -662,7 +661,7 @@
 
 //   return (
 //     <div>
-//       <div className="mb-ztg-24 max-h-[520px] overflow-scroll">
+//       <div className="mb-DHP-24 max-h-[520px] overflow-scroll">
 //         {inventory.loading ? (
 //           <div className="my-20 flex items-center justify-center">
 //             <Loader color="rgba(210,210,210, 0.3)" size={12} />
@@ -677,10 +676,10 @@
 //                 )}
 //               />
 //               <div className="w-full">
-//                 <h4 className="mb-ztg-12  text-ztg-18-150 font-semibold">
+//                 <h4 className="mb-DHP-12  text-DHP-18-150 font-semibold">
 //                   {item.metadata_properties.badge.value.name}
 //                 </h4>
-//                 <p className="text-ztg-14-110 mb-4">
+//                 <p className="text-DHP-14-110 mb-4">
 //                   {item.metadata_properties.badge.value.description}
 //                 </p>
 //                 <div className="float-right">

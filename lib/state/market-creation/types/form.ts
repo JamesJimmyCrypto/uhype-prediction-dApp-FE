@@ -42,20 +42,20 @@ import { Keypair, PublicKey, Connection, Transaction, Signer } from '@solana/web
  *  When we move to strict null checks we can do ```z.infer<ReturnType<typeof createMarketFormValidator>>```
  */
 export type MarketFormData = {
-  currency: CurrencyTag;
-  question: Question;
+  currency?: CurrencyTag;
+  question?: Question;
   tags: Tags;
   answers: Answers;
   timeZone: TimeZone;
   endDate: EndDate;
-  gracePeriod: PeriodOption;
-  reportingPeriod: PeriodOption;
-  disputePeriod: PeriodOption;
+  // gracePeriod: PeriodOption;
+  // reportingPeriod: PeriodOption;
+  // disputePeriod: PeriodOption;
   oracle: Oracle;
   creatorFee: Fee;
   description?: Description;
-  moderation: Moderation;
-  liquidity: Liquidity;
+  // moderation: Moderation;
+  // liquidity: Liquidity;
 };
 
 export type Category = { name: string; img?: string | undefined; ticker?: string | undefined; color?: string | undefined; }
@@ -65,7 +65,10 @@ export type CreateMarketParams = {
   oracle: z.infer<typeof IOOracle>; // Oracle to determine outcomes
   period: { Timestamp: [number, number]; }; // Event time window
   creatorFee: string; // Fee for the market creator
-  marketType: { Scalar?: [string, string]; Categorical?: number; }; // Scalar or categorical market type
+  marketType: {
+    // Scalar?: [string, string]; 
+    Categorical?: number;
+  }; // Scalar or categorical market type
   metadata: {
     description: string;
     question: string;
@@ -126,14 +129,14 @@ export const marketCreationFormKeys = union<keyof MarketFormData>().exhaust([
   "answers",
   "timeZone",
   "endDate",
-  "gracePeriod",
-  "reportingPeriod",
-  "disputePeriod",
+  // "gracePeriod",
+  // "reportingPeriod",
+  // "disputePeriod",
   "oracle",
   "description",
-  "moderation",
+  // "moderation",
   "creatorFee",
-  "liquidity",
+  // "liquidity",
 ]);
 
 /**
@@ -187,13 +190,14 @@ export const marketFormDataToExtrinsicParams = (
 ): CreateMarketParams => {
   console.log({ cur: form.currency })
   const baseCurrencyMetadata = getMetadataForCurrency(form.currency);
-  const timeline = timelineAsBlocks(form, chainTime).unwrap();
+  // const timeline = timelineAsBlocks(form, chainTime).unwrap();
 
   if (!baseCurrencyMetadata) {
     throw new Error("Invalid market creation form data");
   }
 
-  const hasPool = form.moderation === "Permissionless" && form.liquidity.deploy;
+  const hasPool = false;
+  // form.moderation === "Permissionless" && form.liquidity.deploy;
 
   const poolParams: WithPool | NoPool = hasPool
     ? {
@@ -208,7 +212,7 @@ export const marketFormDataToExtrinsicParams = (
     }
     : {
       scoringRule: "AmmCdaHybrid",
-      creationType: form.moderation,
+      // creationType: form.moderation,
     };
 
   let disputeMechanism: CreateMarketParams["disputeMechanism"] =
@@ -235,25 +239,23 @@ export const marketFormDataToExtrinsicParams = (
     // },
     creatorFee: new Decimal(10).pow(7).mul(form.creatorFee.value).toString(),
     marketType:
-      form.answers.type === "scalar"
-        ? {
-          Scalar: [
-            new Decimal(form.answers.answers[0]).mul(ZTG).toFixed(),
-            new Decimal(form.answers.answers[1]).mul(ZTG).toFixed(),
-          ],
-        }
-        : {
-          Categorical: form.answers.answers.length,
-        },
+    {
+      Categorical: form.answers.answers.length,
+    },
+    // form.answers.type === "scalar"
+    // ? {
+    //   Scalar: [
+    //     new Decimal(form.answers.answers[0]).mul(ZTG).toFixed(),
+    //     new Decimal(form.answers.answers[1]).mul(ZTG).toFixed(),
+    //   ],
+    // }
+    // :
     metadata: {
-      __meta: "markets",
       description: form.description ?? "",
       question: form.question,
-      slug: form.question,
+      // slug: form.question,
       tags: form.tags,
-      categories: tickersForAnswers(form.answers),
-      scalarType:
-        form.answers?.type === "scalar" ? form.answers.numberType : undefined,
+      // categories: tickersForAnswers(form.answers),
     },
     baseAsset: "TODO",
     ...poolParams,

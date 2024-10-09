@@ -19,7 +19,6 @@ import { BLOCK_TIME_SECONDS, ZTG } from "lib/constants";
 import { lookupAssetImagePath } from "lib/constants/foreign-asset";
 import { MarketPageIndexedData } from "lib/gql/markets";
 import { useMarketCaseId } from "lib/hooks/queries/court/useMarketCaseId";
-import { useIdentity } from "lib/hooks/queries/useIdentity";
 import {
   MarketEventHistory,
   useMarketEventHistory,
@@ -65,11 +64,11 @@ export const UserIdentity: FC<
     className?: string;
   }>
 > = ({ user, shorten, className }) => {
-  const { data: identity } = useIdentity(user ?? "");
-  const displayName =
-    identity && identity.displayName?.length !== 0
-      ? identity.displayName
-      : shortenAddress(user, shorten?.start ?? 10, shorten?.end ?? 10);
+  const displayName = shortenAddress(
+    user,
+    shorten?.start ?? 10,
+    shorten?.end ?? 10,
+  );
   return (
     <div className={`inline-flex items-center gap-1 ${className}`}>
       <Avatar address={user} copy={false} size={18} />
@@ -175,8 +174,8 @@ const MarketHistory: FC<
     oracleReported: boolean;
     categories: { name: string; color: string }[];
     marketType: {
-      scalar: string[];
-      categorical: string;
+      // scalar: string[];
+      categorical: number;
     };
     scalarType: ScalarRangeType;
   }>
@@ -197,11 +196,11 @@ const MarketHistory: FC<
     timeStyle: "short",
   }).format(marketHistory?.end?.timestamp);
   const getOutcome = (outcome: OutcomeReport) => {
-    if (marketType.scalar === null) {
-      return categories[outcome.categorical!]?.name;
-    } else {
-      return formatScalarOutcome(outcome["scalar"], scalarType);
-    }
+    // if (marketType.scalar === null) {
+    //   return categories[outcome.categorical!]?.name;
+    // } else {
+    return formatScalarOutcome(outcome["scalar"], scalarType);
+    // }
   };
 
   return (
@@ -305,13 +304,7 @@ const MarketHistory: FC<
                 <p className="pb-1">
                   Market resolved to{" "}
                   <span className="font-bold">
-                    {marketType.scalar === null
-                      ? categories[marketHistory?.resolved?.resolvedOutcome]
-                          ?.name
-                      : formatScalarOutcome(
-                          marketHistory?.resolved?.resolvedOutcome,
-                          scalarType,
-                        )}
+                    {categories[marketHistory?.resolved?.resolvedOutcome]}
                   </span>
                 </p>
                 <span className="text-sm text-gray-500">
@@ -399,7 +392,7 @@ const MarketHeader: FC<{
     Number(market.deadlines?.disputeDuration ?? 0),
   );
 
-  const assetId = parseAssetId(market.baseAsset).unwrap();
+  const assetId = "SOL";
   const imagePath = lookupAssetImagePath(assetId);
 
   const { data: caseId } = useMarketCaseId(market.marketId);

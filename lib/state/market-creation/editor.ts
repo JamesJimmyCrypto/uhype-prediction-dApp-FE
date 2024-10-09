@@ -331,7 +331,8 @@ export const useMarketDraftEditor = (): MarketDraftEditor => {
   const prevAnswersLength = usePrevious(draft.form.answers?.answers?.length);
 
   useEffect(() => {
-    if (!draft.form.answers || !draft.form.liquidity) return;
+    //|| !draft.form.liquidity
+    if (!draft.form.answers) return;
 
     const baseAmount = minBaseLiquidity[draft.form.currency!]
       ? `${minBaseLiquidity[draft.form.currency!]}`
@@ -349,24 +350,15 @@ export const useMarketDraftEditor = (): MarketDraftEditor => {
 
     const rows = [
       ...draft.form.answers.answers.map((answer, index) => {
-        const liquidity = draft.form.liquidity?.rows?.[index];
-
-        const amount = new Decimal(
-          reset
-            ? baseAmount
-            : draft.form.liquidity?.rows?.[index]?.amount || baseAmount,
-        );
-
-        const price = reset
-          ? ratio.toString()
-          : liquidity?.price?.price ?? ratio.toString();
+        const amount = new Decimal(baseAmount);
+        const price = ratio.toString();
 
         return {
           asset: tickers?.[index]?.ticker ?? answer,
           amount: amount.toString(),
           price: {
             price: price,
-            locked: liquidity?.price?.locked ?? false,
+            locked: false,
           },
           value: `${amount.mul(ratio).toFixed(4)}`,
         };
@@ -377,11 +369,11 @@ export const useMarketDraftEditor = (): MarketDraftEditor => {
       ...draft,
       form: {
         ...draft.form,
-        liquidity: {
-          ...draft.form.liquidity,
-          amount: draft.form.liquidity.amount || liquidity,
-          rows,
-        },
+        // liquidity: {
+        //   ...draft.form.liquidity,
+        //   amount: draft.form.liquidity.amount || liquidity,
+        //   rows,
+        // },
       },
     });
   }, [draft.form.answers, draft.form.currency]);

@@ -8,12 +8,6 @@ import Link from "next/link";
 import { BarChart2, Droplet, Users } from "react-feather";
 import ScalarPriceRange from "../ScalarPriceRange";
 import MarketCardContext from "./context";
-import { FullMarketFragment } from "@zeitgeistpm/indexer";
-import {
-  IOBaseAssetId,
-  IOForeignAssetId,
-  parseAssetId,
-} from "@zeitgeistpm/sdk";
 import { lookupAssetImagePath } from "lib/constants/foreign-asset";
 import { useMarketCmsMetadata } from "lib/hooks/queries/cms/useMarketCmsMetadata";
 import { useMarketImage } from "lib/hooks/useMarketImage";
@@ -22,55 +16,100 @@ import { isAbsoluteUrl } from "next/dist/shared/lib/utils";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { getCurrentPrediction } from "lib/util/assets";
-
+import { BN } from "@coral-xyz/anchor";
+import { PublicKey } from "@solana/web3.js";
+import { Market } from "src/types";
 const MarketFavoriteToggle = dynamic(() => import("../MarketFavoriteToggle"), {
   ssr: false,
 });
 
-export interface MarketType {
-  categorical?: string;
-  scalar?: string[];
+export interface Category {
+  name: string;
 }
 
+export interface Asset {
+  price: number;
+}
+
+export interface MarketType {
+  scalar: [number, number];
+}
+
+export type FullMarketFragment = Market & {
+  categories?: Category[]; // Array of categories like "Sports"
+  assets?: Asset[]; // Array of assets, each having a price
+  outcomeAssets?: (Asset | null)[]; // Outcome assets, can be null or Asset
+  marketType?: MarketType; // Scalar or categorical market type
+  baseAsset?: Asset | null; // Base asset, could be null
+  marketKey?: BN; // Identifier for the market
+  pool?: any; // Placeholder for pool, type depends on implementation
+  neoPool?: any; // Placeholder for neoPool, type depends on implementation
+  scalarType?: string; // Type of scalar market (e.g., number)
+  status?: string; // Status of the market (e.g., "Active")
+  img?: string | null; // Image URL or null
+  resolvedOutcome?: string | null; // Resolved outcome, can be null
+};
+
 export interface MarketCardProps {
-  market: FullMarketFragment;
+  market: Market;
   liquidity?: string;
   numParticipants?: number;
   className?: string;
   disableLink?: boolean;
 }
-
+const defaultMarket = {
+  title: "",
+  answers: [],
+  pool: {},
+  neoPool: {},
+  scalarType: "",
+  status: "",
+  coverUrl: "",
+  resolvedOutcome: "",
+  categories: ["Sports"],
+  assets: [],
+  outcomeAssets: [],
+  marketType: "",
+  baseAsset: "",
+};
 export const MarketCard = ({
   market,
-  liquidity,
-  numParticipants,
+  liquidity = "1000",
+  numParticipants = 10,
   className = "",
-  disableLink,
+  disableLink = false,
 }: MarketCardProps) => {
+  console.log(market, "marketcard");
   const {
+    marketKey,
+    title,
+
+    answers,
+  } = market;
+  const {
+    pool,
+    neoPool,
+    scalarType,
+    status,
+    coverUrl,
+    resolvedOutcome,
     categories,
     assets,
     outcomeAssets,
     marketType,
     baseAsset,
-    marketId,
-    question,
-    pool,
-    neoPool,
-    scalarType,
-    status,
-    img,
-    resolvedOutcome,
-  } = market;
+  } = defaultMarket;
+
+  const isCategorical = answers?.length > 2;
 
   const marketCategories: MarketOutcomes =
     categories?.map((category, index) => {
-      const asset = assets[index];
+      const asset = assets?.[index];
 
       const marketCategory: MarketOutcome = {
-        name: category.name ?? "",
-        assetId: outcomeAssets[index],
-        price: asset?.price,
+        name: category ?? "",
+        assetId: String(outcomeAssets?.[index]) ?? "",
+        price: 0,
       };
 
       return marketCategory;
@@ -81,39 +120,40 @@ export const MarketCard = ({
     marketCategories.some((outcome) => outcome.name.toLowerCase() === "yes") &&
     marketCategories.some((outcome) => outcome.name.toLowerCase() === "no");
 
-  const prediction = getCurrentPrediction(assets, market);
+  const prediction = getCurrentPrediction(assets!, {
+    marketType: { categorical: "yes" },
+  });
 
-  //always show "Yes" prediction percentage
+  // Always show "Yes" prediction percentage
   const displayPrediction =
     isYesNoMarket === true && prediction?.name.toLowerCase() === "no"
       ? { price: 1 - prediction.price, name: "Yes" }
       : prediction;
 
-  const lower = marketType?.scalar?.[0]
-    ? new Decimal(marketType?.scalar?.[0]).div(ZTG).toNumber()
-    : 0;
-  const upper = marketType?.scalar?.[1]
-    ? new Decimal(marketType?.scalar?.[1]).div(ZTG).toNumber()
-    : 0;
+  // const lower = marketType?.scalar?.[0]
+  //   ? new Decimal(marketType?.scalar?.[0]).div(ZTG).toNumber()
+  //   : 0;
+  // const upper = marketType?.scalar?.[1]
+  //   ? new Decimal(marketType?.scalar?.[1]).div(ZTG).toNumber()
+  //   : 0;
 
-  const { data: image } = useMarketImage(market, {
-    fallback:
-      img && isAbsoluteUrl(img) && !isMarketImageBase64Encoded(img)
-        ? img
-        : undefined,
-  });
+  // const { data: image } = useMarketImage(market, {
+  //   fallback:
+  //     img && isAbsoluteUrl(img) && !isMarketImageBase64Encoded(img)
+  //       ? img
+  //       : undefined,
+  // });
 
-  const { data: cmsMetadata } = useMarketCmsMetadata(marketId);
+  // const { data: cmsMetadata } = useMarketCmsMetadata(marketKey);
 
   return (
-    <MarketCardContext.Provider value={{ baseAsset }}>
+    <MarketCardContext.Provider value={{ baseAsset: "SOL" }}>
       <div
-        data-testid={`marketCard-${marketId}`}
-        className={`ztg-transition group relative flex min-w-full flex-col
-rounded-[10px] bg-white p-5 md:min-w-[calc(50%-8px)] md:hover:scale-[1.015] lg:min-w-[calc(100%/3-9.67px)] ${className}`}
+        data-testid={`marketCard-${marketKey}`}
+        className={`ztg-transition group relative flex min-w-full flex-col rounded-[10px] bg-white p-5 md:min-w-[calc(50%-8px)] md:hover:scale-[1.015] lg:min-w-[calc(100%/3-9.67px)] ${className}`}
       >
         <Link
-          href={`/markets/${marketId}`}
+          href={`/markets/${marketKey}`}
           onClick={(e) => {
             if (disableLink) {
               e.preventDefault();
@@ -126,13 +166,13 @@ rounded-[10px] bg-white p-5 md:min-w-[calc(50%-8px)] md:hover:scale-[1.015] lg:m
         >
           <div className="flex h-[54px] w-full gap-4 whitespace-normal">
             <div className="absolute right-4 top-4">
-              <MarketFavoriteToggle marketId={marketId} />
+              <MarketFavoriteToggle marketId={marketKey?.toNumber()} />
             </div>
             <div className="relative min-h-[54px] min-w-[54px] rounded-lg bg-gray-400 bg-opacity-30">
               <Image
                 priority
                 alt={"Market image"}
-                src={image}
+                src={coverUrl}
                 fill
                 className="overflow-hidden rounded-lg"
                 style={{
@@ -143,7 +183,7 @@ rounded-[10px] bg-white p-5 md:min-w-[calc(50%-8px)] md:hover:scale-[1.015] lg:m
               />
             </div>
             <h5 className="line-clamp-2 h-fit w-full pr-4 text-base duration-200">
-              {cmsMetadata?.question ?? question}
+              {title}
             </h5>
           </div>
 
@@ -152,23 +192,23 @@ rounded-[10px] bg-white p-5 md:min-w-[calc(50%-8px)] md:hover:scale-[1.015] lg:m
               <span className="text-xs text-ztg-blue">
                 Resolved:{" "}
                 <span className="font-semibold">
-                  {marketType?.categorical
+                  {isCategorical
                     ? marketCategories[resolvedOutcome].name
                     : formatNumberCompact(Number(resolvedOutcome) / ZTG)}
                 </span>
               </span>
-            ) : (pool || neoPool) && marketType?.categorical ? (
+            ) : (pool || neoPool) && isCategorical ? (
               displayPrediction && (
                 <MarketCardPredictionBar prediction={displayPrediction} />
               )
             ) : pool || neoPool ? (
               <ScalarPriceRange
                 scalarType={(scalarType ?? "number") as "number" | "date"}
-                lowerBound={lower}
-                upperBound={upper}
+                lowerBound={0}
+                upperBound={100}
                 shortPrice={marketCategories[1]?.price}
                 longPrice={marketCategories[0]?.price}
-                status={status}
+                status={String(status)}
               />
             ) : (
               <>
@@ -177,7 +217,7 @@ rounded-[10px] bg-white p-5 md:min-w-[calc(50%-8px)] md:hover:scale-[1.015] lg:m
                     No liquidity in this market
                   </span>
                   <span className="text-gray-500">
-                    {lower} - {upper}
+                    {0} - {100}
                   </span>
                 </div>
                 <div className="h-1.5 w-full rounded-lg bg-gray-200"></div>
@@ -244,25 +284,31 @@ const MarketCardDetails = ({
   liquidity?: string;
   numParticipants?: number;
 }) => {
-  const { period, baseAsset, outcomeAssets, volume } = market;
+  const { baseAsset, outcomeAssets } = market;
+  const volume = new Decimal(Math.random() * 100).mul(
+    outcomeAssets?.length ?? 0,
+  );
+  const period = {
+    end: 1632384000000,
+  };
   const isEnding = () => {
     const currentTime = new Date();
-    const endTime = Number(period.end);
+    const endTime = Number(period?.end);
     //6 hours in milliseconds
     const sixHours = 21600000;
     const diff = endTime - currentTime.getTime();
     //checks if event has passed and is within 6 hours
     return diff < sixHours && diff > 0 ? true : false;
   };
-  const hasEnded = hasDatePassed(period.end);
-  const assetId = parseAssetId(baseAsset).unwrap();
+  const hasEnded = hasDatePassed(period?.end);
+  const assetId = "SOL";
   const imagePath = lookupAssetImagePath(assetId);
 
   return (
     <div className="flex items-center text-xs">
       <div>
         <span>
-          {period.end &&
+          {period?.end &&
             `${hasEnded ? "Ended" : "Ends"} ${new Date(
               Number(period.end),
             ).toLocaleString("en-US", {
@@ -272,7 +318,7 @@ const MarketCardDetails = ({
         </span>
         {isEnding() && <span className="ml-1 text-red">Ends Soon</span>}
         <span className="ml-1 border-l-1 border-l-black pl-1 font-semibold ">
-          {outcomeAssets.length} outcomes{" "}
+          {outcomeAssets?.length} outcomes{" "}
         </span>
       </div>
       <div className="ml-auto flex items-center justify-center gap-1.5">
@@ -287,7 +333,7 @@ const MarketCardDetails = ({
         <div className="flex items-center gap-1">
           <BarChart2 size={12} />
           <span>
-            {formatNumberCompact(new Decimal(volume).div(ZTG).toNumber(), 2)}
+            {/* {formatNumberCompact(new Decimal(volume).div(ZTG).toNumber(), 2)} */}
           </span>
         </div>
         {liquidity != undefined && baseAsset ? (

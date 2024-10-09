@@ -1,11 +1,5 @@
 import Skeleton from "components/ui/Skeleton";
-import {
-  IndexerContext,
-  IOMarketOutcomeAssetId,
-  IOPoolShareAssetId,
-  Market,
-  ZTG,
-} from "@zeitgeistpm/sdk";
+import { ZTG } from "@zeitgeistpm/sdk";
 import DisputeButton from "components/assets/AssetActionButtons/DisputeButton";
 import RedeemButton from "components/assets/AssetActionButtons/RedeemButton";
 import ReportButton from "components/assets/AssetActionButtons/ReportButton";
@@ -20,7 +14,7 @@ import { useAllForeignAssetUsdPrices } from "lib/hooks/queries/useAssetUsdPrice"
 import { lookUpAssetPrice } from "lib/util/lookup-price";
 import { MIN_USD_DISPLAY_AMOUNT } from "lib/constants";
 import PoolShareButtons from "components/assets/AssetActionButtons/PoolShareButtons";
-
+import { Market } from "src/types";
 const COLUMNS: TableColumn[] = [
   {
     header: "Outcomes",
@@ -133,7 +127,7 @@ const COLUMNS_LIQUIDITY: TableColumn[] = [
 export type MarketPositionsProps = {
   usdZtgPrice: Decimal;
   positions: Position[];
-  market: Market<IndexerContext>;
+  market: Market;
   className?: string;
 };
 
@@ -148,7 +142,7 @@ export const MarketPositions = ({
 
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString() ?? "";
-  const isOracle = market?.oracle === pubKey;
+  // const isOracle = market?.oracle === pubKey;
 
   const isLiquidityMarket = positions.some(
     (pos) => pos.outcome == "Pool Share",
@@ -175,9 +169,9 @@ export const MarketPositions = ({
   return (
     <div className={`${className}`}>
       <MarketPositionHeader
-        marketId={market.marketId}
-        question={market.question ?? undefined}
-        baseAsset={market.baseAsset}
+        marketId={market.marketKey.toNumber()}
+        question={market.title ?? undefined}
+        baseAsset={"SOL"}
       />
       <Table
         showHighlight={false}
@@ -239,7 +233,7 @@ export const MarketPositions = ({
                   : changePercentage.toFixed(1),
                 actions: (
                   <div className="text-right">
-                    {IOPoolShareAssetId.is(assetId) ? (
+                    {/* {IOPoolShareAssetId.is(assetId) ? (
                       <PoolShareButtons
                         poolId={assetId.PoolShare}
                         market={market}
@@ -259,7 +253,7 @@ export const MarketPositions = ({
                       <ReportButton market={market} assetId={assetId} />
                     ) : (
                       ""
-                    )}
+                    )} */}
                   </div>
                 ),
               };

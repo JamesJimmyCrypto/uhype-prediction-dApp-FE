@@ -3,8 +3,6 @@ import { ISubmittableResult } from "@polkadot/types/types";
 import { useQuery } from "@tanstack/react-query";
 import Decimal from "decimal.js";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useFeePayingAsset } from "./useFeePayingAsset";
-import { BLOCK_TIME_SECONDS } from "lib/constants";
 import { useDebounce } from "use-debounce";
 
 export const extrinsicFeeKey = "extrinsic-fee";

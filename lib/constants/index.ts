@@ -118,3 +118,5 @@ export const LAST_MARKET_ID_BEFORE_ASSET_MIGRATION = Number(
 
 // dehype constants
 export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+export const RPC_URL = process.env.NEXT_PUBLIC_RPC_URL;

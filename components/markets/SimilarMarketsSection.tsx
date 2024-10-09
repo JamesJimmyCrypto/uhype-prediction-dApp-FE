@@ -1,8 +1,5 @@
-import type { FullMarketFragment } from "@zeitgeistpm/indexer";
-import { ScalarRangeType } from "@zeitgeistpm/sdk";
+import { Market } from "@/src/types";
 import MarketCard from "components/markets/market-card";
-import Decimal from "decimal.js";
-import { ZTG } from "lib/constants";
 import { useMarketsStats } from "lib/hooks/queries/useMarketsStats";
 import { useRecommendedMarkets } from "lib/hooks/queries/useRecommendedMarkets";
 
@@ -10,14 +7,14 @@ export const SimilarMarketsSection = ({
   market,
   limit,
 }: {
-  market?: FullMarketFragment;
+  market?: Market;
   limit?: number;
 }) => {
   const { data: recommendedMarkets, isFetched: isMarketsFetched } =
-    useRecommendedMarkets(market?.marketId, limit ?? 2);
+    useRecommendedMarkets(market?.marketKey.toNumber(), limit ?? 2);
 
   const { data: stats, isFetched: isStatsFetched } = useMarketsStats(
-    recommendedMarkets?.markets?.map((m) => m.marketId) ?? [],
+    recommendedMarkets?.markets?.map((m) => m.marketKey.toNumber()) ?? [],
   );
 
   const isLoading = !isMarketsFetched || !isStatsFetched;
@@ -40,18 +37,18 @@ export const SimilarMarketsSection = ({
           )}
 
           {recommendedMarkets?.markets.map((market, index) => {
-            const stat = stats?.find((s) => s.marketId === market.marketId);
+            const stat = stats?.find((s) => s.marketId === market.marketKey.toNumber());
 
             return (
               <div
-                key={`market-${market.marketId}`}
+                key={`market-${market.marketKey.toNumber()}`}
                 className="animate-pop-in rounded-xl opacity-0 shadow-lg"
                 style={{
                   animationDelay: `${200 * (index + 1)}ms`,
                 }}
               >
                 <MarketCard
-                  key={market.marketId}
+                  key={market.marketKey.toNumber()}
                   market={market}
                   numParticipants={stat?.participants}
                   liquidity={stat?.liquidity}

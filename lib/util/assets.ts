@@ -5,14 +5,14 @@ import { parseAssetIdString } from "./parse-asset-id";
 export const getCurrentPrediction = (
   assets: { price: number; assetId?: string }[],
   market: {
-    marketType: {
+    marketType?: {
       categorical?: string | null;
-      scalar?: (string | null)[] | null;
+      // scalar?: (string | null)[] | null;
     };
     categories?: ({ name?: string | null } | null)[] | null;
   },
 ): { name: string; price: number; percentage: number } => {
-  const totalPrice = assets.reduce((acc, asset) => acc + asset.price, 0);
+  const totalPrice = assets?.reduce((acc, asset) => acc + asset.price, 0);
 
   if (assets?.length < 2) {
     return { name: "N/A", price: 0, percentage: 0 };
@@ -44,12 +44,12 @@ export const getCurrentPrediction = (
       percentage,
     };
   } else {
-    const bounds: number[] =
-      market?.marketType?.scalar?.map((b) => Number(b)) ?? [];
+    const bounds: number[] = [0, 100]
+    // market?.marketType?.scalar?.map((b) => Number(b)) ?? [];
 
     const range = bounds[1] - bounds[0];
-    const longPrice = assets[0].price;
-    const shortPrice = assets[1].price;
+    const longPrice = assets?.[0]?.price;
+    const shortPrice = assets?.[1]?.price;
 
     const shortPricePrediction = range * (1 - shortPrice) + bounds[0];
     const longPricePrediction = range * longPrice + bounds[0];

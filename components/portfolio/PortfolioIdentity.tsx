@@ -3,7 +3,6 @@ import DiscordIcon from "components/icons/DiscordIcon";
 import TwitterIcon from "components/icons/TwitterIcon";
 import SettingsModal from "components/settings/SettingsModal";
 import Avatar from "components/ui/Avatar";
-import { useIdentity } from "lib/hooks/queries/useIdentity";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { shortenAddress } from "lib/util";
 import { useState } from "react";
@@ -13,12 +12,9 @@ import { ExternalLink } from "react-feather";
 
 const PortfolioIdentity = ({ address }: { address: string }) => {
   const { publicKey } = useWallet();
-  const { data: identity } = useIdentity(address);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
-  let hasIdentity = Boolean(identity?.displayName);
   let isOwned = false;
-  let name = identity?.displayName;
 
   return (
     <>
@@ -28,22 +24,20 @@ const PortfolioIdentity = ({ address }: { address: string }) => {
           <div className="flex flex-col justify-center">
             <div className="mb-2 flex items-center gap-2">
               <div>
-                {isOwned && !hasIdentity && (
+                {isOwned && (
                   <div className="text-xs font-extrabold text-gray-500">
                     wallet name
                   </div>
                 )}
-                {isOwned && hasIdentity && (
+                {isOwned && (
                   <div className="text-xs font-extrabold text-gray-500">
                     on chain name
                   </div>
                 )}
-                <div className="text-xl font-extrabold sm:text-4xl">
-                  {name}{" "}
-                </div>
+                <div className="text-xl font-extrabold sm:text-4xl"></div>
               </div>
 
-              {isOwned && !hasIdentity && (
+              {isOwned && (
                 <div className="flex flex-1 items-center justify-end">
                   <button
                     className="center gap-2 rounded-lg bg-ztg-blue px-3 py-2 text-sm text-white"
@@ -77,7 +71,7 @@ const PortfolioIdentity = ({ address }: { address: string }) => {
           </div>
         </div>
         <div className="flex flex-wrap gap-3 text-sm text-white">
-          {identity?.twitter && (
+          {/* {identity?.twitter && (
             <a
               className="flex items-center rounded-md bg-twitter p-2"
               href={`https://twitter.com/${identity.twitter}`}
@@ -87,13 +81,13 @@ const PortfolioIdentity = ({ address }: { address: string }) => {
               <TwitterIcon fill="white" />
               <span className="ml-2.5 ">{identity.twitter}</span>
             </a>
-          )}
-          {identity?.discord && (
+          )} */}
+          {/* {identity?.discord && (
             <div className="flex items-center rounded-md bg-discord p-2">
               <DiscordIcon fill="white" />
               <span className="ml-2.5">{identity.discord}</span>
             </div>
-          )}
+          )} */}
           {/* <Transition
             enter="transition-opacity duration-250"
             enterFrom="opacity-0"

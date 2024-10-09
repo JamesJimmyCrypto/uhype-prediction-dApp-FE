@@ -10,10 +10,7 @@ export type BlockTimeline = {
 };
 
 export const timelineAsBlocks = (
-  form: Pick<
-    PartialMarketFormData,
-    "endDate" | "gracePeriod" | "disputePeriod" | "reportingPeriod"
-  >,
+  form: any,
   chainTime?: ChainTime,
 ): O.IOption<BlockTimeline> => {
   return O.tryCatch(() => {
@@ -27,19 +24,19 @@ export const timelineAsBlocks = (
       form.gracePeriod?.type === "date"
         ? dateBlock(chainTime, new Date(form.gracePeriod?.date))
         : marketEndBlock +
-          (form.gracePeriod ? durationasBlocks(form.gracePeriod) : 0);
+        (form.gracePeriod ? durationasBlocks(form.gracePeriod) : 0);
 
     const reportPeriodEndBlock =
       form.reportingPeriod?.type === "date"
         ? dateBlock(chainTime, new Date(form.reportingPeriod?.date))
         : gracePeriodEndBlock +
-          (form.reportingPeriod ? durationasBlocks(form.reportingPeriod) : 0);
+        (form.reportingPeriod ? durationasBlocks(form.reportingPeriod) : 0);
 
     const disputePeriodEndBlock =
       form.disputePeriod?.type === "date"
         ? dateBlock(chainTime, new Date(form.disputePeriod?.date))
         : reportPeriodEndBlock +
-          (form.disputePeriod ? durationasBlocks(form.disputePeriod) : 0);
+        (form.disputePeriod ? durationasBlocks(form.disputePeriod) : 0);
 
     const graceDelta = gracePeriodEndBlock - marketEndBlock;
     const reportDelta = reportPeriodEndBlock - gracePeriodEndBlock;

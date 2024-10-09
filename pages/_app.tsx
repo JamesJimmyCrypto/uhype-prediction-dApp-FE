@@ -17,6 +17,7 @@ import { AppWalletProvider } from "components/account/Wallet";
 import { ConnectionProvider } from "@jup-ag/wallet-adapter";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { clusterApiUrl } from "@solana/web3.js";
+import { RPC_URL } from "@/lib/constants";
 // environment variables set in .env.local or vercel interface
 const fathomSiteId = process.env["NEXT_PUBLIC_FATHOM_SITE_ID"];
 const domain = process.env["NEXT_PUBLIC_DOMAIN"];
@@ -27,8 +28,9 @@ const MyApp = ({ Component, pageProps }) => {
   const Layout = Component.Layout ? Component.Layout : React.Fragment;
   const router = useRouter();
   const network = WalletAdapterNetwork.Devnet;
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-
+  const endpoint = useMemo(() => {
+    return RPC_URL || clusterApiUrl(network);
+  }, [network]);
   useEffect(() => {
     if (!isProduction) {
       return;

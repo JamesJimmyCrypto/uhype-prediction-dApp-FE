@@ -1,4 +1,3 @@
-import { OutcomeReport } from "@zeitgeistpm/indexer";
 
 export type MarketOutcome = {
   name: string;
@@ -25,10 +24,9 @@ export type MarketDispute = {
   by: string;
 };
 
-export type MarketTypeOf =
-  | {
-      categorical: number;
-    }
-  | {
-      scalar: string[];
-    };
+export type MarketTypeOf = {
+  categorical: number;
+}
+// | {
+//   scalar: string[];
+// };

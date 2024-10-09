@@ -1,3 +1,4 @@
+import { BN } from "@coral-xyz/anchor";
 import { useFavoriteMarketsStorage } from "lib/state/favorites";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 

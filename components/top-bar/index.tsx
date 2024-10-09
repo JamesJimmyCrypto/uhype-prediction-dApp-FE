@@ -184,7 +184,7 @@ const TopBar = () => {
                         )}
                       </Menu.Item>
 
-                      {process.env.NEXT_PUBLIC_SHOW_COURT === "true" && (
+                      {/* {process.env.NEXT_PUBLIC_SHOW_COURT === "true" && (
                         <Menu.Item>
                           {({ active }) => (
                             <Link href="/court" onClick={close}>
@@ -199,7 +199,7 @@ const TopBar = () => {
                             </Link>
                           )}
                         </Menu.Item>
-                      )}
+                      )} */}
                     </Menu.Items>
                   </Transition>
                 </>
