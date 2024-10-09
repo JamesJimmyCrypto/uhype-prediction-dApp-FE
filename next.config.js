@@ -13,6 +13,7 @@ module.exports = withPlaiceholder({
       "cdn.discordapp.com",
       "images.unsplash.com",
       "cdn.sanity.io",
+      "upload.wikimedia.org"
     ],
   },
   staticPageGenerationTimeout: 300, //5 mins

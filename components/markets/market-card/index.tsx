@@ -80,18 +80,12 @@ export const MarketCard = ({
   disableLink = false,
 }: MarketCardProps) => {
   console.log(market, "marketcard");
-  const {
-    marketKey,
-    title,
-
-    answers,
-  } = market;
+  const { marketKey, title, coverUrl, answers, publicKey } = market;
   const {
     pool,
     neoPool,
     scalarType,
     status,
-    coverUrl,
     resolvedOutcome,
     categories,
     assets,
@@ -153,7 +147,7 @@ export const MarketCard = ({
         className={`ztg-transition group relative flex min-w-full flex-col rounded-[10px] bg-white p-5 md:min-w-[calc(50%-8px)] md:hover:scale-[1.015] lg:min-w-[calc(100%/3-9.67px)] ${className}`}
       >
         <Link
-          href={`/markets/${marketKey}`}
+          href={`/markets/${publicKey}`}
           onClick={(e) => {
             if (disableLink) {
               e.preventDefault();

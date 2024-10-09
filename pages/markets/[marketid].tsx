@@ -125,67 +125,67 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const client = new GraphQLClient(graphQlEndpoint);
+  // const { getMarket } = useMarketProgram();
+  // const market = await getMarket(params.marketid);
+  // const [cmsMetadata] = await Promise.all([
+  //   getCmsFullMarketMetadataForMarket(params.marketid),
+  // ]);
 
-  const [market, cmsMetadata] = await Promise.all([
-    getMarket(client, params.marketid),
-    getCmsFullMarketMetadataForMarket(params.marketid),
-  ]);
-
-  const chartSeries: ChartSeries[] = market?.categories?.map(
-    (category, index) => {
-      return {
-        accessor: `v${index}`,
-        label: category.name,
-        color: category.color,
-      };
-    },
-  );
+  // const chartSeries: ChartSeries[] = market?.categories?.map(
+  //   (category, index) => {
+  //     return {
+  //       accessor: `v${index}`,
+  //       label: category.name,
+  //       color: category.color,
+  //     };
+  //   },
+  // );
 
   let resolutionTimestamp: string | undefined;
-  if (market) {
-    const { timestamp } = await getResolutionTimestamp(client, market.marketId);
-    resolutionTimestamp = timestamp ?? undefined;
+  // if (market) {
+  //   const { timestamp } = await getResolutionTimestamp(client, market.marketId);
+  //   resolutionTimestamp = timestamp ?? undefined;
 
-    if (cmsMetadata?.question || cmsMetadata?.description) {
-      market.hasEdits = true;
-      (market as MarketPageIndexedData & WithCmsEdits).originalMetadata = {};
-    }
+  //   if (cmsMetadata?.question || cmsMetadata?.description) {
+  //     market.hasEdits = true;
+  //     (market as MarketPageIndexedData & WithCmsEdits).originalMetadata = {};
+  //   }
 
-    if (cmsMetadata?.imageUrl) {
-      market.img = cmsMetadata?.imageUrl;
-    }
+  //   if (cmsMetadata?.imageUrl) {
+  //     market.img = cmsMetadata?.imageUrl;
+  //   }
 
-    if (cmsMetadata?.question) {
-      (
-        market as MarketPageIndexedData & WithCmsEdits
-      ).originalMetadata.question = market.question;
-      market.question = cmsMetadata?.question;
-    }
+  //   if (cmsMetadata?.question) {
+  //     (
+  //       market as MarketPageIndexedData & WithCmsEdits
+  //     ).originalMetadata.question = market.question;
+  //     market.question = cmsMetadata?.question;
+  //   }
 
-    if (cmsMetadata?.description) {
-      (
-        market as MarketPageIndexedData & WithCmsEdits
-      ).originalMetadata.description = market.description as string;
-      market.description = cmsMetadata?.description;
-    }
-  }
+  //   if (cmsMetadata?.description) {
+  //     (
+  //       market as MarketPageIndexedData & WithCmsEdits
+  //     ).originalMetadata.description = market.description as string;
+  //     market.description = cmsMetadata?.description;
+  //   }
+  // }
 
-  const hasLiveTwitchStream = await from(async () => {
-    const channelName = extractChannelName(cmsMetadata?.twitchStreamUrl);
-    if (channelName) {
-      return await isLive(channelName);
-    }
-    return false;
-  });
+  // const hasLiveTwitchStream = await from(async () => {
+  //   const channelName = extractChannelName(cmsMetadata?.twitchStreamUrl);
+  //   if (channelName) {
+  //     return await isLive(channelName);
+  //   }
+  //   return false;
+  // });
 
   return {
     props: {
-      indexedMarket: market ?? null,
-      chartSeries: chartSeries ?? null,
-      resolutionTimestamp: resolutionTimestamp ?? null,
-      promotionData: null,
-      cmsMetadata: cmsMetadata ?? null,
-      hasLiveTwitchStream: hasLiveTwitchStream,
+      // indexedMarket: market ?? null,
+      // chartSeries: chartSeries ?? null,
+      // resolutionTimestamp: resolutionTimestamp ?? null,
+      // promotionData: null,
+      // cmsMetadata: cmsMetadata ?? null,
+      // hasLiveTwitchStream: hasLiveTwitchStream,
     },
     revalidate:
       environment === "production"
@@ -220,8 +220,6 @@ const Market: NextPage<MarketPageProps> = ({
     marketId_eq: marketId,
     makerAccountId_eq: pubKey,
   });
-
-  const referendumIndex = cmsMetadata?.referendumRef?.referendumIndex;
 
   const tradeItem = useTradeItem();
 

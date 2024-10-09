@@ -31,6 +31,7 @@ export type MarketAccount = {
 };
 export type Market = MarketAccount & {
   answers: Answer[];
+  publicKey: PublicKey;
 };
 // Define the MarketResponse type
 export type MarketResponse = {

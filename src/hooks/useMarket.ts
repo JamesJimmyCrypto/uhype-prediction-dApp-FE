@@ -194,6 +194,7 @@ export function useMarketProgram() {
           const answers = await getMarketAnswers(marketKey);
           return {
             ...market.account,
+            publicKey: market.publicKey,
             answers: answers.answers as Answer[],
           };
         })
@@ -220,6 +221,7 @@ export function useMarketProgram() {
       const answers = await getMarketAnswers(marketAccount.account.marketKey);
 
       return {
+        publicKey: marketPublicKey,
         ...marketAccount.account,
         answers: answers.answers as Answer[],
       };
