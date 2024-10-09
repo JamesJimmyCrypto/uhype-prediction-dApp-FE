@@ -1,7 +1,6 @@
 import { isMoment, Moment } from "moment";
 import React, {
   ChangeEventHandler,
-  FC,
   InputHTMLAttributes,
   useMemo,
   useRef,
@@ -17,58 +16,58 @@ interface InputProps {
   max?: number;
   step?: number;
   value?: string;
-  ref?: React.Ref<HTMLInputElement>;
 }
 
 const inputClasses =
-  "bg-gray-100 dark:bg-black text-ztg-14-150 w-full rounded-lg h-ztg-40 p-ztg-8  focus:outline-none dark:border-black text-black dark:text-white";
+  "bg-gray-100 dark:bg-black text-ztg-14-150 w-full rounded-lg h-ztg-40 p-ztg-8 focus:outline-none dark:border-black text-black dark:text-white";
 const invalidClasses = "!border-vermilion !text-vermilion";
 
-const Input: FC<InputProps & InputHTMLAttributes<HTMLInputElement>> =
-  React.forwardRef<
-    HTMLInputElement,
-    InputProps & InputHTMLAttributes<HTMLInputElement>
-  >(
-    (
-      {
-        placeholder = "",
-        type,
-        onChange,
-        min,
-        max,
-        step,
-        value,
-        className = "",
-        ...restProps
-      },
-      ref,
-    ) => {
-      const { name, ...rest } = restProps;
-
-      return (
-        <input
-          {...rest}
-          ref={ref}
-          name={name}
-          className={`${inputClasses} ${className}`}
-          placeholder={placeholder}
-          type={type}
-          onChange={onChange}
-          onBlur={(e) => {
-            rest.onBlur && rest.onBlur(e);
-          }}
-          min={min}
-          max={max}
-          step={step}
-          value={value}
-          onWheel={(event) => {
-            if (type === "number") event.currentTarget.blur();
-          }}
-        />
-      );
+// Remove FC since forwardRef already handles function component typing
+const Input = React.forwardRef<
+  HTMLInputElement,
+  InputProps & InputHTMLAttributes<HTMLInputElement>
+>(
+  (
+    {
+      placeholder = "",
+      type,
+      onChange,
+      min,
+      max,
+      step,
+      value,
+      className = "",
+      ...restProps
     },
-  );
+    ref,
+  ) => {
+    const { name, ...rest } = restProps;
 
+    return (
+      <input
+        {...rest}
+        ref={ref}
+        name={name}
+        className={`${inputClasses} ${className}`}
+        placeholder={placeholder}
+        type={type}
+        onChange={onChange}
+        onBlur={(e) => {
+          rest.onBlur && rest.onBlur(e);
+        }}
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onWheel={(event) => {
+          if (type === "number") event.currentTarget.blur();
+        }}
+      />
+    );
+  },
+);
+
+// Function to render the date-time input
 const rdtpInput = (
   props: InputProps & InputHTMLAttributes<HTMLInputElement>,
   openCalendar: () => void,
@@ -96,11 +95,13 @@ const rdtpInput = (
   );
 };
 
+// Helper function to get date from timestamp
 const getDateFromTimestamp = (timestamp?: string) => {
   const ts = Number(timestamp) || new Date().valueOf();
   return new Date(ts);
 };
 
+// Helper function to get local date format
 const getLocalDateFormat = () => {
   const formatObj = new Intl.DateTimeFormat().formatToParts(new Date());
 
@@ -120,7 +121,8 @@ const getLocalDateFormat = () => {
     .join("");
 };
 
-export const DateTimeInput: FC<{
+// DateTimeInput component
+export const DateTimeInput: React.FC<{
   timestamp?: string;
   className?: string;
   onChange: (timestamp: string) => void;
@@ -136,6 +138,7 @@ export const DateTimeInput: FC<{
       onChange(`${v.valueOf()}`);
     }
   };
+
   const localDateFormat = getLocalDateFormat();
 
   return (
