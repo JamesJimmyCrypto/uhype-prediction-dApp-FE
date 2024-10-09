@@ -5,7 +5,6 @@ import Table, { TableColumn, TableData } from "components/ui/Table";
 import Decimal from "decimal.js";
 import { ZTG } from "lib/constants";
 import { useAccountAmm2Pool } from "lib/hooks/queries/useAccountAmm2Pools";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import Link from "next/link";
@@ -79,23 +78,6 @@ const PoolButtons = ({ marketId }: { marketId: number }) => {
   const notificationStore = useNotifications();
   const [showLiqudityModal, setShowLiqudityModal] = useState(false);
 
-  const {
-    isLoading: isCollectingFees,
-    isSuccess,
-    send: withdrawFees,
-  } = useExtrinsic(
-    () => {
-      if (!isRpcSdk(sdk)) return;
-      return sdk.api.tx.neoSwaps.withdrawFees(marketId);
-    },
-    {
-      onSuccess: () => {
-        notificationStore.pushNotification(`Redeemed Fees`, {
-          type: "Success",
-        });
-      },
-    },
-  );
   return (
     <div className="flex justify-end gap-2">
       <LiquidityModalAmm2
@@ -113,10 +95,8 @@ const PoolButtons = ({ marketId }: { marketId: number }) => {
       </SecondaryButton>
       <SecondaryButton
         className="w-full max-w-[150px]"
-        disabled={isCollectingFees || isSuccess}
-        onClick={() => {
-          withdrawFees();
-        }}
+        disabled={true}
+        onClick={() => {}}
       >
         Collect fees
       </SecondaryButton>

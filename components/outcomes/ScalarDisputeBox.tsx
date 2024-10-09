@@ -2,7 +2,6 @@ import { IndexerContext, isRpcSdk, Market } from "@zeitgeistpm/sdk";
 import { MarketStatus } from "@zeitgeistpm/indexer";
 import TransactionButton from "components/ui/TransactionButton";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -29,27 +28,7 @@ const ScalarDisputeBox = ({
       : undefined;
 
   const isScalarDate = market.scalarType === "date";
-
-  const { send, isLoading, isBroadcasting } = useExtrinsic(
-    () => {
-      if (!isRpcSdk(sdk) || !publicKey) return;
-      return sdk.api.tx.predictionMarkets.dispute(market.marketId);
-    },
-    {
-      onBroadcast: () => {},
-      onSuccess: () => {
-        if (onSuccess) {
-          onSuccess?.();
-        } else {
-          notificationStore.pushNotification("Outcome Disputed", {
-            type: "Success",
-          });
-        }
-      },
-    },
-  );
-
-  const handleSignTransaction = async () => send();
+  const handleSignTransaction = async () => {};
 
   return (
     <div className="flex flex-col items-center gap-y-3 p-[30px]">
@@ -73,8 +52,8 @@ const ScalarDisputeBox = ({
       <TransactionButton
         className="mb-ztg-10 mt-[20px]"
         onClick={handleSignTransaction}
-        disabled={isLoading}
-        loading={isBroadcasting}
+        disabled={true}
+        loading={true}
       >
         Confirm Dispute
       </TransactionButton>

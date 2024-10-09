@@ -10,7 +10,6 @@ import TransactionButton from "components/ui/TransactionButton";
 import { DateTimeInput } from "components/ui/inputs";
 import Decimal from "decimal.js";
 import { ZTG } from "lib/constants";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { MarketScalarOutcome } from "lib/types";
@@ -43,44 +42,9 @@ const ScalarReportBox = ({
     return ((bounds[1].toNumber() + bounds[0].toNumber()) / 2).toFixed(0);
   });
 
-  const { send, isLoading, isBroadcasting, isSuccess } = useExtrinsic(
-    () => {
-      if (!isRpcSdk(sdk) || scalarReportValue === "") return;
+  const reportDisabled = !sdk || !isRpcSdk(sdk) || scalarReportValue === "";
 
-      const outcomeReport: any = {
-        scalar: new Decimal(scalarReportValue).mul(ZTG).toFixed(0),
-      };
-
-      return sdk.api.tx.predictionMarkets.report(
-        market.marketId,
-        outcomeReport,
-      );
-    },
-    {
-      onBroadcast: () => {},
-      onSuccess: () => {
-        if (onReport) {
-          onReport?.({
-            type: market.scalarType as ScalarRangeType,
-            scalar: new Decimal(scalarReportValue).mul(ZTG).toString(),
-          });
-        } else {
-          notificationStore.pushNotification("Outcome Reported", {
-            type: "Success",
-          });
-        }
-      },
-    },
-  );
-
-  const reportDisabled =
-    !sdk ||
-    !isRpcSdk(sdk) ||
-    isLoading ||
-    isSuccess ||
-    scalarReportValue === "";
-
-  const handleSignTransaction = async () => send();
+  const handleSignTransaction = async () => {};
 
   const digits =
     bounds[0].abs().toString().length + bounds[1].abs().toString().length;
@@ -143,7 +107,7 @@ const ScalarReportBox = ({
             }
           >
             <div
-              className={`flex h-full flex-1 items-center justify-end bg-scalar-bar px-3 py-1 text-sm text-scalar-text transition-all ease-[cubic-bezier(0.95,0.05,0.795,0.035)] sm:justify-center md:justify-end lg:justify-center`}
+              className={`ease-[cubic-bezier(0.95,0.05,0.795,0.035)] flex h-full flex-1 items-center justify-end bg-scalar-bar px-3 py-1 text-sm text-scalar-text transition-all sm:justify-center md:justify-end lg:justify-center`}
               style={{
                 minWidth: expandedInfoToggled ? digits * 18 : digits * 12,
               }}
@@ -172,7 +136,7 @@ const ScalarReportBox = ({
         className="mt-4 shadow-ztg-2"
         onClick={handleSignTransaction}
         disabled={reportDisabled}
-        loading={isBroadcasting}
+        loading={true}
       >
         {scalarReportValue != null && scalarReportValue != "" && (
           <>Report Outcome</>

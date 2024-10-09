@@ -9,7 +9,6 @@ import {
   useOrders,
 } from "lib/hooks/queries/orderbook/useOrders";
 import { useMarketsByIds } from "lib/hooks/queries/useMarketsByIds";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -120,31 +119,8 @@ const CancelOrderButton = ({
   const [sdk, id] = useSdkv2();
   const queryClient = useQueryClient();
 
-  const {
-    isLoading,
-    isSuccess,
-    send: cancelOrder,
-  } = useExtrinsic(
-    () => {
-      if (!isRpcSdk(sdk)) return;
-      return sdk.api.tx.orderbook.removeOrder(orderId);
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([id, ordersRootKey]);
-
-        notificationStore.pushNotification("Successfully cancelled order", {
-          type: "Success",
-        });
-      },
-    },
-  );
-
   return (
-    <SecondaryButton
-      onClick={() => cancelOrder()}
-      disabled={isLoading || isSuccess || disabled}
-    >
+    <SecondaryButton onClick={() => {}} disabled={disabled}>
       Cancel Order
     </SecondaryButton>
   );

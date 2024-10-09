@@ -19,7 +19,6 @@ import { useBalance } from "lib/hooks/queries/useBalance";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { formatNumberLocalized } from "lib/util";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useNotifications } from "lib/state/notifications";
 import { formatNumberCompact } from "lib/util/format-compact";
 import { assetsAreEqual } from "lib/util/assets-are-equal";
@@ -153,31 +152,6 @@ const TransferModal = ({
     );
   }, [pubKey, asset?.assetOption?.value, targetAddress?.value, isValid]);
 
-  const {
-    send,
-    isLoading: txIsLoading,
-    fee: feeRaw,
-  } = useExtrinsic(
-    () => {
-      return extrinsic;
-    },
-    {
-      onSuccess: () => {
-        notifications.pushNotification(
-          `Successfully transferred ${formatNumberCompact(
-            Number(asset.amount),
-          )} ${asset.assetOption?.label} to ${targetAddress?.label}`,
-          {
-            type: "Success",
-          },
-        );
-        reset({
-          asset: { amount: "", assetOption: defaultOption },
-          address: null,
-        });
-      },
-    },
-  );
   const fee = 0;
 
   let maxAmount = "";
@@ -289,10 +263,7 @@ const TransferModal = ({
             Transfer Fee: {fee ? `${formatNumberCompact(0)} ${"SOL"}` : ""}
           </span>
         </div>
-        <FormTransactionButton
-          loading={txIsLoading}
-          disabled={!isValid || txIsLoading}
-        >
+        <FormTransactionButton loading={true} disabled={!isValid}>
           Transfer
         </FormTransactionButton>
       </form>

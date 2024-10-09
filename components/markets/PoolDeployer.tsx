@@ -12,7 +12,6 @@ import { ZTG } from "lib/constants";
 import { accountPoolAssetBalancesRootKey } from "lib/hooks/queries/useAccountPoolAssetBalances";
 import { useMarket } from "lib/hooks/queries/useMarket";
 import { useMarketPoolId } from "lib/hooks/queries/useMarketPoolId";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -47,38 +46,6 @@ const PoolDeployer = ({
   const notificationStore = useNotifications();
   const [sdk, id] = useSdkv2();
   const [liquidity, setLiquidity] = useState<Liquidity | null>(null);
-
-  const {
-    send: deployAmm2Pool,
-    isLoading,
-    isSuccess,
-  } = useExtrinsic(
-    () => {
-      if (isRpcSdk(sdk) && liquidity?.amount && liquidity.rows) {
-        const amount = new Decimal(liquidity.amount).mul(ZTG).toFixed(0);
-        return sdk.api.tx.utility.batchAll([
-          sdk.api.tx.predictionMarkets.buyCompleteSet(marketId, amount),
-          sdk.api.tx.neoSwaps.deployPool(
-            marketId,
-            new Decimal(liquidity.amount).mul(ZTG).toFixed(0),
-            liquidity.rows.map((row) =>
-              new Decimal(row.price.price).mul(ZTG).toFixed(0),
-            ),
-            swapFeeFromFloat(liquidity.swapFee?.value).toString(),
-          ),
-        ]);
-      }
-    },
-    {
-      onSuccess: () => {
-        notificationStore.pushNotification("Liquidity pool deployed", {
-          type: "Success",
-        });
-        queryClient.invalidateQueries([id, accountPoolAssetBalancesRootKey]);
-        onPoolDeployed?.();
-      },
-    },
-  );
 
   const poolCost = liquidity?.amount;
 
@@ -182,9 +149,9 @@ const PoolDeployer = ({
 
   return (
     <>
-      {isSuccess ? (
+      {true ? (
         <></>
-      ) : liquidity && isLoading ? (
+      ) : liquidity ? (
         <div className="center">
           <div className="center gap-4 rounded-md bg-slate-50 p-6">
             <div className="center h-12 w-12 bg-inherit">
@@ -213,13 +180,13 @@ const PoolDeployer = ({
               </div>
             </div>
             <div className="text-center">
-              <TransactionButton
+              {/* <TransactionButton
                 className="mb-4 ml-ztg-8 w-ztg-266"
                 onClick={() => deployAmm2Pool()}
                 disabled={!fieldState.isValid || isLoading}
               >
                 Deploy Pool
-              </TransactionButton>
+              </TransactionButton> */}
 
               <div className="ml-[27px] text-ztg-12-150 font-bold text-sky-600">
                 Total Cost:

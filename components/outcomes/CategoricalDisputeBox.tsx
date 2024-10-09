@@ -14,7 +14,6 @@ import {
   marketDisputesRootKey,
   useMarketDisputes,
 } from "lib/hooks/queries/useMarketDisputes";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 
@@ -46,35 +45,6 @@ const CategoricalDisputeBox = ({
   const tokenSymbol = constants?.tokenSymbol;
 
   const bondAmount = disputes ? disputeBond : undefined;
-
-  const {
-    send: dispute,
-    isLoading,
-    isBroadcasting,
-  } = useExtrinsic(
-    () => {
-      if (isRpcSdk(sdk)) {
-        return sdk.api.tx.predictionMarkets.dispute(market.marketId);
-      }
-    },
-    {
-      onBroadcast: () => {},
-      onSuccess: () => {
-        queryClient.invalidateQueries([
-          id,
-          marketDisputesRootKey,
-          market.marketId,
-        ]);
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          notificationStore.pushNotification(`Successfully disputed.`, {
-            type: "Success",
-          });
-        }
-      },
-    },
-  );
 
   const getPreviousReportName = () => {
     const reportIndex = market.report?.outcome?.categorical;
@@ -125,9 +95,9 @@ const CategoricalDisputeBox = ({
       )}
       <TransactionButton
         className="mb-ztg-10 mt-[20px]"
-        onClick={() => dispute()}
-        disabled={isLoading}
-        loading={isBroadcasting}
+        onClick={() => {}}
+        disabled={true}
+        loading={true}
       >
         Confirm Dispute
       </TransactionButton>

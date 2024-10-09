@@ -24,7 +24,6 @@ import {
   useTradeMaxBaseAmount,
   useTradeTransaction,
 } from "lib/hooks/trade";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { calcInGivenOut, calcOutGivenIn, calcSpotPrice } from "lib/math";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -207,40 +206,6 @@ const Inner = ({
     lastEditedAssetId,
     IOMarketOutcomeAssetId.is(lastEditedAssetId) ? assetAmount : baseAmount,
   );
-
-  const {
-    send: swapTx,
-    isSuccess,
-    isLoading,
-    fee,
-    isBroadcasting,
-    resetState: resetTransactionState,
-  } = useExtrinsic(() => transaction, {
-    onSuccess: (data) => {
-      const { baseAmount, assetAmount } = getTradeValuesFromExtrinsicResult(
-        type,
-        data,
-      );
-
-      // notifications.pushNotification(
-      //   `Successfully ${
-      //     tradeItem.action === "buy" ? "bought" : "sold"
-      //   } ${assetAmount} ${
-      //     tradeItemState?.asset?.name
-      //   } for ${baseAmount} ${baseSymbol}`,
-      //   { type: "Success", lifetime: 60 },
-      // );
-
-      setFinalAmounts({ asset: assetAmount, base: baseAmount });
-      setPercentageDisplay("0");
-
-      if (tradeItem.action === "buy" && publicKey) {
-        awaitIndexer(() => {
-          queryClient.invalidateQueries([id, positionsRootKey, publicKey]);
-        });
-      }
-    },
-  });
 
   const changeByPercentage = useCallback(
     (percentage: Decimal) => {
@@ -479,7 +444,7 @@ const Inner = ({
 
   return (
     <div>
-      {isSuccess === true && tradeItemState ? (
+      {tradeItemState ? (
         <TradeResult
           type={tradeItem.action}
           amount={new Decimal(finalAmounts.asset)}
@@ -491,7 +456,6 @@ const Inner = ({
           onContinueClick={() => {
             setPercentageDisplay("0");
             reset();
-            resetTransactionState();
           }}
         />
       ) : (
@@ -499,7 +463,6 @@ const Inner = ({
           className="relative rounded-[10px] bg-white"
           onSubmit={(e) => {
             e.preventDefault();
-            swapTx();
           }}
         >
           <div className="hidden md:block">
@@ -552,18 +515,14 @@ const Inner = ({
                   max: maxAssetAmount?.div(ZTG).toFixed(4),
                   validate: (value) => Number(value) > 0,
                 })}
-                onFocus={() => {
-                  if (tradeItemState?.assetId) {
-                    setLastEditedAssetId(tradeItemState?.assetId);
-                  }
-                }}
+                onFocus={() => {}}
                 step="any"
                 className="w-full bg-transparent text-center text-6xl sm:text-4xl lg:text-5xl"
                 autoFocus
               />
             </div>
             <div className="center mb-4 font-semibold">
-              {market && tradeItemState?.assetId && (
+              {/* {market && tradeItemState?.assetId && (
                 <MarketContextActionOutcomeSelector
                   market={market}
                   selected={tradeItemState?.assetId}
@@ -576,7 +535,7 @@ const Inner = ({
                     });
                   }}
                 />
-              )}
+              )} */}
             </div>
             <div className="center relative mb-[20px] h-[56px] rounded-lg bg-anti-flash-white text-ztg-18-150">
               <Input
@@ -587,11 +546,7 @@ const Inner = ({
                   max: maxBaseAmount?.div(ZTG).toFixed(4),
                   validate: (value) => Number(value) > 0,
                 })}
-                onFocus={() => {
-                  if (tradeItemState?.baseAssetId) {
-                    setLastEditedAssetId(tradeItemState?.baseAssetId);
-                  }
-                }}
+                onFocus={() => {}}
                 step="any"
                 className="w-full bg-transparent text-center"
               />
@@ -603,16 +558,16 @@ const Inner = ({
               value={percentageDisplay}
               onValueChange={setPercentageDisplay}
               onFocus={() => {
-                if (tradeItemState?.assetId) {
-                  setLastEditedAssetId(tradeItemState?.assetId);
-                }
+                // if (tradeItemState?.assetId) {
+                //   setLastEditedAssetId(tradeItemState?.assetId);
+                // }
               }}
               minLabel="0 %"
               step="0.1"
               valueSuffix="%"
               maxLabel="100 %"
               className="mb-[20px]"
-              disabled={isLoading === true || pubKey == null}
+              disabled={pubKey == null}
               {...register("percentage")}
             />
             <div className="mb-4 text-center">
@@ -635,11 +590,11 @@ const Inner = ({
 
             <div className="relative">
               <TransactionButton
-                disabled={!formState.isValid || isLoading === true}
-                className={`relative h-[56px] ${isLoading && "animate-pulse"}`}
+                disabled={!formState.isValid}
+                className={`relative h-[56px] `}
                 type="submit"
                 extrinsic={transaction}
-                loading={isBroadcasting}
+                loading={true}
               >
                 <div>
                   <div className="center h-[20px] font-normal">

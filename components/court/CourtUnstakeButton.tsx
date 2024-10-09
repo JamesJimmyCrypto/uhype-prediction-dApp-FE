@@ -7,7 +7,6 @@ import { BLOCK_TIME_SECONDS, DAY_SECONDS } from "lib/constants";
 import { useConnectedCourtParticipant } from "lib/hooks/queries/court/useConnectedCourtParticipant";
 import { courtParticipantsRootKey } from "lib/hooks/queries/court/useCourtParticipants";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -21,27 +20,6 @@ const CourtUnstakeButton = ({ className }: { className?: string }) => {
   const { publicKey } = useWallet();
   const participant = useConnectedCourtParticipant();
   const queryClient = useQueryClient();
-
-  const {
-    isLoading: isPrepareLeaveLoading,
-    send: prepareLeaveCourt,
-    fee,
-  } = useExtrinsic(
-    () => {
-      if (!isRpcSdk(sdk) || !publicKey) return;
-
-      return sdk.api.tx.court.prepareExitCourt();
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([id, courtParticipantsRootKey]);
-        notificationStore.pushNotification("Successfully began exit process", {
-          type: "Success",
-        });
-        setIsOpen(false);
-      },
-    },
-  );
 
   return (
     <>
@@ -80,13 +58,13 @@ const CourtUnstakeButton = ({ className }: { className?: string }) => {
                 Network Fee: {0} {"SOL"}
               </span>
             </div>
-            <TransactionButton
+            {/* <TransactionButton
               className="w-full max-w-[250px]"
               disabled={isPrepareLeaveLoading}
               onClick={() => prepareLeaveCourt()}
             >
               Confirm Leave
-            </TransactionButton>
+            </TransactionButton> */}
           </div>
         </Dialog.Panel>
       </Modal>

@@ -3,14 +3,12 @@ import { useForm } from "react-hook-form";
 import { isRpcSdk } from "@zeitgeistpm/sdk";
 import FormTransactionButton from "components/ui/FormTransactionButton";
 import { identityRootKey } from "lib/hooks/queries/useIdentity";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { appQueryClient } from "lib/query-client";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { UserIdentity } from "lib/types/user-identity";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
-import { useExtrinsicFee } from "lib/hooks/queries/useExtrinsicFee";
 
 export type AcccountSettingsFormProps = {
   identity: UserIdentity;
@@ -57,54 +55,12 @@ const AcccountSettingsForm: React.FC<AcccountSettingsFormProps> = ({
   const isCleared =
     !identity?.displayName && !identity?.discord && !identity?.twitter;
 
-  const { send: updateIdentity, isLoading: isUpdating } = useExtrinsic(
-    () => {
-      if (isRpcSdk(sdk)) {
-        return sdk.api.tx.identity.setIdentity({
-          additional: [[{ Raw: "discord" }, { Raw: discordHandle }]],
-          display: { Raw: displayName },
-          twitter: { Raw: twitterHandle },
-        });
-      }
-    },
-    {
-      onSuccess: () => {
-        appQueryClient.invalidateQueries([id, identityRootKey, address]);
-        notificationStore.pushNotification("Successfully set Identity", {
-          type: "Success",
-        });
-        reset({ displayName, discord: discordHandle, twitter: twitterHandle });
-      },
-    },
-  );
-
-  const { send: clearIdentity, isLoading: isClearing } = useExtrinsic(
-    () => {
-      if (isRpcSdk(sdk)) {
-        return sdk.api.tx.identity.clearIdentity();
-      }
-    },
-    {
-      onSuccess: () => {
-        appQueryClient.invalidateQueries([id, identityRootKey, address]);
-        notificationStore.pushNotification("Successfully cleared Identity", {
-          type: "Success",
-        });
-        reset({
-          displayName: "",
-          discord: "",
-          twitter: "",
-        });
-      },
-    },
-  );
   return (
     <form
       className="flex flex-col"
       onSubmit={(e) => {
         e.preventDefault();
         if (!isValid) return;
-        updateIdentity();
       }}
     >
       <label htmlFor="displayName" className="mb-2 font-bold">
@@ -154,17 +110,14 @@ const AcccountSettingsForm: React.FC<AcccountSettingsFormProps> = ({
         identity.
       </div>
 
-      <FormTransactionButton
-        loading={isUpdating}
-        disabled={!isDirty || !isValid || isUpdating || isClearing}
-      >
+      <FormTransactionButton loading={true} disabled={!isDirty || !isValid}>
         Set Identity
       </FormTransactionButton>
       <button
         type="button"
         className="mt-2 text-sm text-sky-600 focus:outline-none"
-        disabled={isUpdating || isClearing || isCleared}
-        onClick={() => clearIdentity()}
+        disabled={true}
+        onClick={() => {}}
       >
         Clear Identity
       </button>

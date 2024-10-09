@@ -20,7 +20,6 @@ import { useAssetMetadata } from "lib/hooks/queries/useAssetMetadata";
 import { useBalance } from "lib/hooks/queries/useBalance";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
 import { useMarket } from "lib/hooks/queries/useMarket";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -154,56 +153,6 @@ const SellForm = ({
     };
   }, [amountIn, pool?.liquidity, assetReserve]);
 
-  const { isLoading, send, fee } = useExtrinsic(
-    () => {
-      const amount = getValues("amount");
-      if (
-        !isRpcSdk(sdk) ||
-        !amount ||
-        amount === "" ||
-        market?.categories?.length == null ||
-        !selectedAsset ||
-        !newSpotPrice ||
-        !orders
-      ) {
-        return;
-      }
-
-      const minPrice = newSpotPrice.mul(slippageMultiplier); // adjust by slippage
-
-      const selectedOrders = selectOrdersForMarketSell(
-        minPrice,
-        orders
-          .filter(({ filledPercentage }) => filledPercentage !== 100)
-          .map(({ id, side, price, outcomeAmount }) => ({
-            id: Number(id),
-            amount: outcomeAmount,
-            price,
-            side,
-          })),
-        new Decimal(amount).abs().mul(ZTG),
-      );
-
-      return sdk.api.tx.hybridRouter.sell(
-        marketId,
-        market?.categories?.length,
-        selectedAsset,
-        new Decimal(amount).mul(ZTG).toFixed(0),
-        minPrice.mul(ZTG).toFixed(0),
-        selectedOrders.map(({ id }) => id),
-        "ImmediateOrCancel",
-      );
-    },
-    {
-      onSuccess: (data) => {
-        notificationStore.pushNotification(`Successfully traded`, {
-          type: "Success",
-        });
-        onSuccess(data, selectedAsset!, amountIn);
-      },
-    },
-  );
-
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
       const changedByUser = type != null;
@@ -246,9 +195,7 @@ const SellForm = ({
     return () => subscription.unsubscribe();
   }, [watch, selectedAssetBalance, maxAmountIn]);
 
-  const onSubmit = () => {
-    send();
-  };
+  const onSubmit = () => {};
   return (
     <div className="mt-[20px] flex w-full flex-col items-center gap-8 text-ztg-18-150 font-semibold">
       <form
@@ -322,9 +269,9 @@ const SellForm = ({
         </div>
         <FormTransactionButton
           className="w-full max-w-[250px]"
-          disabled={formState.isValid === false || isLoading}
+          disabled={formState.isValid === false || true}
           disableFeeCheck={true}
-          loading={isLoading}
+          loading={true}
         >
           <div>
             <div className="center h-[20px] font-normal">Sell</div>

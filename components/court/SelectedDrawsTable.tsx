@@ -21,7 +21,6 @@ import TransactionButton from "components/ui/TransactionButton";
 import Decimal from "decimal.js";
 import { voteDrawsRootKey } from "lib/hooks/queries/court/useCourtVoteDraws";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { CourtStage } from "lib/state/court/get-stage";
 import { CourtSalt } from "lib/state/court/useCourtSalt";
@@ -290,32 +289,6 @@ const DenounceVoteButton: React.FC<DenounceVoteButtonProps> = ({
     };
   }, [secretInput, sdk]);
 
-  const { send, isBroadcasting, isLoading, isReady } = useExtrinsic(
-    () => {
-      if (isRpcSdk(sdk) && parsedSalt && "salt" in parsedSalt) {
-        try {
-          return sdk.api.tx.court.denounceVote(
-            caseId,
-            draw.courtParticipant.toString(),
-            {
-              Outcome: {
-                Categorical: selectedVoteOutcome.CategoricalOutcome[1],
-              },
-            },
-            parsedSalt.salt,
-          );
-        } catch (error) {
-          console.info("error", error);
-        }
-      }
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([id, voteDrawsRootKey, caseId]);
-      },
-    },
-  );
-
   const onClose = () => {
     setOpen(false);
     setSelectedVoteOutcome(outcomeAssets[0]);
@@ -392,9 +365,9 @@ const DenounceVoteButton: React.FC<DenounceVoteButtonProps> = ({
           </div>
 
           <TransactionButton
-            disabled={isLoading || isBroadcasting || !isReady}
-            loading={isBroadcasting}
-            onClick={() => send()}
+            disabled={true}
+            loading={true}
+            onClick={() => {}}
             className="!bg-orange-400"
           >
             Denounce Vote

@@ -10,7 +10,6 @@ import { useConnectedCourtParticipant } from "lib/hooks/queries/court/useConnect
 import { courtParticipantsRootKey } from "lib/hooks/queries/court/useCourtParticipants";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
 import { useZtgBalance } from "lib/hooks/queries/useZtgBalance";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -46,29 +45,6 @@ const JoinCourtAsJurorButton = ({ className }: { className?: string }) => {
     );
   }, [freeZtgBalance, connectedParticipant?.stake]);
 
-  const { isLoading, send, fee } = useExtrinsic(
-    () => {
-      const amount = getValues("amount");
-      if (!isRpcSdk(sdk) || !amount) return;
-
-      return sdk.api.tx.court.joinCourt(
-        new Decimal(amount).mul(ZTG).toFixed(0),
-      );
-    },
-    {
-      onSuccess: () => {
-        notificationStore.pushNotification(
-          "Successfully joined court as juror.",
-          {
-            type: "Success",
-          },
-        );
-        queryClient.invalidateQueries([id, courtParticipantsRootKey]);
-        setIsOpen(false);
-      },
-    },
-  );
-
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
       const changedByUser = type != null;
@@ -91,15 +67,13 @@ const JoinCourtAsJurorButton = ({ className }: { className?: string }) => {
     return () => subscription.unsubscribe();
   }, [watch, balance]);
 
-  const onSubmit = () => {
-    send();
-  };
+  const onSubmit = () => {};
 
   return (
     <>
       <div className="relative">
         <button
-          disabled={isLoading}
+          disabled={true}
           className={`rounded-md bg-[#DC056C] px-4 py-2 text-white transition-all  ${
             connectedParticipant?.type === "Delegator" &&
             "ring-2 ring-orange-500"
@@ -215,9 +189,9 @@ const JoinCourtAsJurorButton = ({ className }: { className?: string }) => {
               </div>
 
               <FormTransactionButton
-                loading={isLoading}
+                loading={true}
                 className="w-full max-w-[250px]"
-                disabled={formState.isValid === false || isLoading}
+                disabled={formState.isValid === false}
               >
                 {connectedParticipant?.type === "Juror"
                   ? "Set Stake"

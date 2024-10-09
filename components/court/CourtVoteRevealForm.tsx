@@ -6,7 +6,7 @@ import { CategoricalAssetId, isRpcSdk, parseAssetId } from "@zeitgeistpm/sdk";
 import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
 import TransactionButton from "components/ui/TransactionButton";
 import { voteDrawsRootKey } from "lib/hooks/queries/court/useCourtVoteDraws";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
+
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { IOCourtSaltPhraseStorage } from "lib/state/court/CourtSaltPhraseStorage";
 import { useCourtCommitmentHash } from "lib/state/court/useCourtCommitmentHash";
@@ -58,31 +58,6 @@ export const CourtVoteRevealForm: React.FC<CourtVoteRevealFormProps> = ({
     salt,
     selectedOutcome: matchingOutcome ?? vote,
   });
-
-  const { send, isReady, isLoading, isBroadcasting } = useExtrinsic(
-    () => {
-      if (isRpcSdk(sdk) && salt && vote) {
-        const assetIndex =
-          matchingOutcome?.CategoricalOutcome[1] ?? vote.CategoricalOutcome[1];
-        return sdk.api.tx.court.revealVote(
-          caseId,
-          {
-            Outcome: {
-              Categorical: assetIndex,
-            },
-          },
-          salt,
-        );
-      }
-      return undefined;
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([id, voteDrawsRootKey, caseId]);
-        queryClient.invalidateQueries([id, voteDrawsRootKey]);
-      },
-    },
-  );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [hasDroppedFile, setHasDroppedFile] = useState(false);
@@ -212,13 +187,11 @@ export const CourtVoteRevealForm: React.FC<CourtVoteRevealFormProps> = ({
         )}
 
         <TransactionButton
-          disabled={
-            !isReady || isLoading || isBroadcasting || !commitmentHashMatches
-          }
-          className={`relative h-[56px] ${isLoading && "animate-pulse"}`}
+          disabled={!commitmentHashMatches}
+          className={`relative h-[56px]`}
           type="submit"
-          loading={isLoading || isBroadcasting}
-          onClick={() => send()}
+          loading={true}
+          onClick={() => {}}
         >
           <div>
             <div className="center h-[20px] font-normal">Reveal Vote</div>

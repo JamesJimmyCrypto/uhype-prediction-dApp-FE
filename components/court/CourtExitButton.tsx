@@ -7,7 +7,6 @@ import TransactionButton from "components/ui/TransactionButton";
 import { useConnectedCourtParticipant } from "lib/hooks/queries/court/useConnectedCourtParticipant";
 import { courtParticipantsRootKey } from "lib/hooks/queries/court/useCourtParticipants";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useChainTime } from "lib/state/chaintime";
 import { useNotifications } from "lib/state/notifications";
@@ -24,25 +23,6 @@ const CourtExitButton = ({ className }: { className?: string }) => {
   const participant = useConnectedCourtParticipant();
   const queryClient = useQueryClient();
   const time = useChainTime();
-
-  const {
-    isLoading: isLeaveLoading,
-    send: leaveCourt,
-    fee,
-  } = useExtrinsic(
-    () => {
-      if (!isRpcSdk(sdk) || !publicKey) return;
-      return sdk.api.tx.court.exitCourt(publicKey.toString());
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([id, courtParticipantsRootKey]);
-        notificationStore.pushNotification("Successfully exited court", {
-          type: "Success",
-        });
-      },
-    },
-  );
 
   const cooldownTime = useMemo(() => {
     if (time && participant && constants && participant?.prepareExitAt) {
@@ -117,13 +97,13 @@ const CourtExitButton = ({ className }: { className?: string }) => {
                 Network Fee: {0} {"SOL"}
               </span>
             </div>
-            <TransactionButton
+            {/* <TransactionButton
               className="w-full max-w-[250px]"
               disabled={isLeaveLoading}
               onClick={() => leaveCourt()}
             >
               Confirm Exit
-            </TransactionButton>
+            </TransactionButton> */}
           </div>
         </Dialog.Panel>
       </Modal>

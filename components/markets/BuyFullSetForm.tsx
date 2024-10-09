@@ -14,7 +14,6 @@ import { useAssetMetadata } from "lib/hooks/queries/useAssetMetadata";
 import { useBalance } from "lib/hooks/queries/useBalance";
 import { useMarket } from "lib/hooks/queries/useMarket";
 import { usePool } from "lib/hooks/queries/usePool";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -50,34 +49,6 @@ const BuyFullSetForm = ({
 
   const { data: balances } = useAccountPoolAssetBalances(pubKey, pool);
 
-  const {
-    send: buySet,
-    isLoading,
-    fee,
-  } = useExtrinsic(
-    () => {
-      if (isRpcSdk(sdk) && amount && amount !== "") {
-        try {
-          return sdk.api.tx.predictionMarkets.buyCompleteSet(
-            marketId,
-            new Decimal(amount).mul(ZTG).toFixed(0),
-          );
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    },
-    {
-      onSuccess: () => {
-        notificationStore.pushNotification(
-          `Bought ${new Decimal(amount).toFixed(1)} full sets`,
-          { type: "Success" },
-        );
-        onSuccess?.();
-      },
-    },
-  );
-
   useEffect(() => {
     let lowestTokenAmount: Decimal = new Decimal(0);
     balances?.forEach((balance) => {
@@ -94,7 +65,6 @@ const BuyFullSetForm = ({
   };
 
   const disabled =
-    isLoading ||
     !baseAssetBalance ||
     Number(amount) > baseAssetBalance?.div(ZTG).toNumber() ||
     Number(amount) === 0;
@@ -103,7 +73,6 @@ const BuyFullSetForm = ({
     if (disabled || !isRpcSdk(sdk)) {
       return;
     }
-    buySet();
   };
 
   useGlobalKeyPress("Enter", handleSignTransaction);
@@ -156,14 +125,12 @@ const BuyFullSetForm = ({
       <TransactionButton
         onClick={handleSignTransaction}
         disabled={disabled}
-        loading={isLoading}
+        loading={true}
       >
         Confirm Buy
-        {fee && (
-          <span className="block text-xs font-normal">
-            Transaction fee: {formatNumberCompact(0)} {"SOL"}
-          </span>
-        )}
+        <span className="block text-xs font-normal">
+          Transaction fee: {formatNumberCompact(0)} {"SOL"}
+        </span>
       </TransactionButton>
     </div>
   );

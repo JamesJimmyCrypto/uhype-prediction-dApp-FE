@@ -11,7 +11,6 @@ import {
 import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
 import TransactionButton from "components/ui/TransactionButton";
 import TruncatedText from "components/ui/TruncatedText";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -40,35 +39,9 @@ const CategoricalReportBox = ({
 
   const [selectedOutcome, setSelectedOutcome] = useState(outcomeAssets[0]);
 
-  const { send, isLoading, isBroadcasting, isSuccess } = useExtrinsic(
-    () => {
-      if (!isRpcSdk(sdk)) return;
+  const reportDisabled = !sdk || !isRpcSdk(sdk);
 
-      if (!IOCategoricalAssetId.is(selectedOutcome)) return;
-
-      const ID = selectedOutcome.CategoricalOutcome[1];
-
-      return sdk.api.tx.predictionMarkets.report(market.marketId, {
-        Categorical: ID,
-      });
-    },
-    {
-      onBroadcast: () => {},
-      onSuccess: () => {
-        if (onReport) {
-          onReport?.({ categorical: getIndexOf(selectedOutcome) });
-        } else {
-          notificationStore.pushNotification("Outcome Reported", {
-            type: "Success",
-          });
-        }
-      },
-    },
-  );
-
-  const reportDisabled = !sdk || !isRpcSdk(sdk) || isLoading || isSuccess;
-
-  const handleSignTransaction = async () => send();
+  const handleSignTransaction = async () => {};
 
   return (
     <>
@@ -89,7 +62,7 @@ const CategoricalReportBox = ({
         className="center my-ztg-10 shadow-ztg-2"
         onClick={handleSignTransaction}
         disabled={reportDisabled}
-        loading={isBroadcasting}
+        loading={true}
       >
         <span className="mr-1">Report Outcome</span>
         <TruncatedText

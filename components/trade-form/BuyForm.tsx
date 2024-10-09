@@ -20,7 +20,6 @@ import { useAssetMetadata } from "lib/hooks/queries/useAssetMetadata";
 import { useBalance } from "lib/hooks/queries/useBalance";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
 import { useMarket } from "lib/hooks/queries/useMarket";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -168,58 +167,6 @@ const BuyForm = ({
       };
     }, [amountIn, pool?.liquidity, assetReserve]);
 
-  const { isLoading, send, fee } = useExtrinsic(
-    () => {
-      const amount = getValues("amount");
-      if (
-        !isRpcSdk(sdk) ||
-        !amount ||
-        amount === "" ||
-        market?.categories?.length == null ||
-        !selectedAsset ||
-        !newSpotPrice ||
-        !orders
-      ) {
-        return;
-      }
-      const amountDecimal = new Decimal(amount).mul(ZTG); // base asset amount
-
-      const maxPrice = newSpotPrice.plus(DEFAULT_SLIPPAGE_PERCENTAGE / 100); // adjust by slippage
-      const approxOutcomeAmount = amountDecimal.mul(maxPrice); // this will be slightly higher than the expect amount out and therefore may pick up extra order suggestions
-
-      const selectedOrders = selectOrdersForMarketBuy(
-        maxPrice,
-        orders
-          .filter(({ filledPercentage }) => filledPercentage !== 100)
-          .map(({ id, side, price, outcomeAmount }) => ({
-            id: Number(id),
-            amount: outcomeAmount,
-            price,
-            side,
-          })),
-        approxOutcomeAmount.abs().mul(ZTG),
-      );
-
-      return sdk.api.tx.hybridRouter.buy(
-        marketId,
-        market?.categories?.length,
-        selectedAsset,
-        amountDecimal.toFixed(0),
-        maxPrice.mul(ZTG).toFixed(0),
-        selectedOrders.map(({ id }) => id),
-        "ImmediateOrCancel",
-      );
-    },
-    {
-      onSuccess: (data) => {
-        notificationStore.pushNotification(`Successfully traded`, {
-          type: "Success",
-        });
-        onSuccess(data, selectedAsset!, amountIn);
-      },
-    },
-  );
-
   const maxSpendableBalance = baseAssetBalance;
 
   useEffect(() => {
@@ -264,9 +211,7 @@ const BuyForm = ({
     return () => subscription.unsubscribe();
   }, [watch, maxSpendableBalance, maxAmountIn]);
 
-  const onSubmit = () => {
-    send();
-  };
+  const onSubmit = () => {};
   return (
     <div className="flex w-full flex-col items-center gap-8 text-ztg-18-150 font-semibold">
       <form
@@ -349,9 +294,9 @@ const BuyForm = ({
         </div>
         <FormTransactionButton
           className="w-full max-w-[250px]"
-          disabled={formState.isValid === false || isLoading}
+          disabled={formState.isValid}
           disableFeeCheck={true}
-          loading={isLoading}
+          loading={true}
         >
           <div>
             <div className="center h-[20px] font-normal">Buy</div>

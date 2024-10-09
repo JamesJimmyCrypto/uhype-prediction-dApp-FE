@@ -7,7 +7,6 @@ import { DEFAULT_SLIPPAGE_PERCENTAGE } from "lib/constants";
 import { Amm2Pool, amm2PoolKey } from "lib/hooks/queries/amm2/useAmm2Pool";
 import { useBalances } from "lib/hooks/queries/useBalances";
 import { lookupAssetMetadata, useMarket } from "lib/hooks/queries/useMarket";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -40,41 +39,6 @@ const JoinPoolForm = ({
     .filter(isPresent);
 
   const queryClient = useQueryClient();
-
-  const { send: joinPool, isLoading } = useExtrinsic(
-    () => {
-      if (isRpcSdk(sdk) && pool && poolSharesToReceive) {
-        const formValue = getValues();
-        const maxAmountsIn = pool?.assetIds.map((assetId, index) => {
-          const assetAmount = formValue[index] ?? 0;
-          return assetAmount === ""
-            ? "0"
-            : new Decimal(assetAmount).mul(ZTG).toFixed(0);
-        });
-
-        try {
-          return sdk.api.tx.neoSwaps.join(
-            marketId,
-            poolSharesToReceive
-              .mul((100 - DEFAULT_SLIPPAGE_PERCENTAGE) / 100)
-              .toFixed(0),
-            maxAmountsIn,
-          );
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    },
-    {
-      onSuccess: () => {
-        notificationStore.pushNotification("Joined pool", {
-          type: "Success",
-        });
-        queryClient.invalidateQueries([id, amm2PoolKey, marketId]);
-        onSuccess?.();
-      },
-    },
-  );
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
@@ -153,9 +117,7 @@ const JoinPoolForm = ({
     return () => subscription.unsubscribe();
   }, [watch, userAssetBalances, pool]);
 
-  const onSubmit: SubmitHandler<any> = () => {
-    joinPool();
-  };
+  const onSubmit: SubmitHandler<any> = () => {};
 
   const prctSharesToReceive = useMemo(() => {
     if (!poolSharesToReceive) return new Decimal(0);
@@ -236,12 +198,8 @@ const JoinPoolForm = ({
       </div>
 
       <FormTransactionButton
-        loading={isLoading}
-        disabled={
-          formState.isValid === false ||
-          isLoading ||
-          market?.status !== "Active"
-        }
+        loading={true}
+        disabled={formState.isValid === false || market?.status !== "Active"}
       >
         Join Pool
       </FormTransactionButton>

@@ -8,7 +8,6 @@ import SecondaryButton from "components/ui/SecondaryButton";
 import Decimal from "decimal.js";
 import { ZTG } from "lib/constants";
 import { ChainName } from "lib/constants/chains";
-import { useExtrinsicFee } from "lib/hooks/queries/useExtrinsicFee";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useChain } from "lib/state/cross-chain";
 import { useNotifications } from "lib/state/notifications";
@@ -122,11 +121,6 @@ const WithdrawModal = ({
   const [sdk] = useSdkv2();
   const { chain } = useChain(toChain);
 
-  const { fee } = useExtrinsicFee(
-    isRpcSdk(sdk) && pubKey
-      ? createWithdrawExtrinsic(sdk.api, "100000000000", pubKey, foreignAssetId)
-      : undefined,
-  );
   const amount = getValues("amount");
   const amountDecimal: Decimal = amount
     ? convertDecimals(new Decimal(amount), 0, assetDecimals)
@@ -221,7 +215,7 @@ const WithdrawModal = ({
                     value={
                       countDecimals(field.value ? Number(field.value) : 0) > 3
                         ? Number(field.value).toFixed(3)
-                        : field.value ?? 0
+                        : (field.value ?? 0)
                     }
                   />
                 );
@@ -267,11 +261,9 @@ const WithdrawModal = ({
           </div>
           <div className="center mb-[16px] text-ztg-12-120 font-normal text-sky-600">
             Zeitgeist fee:
-            {fee && (
-              <span className="ml-1 text-black">
-                {formatNumberCompact(0)} {"SOL"}
-              </span>
-            )}
+            <span className="ml-1 text-black">
+              {formatNumberCompact(0)} {"SOL"}
+            </span>
           </div>
           <div className="center mb-[10px] text-ztg-12-120 font-normal text-sky-600">
             {toChain} fee:

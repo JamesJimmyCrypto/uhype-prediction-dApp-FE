@@ -11,7 +11,6 @@ import { useConnectedCourtParticipant } from "lib/hooks/queries/court/useConnect
 import { courtParticipantsRootKey } from "lib/hooks/queries/court/useCourtParticipants";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
 import { useZtgBalance } from "lib/hooks/queries/useZtgBalance";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -47,30 +46,6 @@ const DelegateButton = ({ address }: { address: string }) => {
     );
   }, [freeZtgBalance, connectedParticipant?.stake]);
 
-  const { isLoading, send, fee } = useExtrinsic(
-    () => {
-      const amount = getValues("amount");
-      if (!isRpcSdk(sdk) || !amount) return;
-
-      return sdk.api.tx.court.delegate(
-        new Decimal(amount).mul(ZTG).toFixed(0),
-        [address],
-      );
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([id, courtParticipantsRootKey]);
-
-        notificationStore.pushNotification(
-          `Successfully delegated to ${shortenAddress(address, 5, 5)} `,
-          {
-            type: "Success",
-          },
-        );
-      },
-    },
-  );
-
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
       const changedByUser = type != null;
@@ -94,7 +69,7 @@ const DelegateButton = ({ address }: { address: string }) => {
   }, [watch, balance]);
 
   const onSubmit = () => {
-    send();
+    // send();
   };
 
   return (
@@ -167,9 +142,9 @@ const DelegateButton = ({ address }: { address: string }) => {
                 </span>
               </div>
               <FormTransactionButton
-                loading={isLoading}
+                loading={true}
                 className="w-full max-w-[250px]"
-                disabled={formState.isValid === false || isLoading}
+                disabled={formState.isValid === false}
               >
                 Delegate
               </FormTransactionButton>

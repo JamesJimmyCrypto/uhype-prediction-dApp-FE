@@ -8,7 +8,6 @@ import {
   useCourtCase,
 } from "lib/hooks/queries/court/useCourtCases";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useMemo } from "react";
 import { AiOutlineEye } from "react-icons/ai";
@@ -18,20 +17,6 @@ export const CourtAppealForm = ({ caseId }: { caseId: number }) => {
   const queryClient = useQueryClient();
   const constants = useChainConstants();
   const { data: courtCase } = useCourtCase(caseId);
-
-  const { send, isReady, isLoading, isBroadcasting } = useExtrinsic(
-    () => {
-      if (isRpcSdk(sdk)) {
-        return sdk.api.tx.court.appeal(caseId);
-      }
-      return undefined;
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([id, courtCaseRootKey]);
-      },
-    },
-  );
 
   const bond = useMemo(() => {
     const appealRound = (courtCase?.appeals.length ?? 0) + 1;
@@ -81,7 +66,7 @@ export const CourtAppealForm = ({ caseId }: { caseId: number }) => {
           </Disclosure>
         </div>
 
-        <TransactionButton
+        {/* <TransactionButton
           disabled={!isReady || isLoading || isBroadcasting}
           className={`relative h-[56px] ${
             isLoading && "animate-pulse"
@@ -93,7 +78,7 @@ export const CourtAppealForm = ({ caseId }: { caseId: number }) => {
           <div>
             <div className="center h-[20px] font-normal">Submit Appeal</div>
           </div>
-        </TransactionButton>
+        </TransactionButton> */}
       </div>
     </div>
   );

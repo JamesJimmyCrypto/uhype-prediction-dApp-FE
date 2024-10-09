@@ -12,7 +12,6 @@ import {
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
 import { useIdentities } from "lib/hooks/queries/useIdentities";
 import { useZtgBalance } from "lib/hooks/queries/useZtgBalance";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -68,32 +67,6 @@ const ManageDelegationsForm = (props: ManageDelegationsFormProps) => {
 
   const queryClient = useQueryClient();
 
-  const { isLoading, send, fee } = useExtrinsic(
-    () => {
-      const amount = getValues("amount");
-      const delegates = getValues("delegates");
-
-      if (!isRpcSdk(sdk) || !amount) return;
-
-      return sdk.api.tx.court.delegate(
-        new Decimal(amount).mul(ZTG).toFixed(0),
-        delegates,
-      );
-    },
-    {
-      onSuccess: () => {
-        notificationStore.pushNotification(
-          "Successfully delegated stake to jurors.",
-          {
-            type: "Success",
-          },
-        );
-        queryClient.invalidateQueries([id, courtParticipantsRootKey]);
-        props.onSuccessfulSubmit?.();
-      },
-    },
-  );
-
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
       const changedByUser = type != null;
@@ -124,9 +97,7 @@ const ManageDelegationsForm = (props: ManageDelegationsFormProps) => {
     return () => subscription.unsubscribe();
   }, [watch, availableDelegationBalance]);
 
-  const onSubmit = () => {
-    send();
-  };
+  const onSubmit = () => {};
 
   return (
     <form
@@ -249,12 +220,10 @@ const ManageDelegationsForm = (props: ManageDelegationsFormProps) => {
       </div>
 
       <FormTransactionButton
-        loading={isLoading}
+        loading={true}
         className="w-full max-w-[250px]"
         disabled={
-          formState.isValid === false ||
-          isLoading ||
-          getValues("delegates").length === 0
+          formState.isValid === false || getValues("delegates").length === 0
         }
       >
         Delegate Stake

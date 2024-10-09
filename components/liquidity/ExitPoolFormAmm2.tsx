@@ -7,7 +7,6 @@ import { DEFAULT_SLIPPAGE_PERCENTAGE } from "lib/constants";
 import { Amm2Pool, amm2PoolKey } from "lib/hooks/queries/amm2/useAmm2Pool";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
 import { lookupAssetMetadata, useMarket } from "lib/hooks/queries/useMarket";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -52,67 +51,6 @@ const ExitPoolForm = ({
   const reserves = Array.from(pool.reserves).map((reserve) => reserve[1]);
 
   const poolAssets = pool?.assetIds;
-
-  const { send: exitPool, isLoading } = useExtrinsic(
-    () => {
-      if (
-        !constants ||
-        !isRpcSdk(sdk) ||
-        !pool ||
-        !poolAssets ||
-        !userPoolShares
-      ) {
-        return;
-      }
-      const formValue = getValues();
-      const slippageMultiplier = (100 - DEFAULT_SLIPPAGE_PERCENTAGE) / 100;
-      // todo: add exit fee for full implementation
-      // const feeMultiplier = 1 - constants.swaps.exitFee;
-      const feeMultiplier = 1;
-
-      const minAssetsOut = poolAssets.map((assetId, index) => {
-        const assetAmount = formValue[index] ?? 0;
-        return assetAmount === ""
-          ? "0"
-          : new Decimal(assetAmount)
-              .mul(ZTG)
-              .mul(slippageMultiplier)
-              .mul(feeMultiplier)
-              .toFixed(0, Decimal.ROUND_DOWN);
-      });
-
-      const poolSharesPercentage: string | undefined =
-        formValue["poolSharesPercentage"];
-
-      if (poolSharesPercentage == null) return;
-
-      const poolSharesAmount = userPoolShares.mul(
-        Number(poolSharesPercentage) / 100,
-      );
-      try {
-        return sdk.api.tx.utility.batchAll([
-          // shares can't be withdrawn without claiming fees first
-          sdk.api.tx.neoSwaps.withdrawFees(marketId),
-          sdk.api.tx.neoSwaps.exit(
-            marketId,
-            poolSharesAmount.toFixed(0),
-            minAssetsOut,
-          ),
-        ]);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    {
-      onSuccess: () => {
-        notificationStore.pushNotification("Exited pool", {
-          type: "Success",
-        });
-        queryClient.invalidateQueries([id, amm2PoolKey, marketId]);
-        onSuccess?.();
-      },
-    },
-  );
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
@@ -176,9 +114,7 @@ const ExitPoolForm = ({
     return () => subscription.unsubscribe();
   }, [watch, pool]);
 
-  const onSubmit: SubmitHandler<any> = () => {
-    exitPool();
-  };
+  const onSubmit: SubmitHandler<any> = () => {};
   return (
     <form className="flex flex-col gap-y-6" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex max-h-[200px] flex-col gap-y-6 overflow-y-auto py-5 md:max-h-[400px]">
@@ -246,8 +182,8 @@ const ExitPoolForm = ({
         {...register("poolSharesPercentage", { min: 0, value: "0" })}
       />
       <FormTransactionButton
-        loading={isLoading}
-        disabled={formState.isValid === false || isLoading}
+        loading={true}
+        disabled={formState.isValid === false}
       >
         Exit Pool
       </FormTransactionButton>

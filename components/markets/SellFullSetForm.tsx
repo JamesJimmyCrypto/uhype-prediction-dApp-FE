@@ -9,7 +9,6 @@ import { useBalance } from "lib/hooks/queries/useBalance";
 import { useMarket } from "lib/hooks/queries/useMarket";
 import { usePool } from "lib/hooks/queries/usePool";
 import { useSaturatedMarket } from "lib/hooks/queries/useSaturatedMarket";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useGlobalKeyPress } from "lib/hooks/events/useGlobalKeyPress";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
@@ -43,34 +42,6 @@ const SellFullSetForm = ({
   const [amount, setAmount] = useState<string>("0");
   const [maxTokenSet, setMaxTokenSet] = useState<Decimal>(new Decimal(0));
 
-  const {
-    send: sellSets,
-    isLoading,
-    fee,
-  } = useExtrinsic(
-    () => {
-      if (isRpcSdk(sdk) && amount && amount !== "") {
-        try {
-          return sdk.api.tx.predictionMarkets.sellCompleteSet(
-            marketId,
-            new Decimal(amount).mul(ZTG).toFixed(0),
-          );
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    },
-    {
-      onSuccess: () => {
-        notificationStore.pushNotification(
-          `Sold ${new Decimal(amount).toFixed(1)} full sets`,
-          { type: "Success" },
-        );
-        onSuccess?.();
-      },
-    },
-  );
-
   useEffect(() => {
     let lowestTokenAmount: Decimal = new Decimal(0);
     balances?.forEach((balance) => {
@@ -86,7 +57,6 @@ const SellFullSetForm = ({
     setAmount(amount);
   };
   const disabled =
-    isLoading ||
     !baseAssetBalance ||
     new Decimal(amount === "" ? 0 : amount).gt(maxTokenSet.div(ZTG)) ||
     new Decimal(amount === "" ? 0 : amount).eq(0);
@@ -95,8 +65,6 @@ const SellFullSetForm = ({
     if (disabled || !isRpcSdk(sdk)) {
       return;
     }
-
-    sellSets();
   };
 
   useGlobalKeyPress("Enter", handleSignTransaction);
@@ -135,14 +103,12 @@ const SellFullSetForm = ({
       <TransactionButton
         onClick={handleSignTransaction}
         disabled={disabled}
-        loading={isLoading}
+        loading={true}
       >
         Confirm Sell
-        {fee && (
-          <span className="block text-xs font-normal">
-            Transaction fee: {formatNumberCompact(0)} {"SOL"}
-          </span>
-        )}
+        <span className="block text-xs font-normal">
+          Transaction fee: {formatNumberCompact(0)} {"SOL"}
+        </span>
       </TransactionButton>
     </div>
   );

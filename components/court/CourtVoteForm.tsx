@@ -7,7 +7,6 @@ import MarketContextActionOutcomeSelector from "components/markets/MarketContext
 import Modal from "components/ui/Modal";
 import TransactionButton from "components/ui/TransactionButton";
 import { voteDrawsRootKey } from "lib/hooks/queries/court/useCourtVoteDraws";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useCourtCommitmentHash } from "lib/state/court/useCourtCommitmentHash";
 import { useCourtSalt } from "lib/state/court/useCourtSalt";
@@ -54,23 +53,6 @@ export const CourtVoteForm: React.FC<CourtVoteFormProps> = ({
   });
 
   const [showDetails, setShowDetails] = useState(false);
-
-  const { send, isReady, isLoading, isBroadcasting } = useExtrinsic(
-    () => {
-      if (isRpcSdk(sdk) && commitmentHash) {
-        return sdk.api.tx.court.vote(caseId, commitmentHash);
-      }
-      return undefined;
-    },
-    {
-      onSuccess: () => {
-        commitVote();
-        queryClient.invalidateQueries([id, voteDrawsRootKey, caseId]);
-        queryClient.invalidateQueries([id, voteDrawsRootKey]);
-        onVote?.();
-      },
-    },
-  );
 
   const onClickDownloadSeed = () => {
     downloadBackup();
@@ -189,7 +171,7 @@ export const CourtVoteForm: React.FC<CourtVoteFormProps> = ({
 
         {/* <div className="text-xxs">{u8aToHex(commitmentHash)}</div> */}
 
-        <TransactionButton
+        {/* <TransactionButton
           disabled={!isReady || isLoading || isBroadcasting || !isBackedUp}
           className={`relative h-[56px] ${isLoading && "animate-pulse"}`}
           type="submit"
@@ -203,7 +185,7 @@ export const CourtVoteForm: React.FC<CourtVoteFormProps> = ({
                 : "Place A Vote"}
             </div>
           </div>
-        </TransactionButton>
+        </TransactionButton> */}
       </div>
     </div>
   );

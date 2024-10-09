@@ -8,7 +8,6 @@ import {
 } from "lib/hooks/queries/court/useCourtCases";
 import { voteDrawsRootKey } from "lib/hooks/queries/court/useCourtVoteDraws";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useMemo } from "react";
 import { AiOutlineEye } from "react-icons/ai";
@@ -18,21 +17,6 @@ export const CourtReassignForm = ({ caseId }: { caseId: number }) => {
   const queryClient = useQueryClient();
   const constants = useChainConstants();
   const { data: courtCase } = useCourtCase(caseId);
-
-  const { send, isReady, isLoading, isBroadcasting } = useExtrinsic(
-    () => {
-      if (isRpcSdk(sdk)) {
-        return sdk.api.tx.court.reassignCourtStakes(caseId);
-      }
-      return undefined;
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([id, courtCaseRootKey]);
-        queryClient.invalidateQueries([id, voteDrawsRootKey]);
-      },
-    },
-  );
 
   return (
     <div className="overflow-hidden rounded-xl shadow-lg">
@@ -69,7 +53,7 @@ export const CourtReassignForm = ({ caseId }: { caseId: number }) => {
           </Disclosure>
         </div>
 
-        <TransactionButton
+        {/* <TransactionButton
           disabled={!isReady || isLoading || isBroadcasting}
           className={`relative h-[56px] ${isLoading && "animate-pulse"}`}
           type="submit"
@@ -79,7 +63,7 @@ export const CourtReassignForm = ({ caseId }: { caseId: number }) => {
           <div>
             <div className="center h-[20px] font-normal">Settle</div>
           </div>
-        </TransactionButton>
+        </TransactionButton> */}
       </div>
     </div>
   );

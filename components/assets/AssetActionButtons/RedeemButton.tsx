@@ -17,7 +17,6 @@ import {
   useAccountAssetBalances,
 } from "lib/hooks/queries/useAccountAssetBalances";
 import { useAssetMetadata } from "lib/hooks/queries/useAssetMetadata";
-import { useExtrinsic } from "lib/hooks/useExtrinsic";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -132,34 +131,14 @@ const RedeemButtonByValue = ({
   const baseAsset = parseAssetIdString(market.baseAsset);
   const { data: baseAssetMetadata } = useAssetMetadata(baseAsset);
 
-  const { isLoading, isSuccess, send } = useExtrinsic(
-    () => {
-      if (!isRpcSdk(sdk) || !publicKey) return;
-      return sdk.api.tx.predictionMarkets.redeemShares(market.marketId);
-    },
-    {
-      onSuccess: () => {
-        notificationStore.pushNotification(
-          `Redeemed ${value.toFixed(2)} ${baseAssetMetadata?.symbol}`,
-          {
-            type: "Success",
-          },
-        );
-      },
-    },
-  );
-
-  const handleClick = () => send();
+  const handleClick = () => {};
 
   return (
     <>
-      {isSuccess ? (
+      {true ? (
         <span className="font-bold text-green-500">Redeemed Tokens!</span>
       ) : (
-        <SecondaryButton
-          onClick={handleClick}
-          disabled={isLoading || value.eq(0)}
-        >
+        <SecondaryButton onClick={handleClick} disabled={value.eq(0)}>
           Redeem Tokens
         </SecondaryButton>
       )}
