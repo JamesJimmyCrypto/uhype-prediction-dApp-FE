@@ -49,18 +49,13 @@ const MarketAssetDetails = ({
   const { data: spotPrices } = useMarketSpotPrices(marketId);
   const { data: priceChanges } = useMarket24hrPriceChanges(marketId);
 
-  const totalAssetPrice = spotPrices
-    ? Array.from(spotPrices.values()).reduce(
-        (val, cur) => val.plus(cur),
-        new Decimal(0),
-      )
-    : new Decimal(0);
+  const totalAssetPrice = 0;
 
   const tableData: TableData[] | undefined = (
     categories ?? market?.categories
   )?.map((category, index) => {
     const outcomeName = category?.name;
-    const currentPrice = spotPrices?.get(index)?.toNumber();
+    const currentPrice = new Decimal(0);
     const priceChange = priceChanges?.get(index);
 
     return {
@@ -68,15 +63,12 @@ const MarketAssetDetails = ({
       id: index,
       outcome: outcomeName,
       totalValue: {
-        value: currentPrice ?? 0,
+        value: 0,
         usdValue: new Decimal(
-          currentPrice ? usdPrice?.mul(currentPrice) ?? 0 : 0,
+          currentPrice ? (usdPrice?.mul(currentPrice) ?? 0) : 0,
         ).toNumber(),
       },
-      pre:
-        currentPrice != null
-          ? Math.round((currentPrice / totalAssetPrice.toNumber()) * 100)
-          : null,
+      pre: null,
       change: priceChange,
     };
   });

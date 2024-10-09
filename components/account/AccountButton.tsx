@@ -1,5 +1,4 @@
 import { Menu, Popover, Transition } from "@headlessui/react";
-import { ZTG } from "@zeitgeistpm/sdk";
 import Avatar from "components/ui/Avatar";
 import Modal from "components/ui/Modal";
 import Decimal from "decimal.js";
@@ -44,7 +43,7 @@ const BalanceRow = ({
         className={`group flex w-full items-center rounded-md px-2 py-2 text-sm font-bold`}
       >
         {balance &&
-          `${formatNumberLocalized(balance?.div(ZTG).abs().toNumber())} ${
+          `${formatNumberLocalized(balance?.div(0).abs().toNumber())} ${
             units ?? ""
           }`}
       </div>

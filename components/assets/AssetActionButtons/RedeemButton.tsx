@@ -4,7 +4,6 @@ import {
   getScalarBounds,
   IndexerContext,
   IOCategoricalAssetId,
-  isRpcSdk,
   Market,
   MarketId,
   parseAssetId,

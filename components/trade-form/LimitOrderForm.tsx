@@ -194,17 +194,13 @@ const LimitOrderForm = ({
   const [initialPriceSetAsset, setInitialPriceSetAsset] = useState<
     MarketOutcomeAssetId | undefined
   >();
-  const spotPrice = asset ? spotPrices?.get(getIndexOf(asset)) : undefined;
+  const spotPrice = undefined;
 
   useEffect(() => {
     // default price to current spot price
     if (!assetsAreEqual(initialPriceSetAsset, asset)) {
-      const adjustedPrice = spotPrice?.plus(
-        side === "buy" ? -DEFAULT_PRICE_ADJUSTMENT : DEFAULT_PRICE_ADJUSTMENT,
-      );
-      setValue("price", adjustedPrice?.toFixed(3));
+      const adjustedPrice = DEFAULT_PRICE_ADJUSTMENT;
       setInitialPriceSetAsset(asset);
-      onPriceChange?.(adjustedPrice ?? new Decimal(0));
       trigger("price"); // reset validation
     }
   }, [spotPrice, initialPriceSetAsset]);

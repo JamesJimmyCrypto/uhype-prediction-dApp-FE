@@ -1,6 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { isRpcSdk, ZTG } from "@zeitgeistpm/sdk";
+import { ZTG } from "@zeitgeistpm/sdk";
 import Avatar from "components/ui/Avatar";
 import FormTransactionButton from "components/ui/FormTransactionButton";
 import Input from "components/ui/Input";

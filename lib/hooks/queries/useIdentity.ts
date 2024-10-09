@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { isRpcSdk } from "@zeitgeistpm/sdk";
 
 export const identityRootKey = "identity";
 

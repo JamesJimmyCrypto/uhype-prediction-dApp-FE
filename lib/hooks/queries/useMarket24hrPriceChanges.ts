@@ -54,23 +54,23 @@ export const useMarket24hrPriceChanges = (marketId: number) => {
       if (!enabled) return null;
       const priceChanges = new Map<number, number>();
 
-      for (const [key, nowPrice] of pricesNow.entries()) {
-        const pastPrice = prices24hrsAgo.get(key);
+      // for (const [key, nowPrice] of pricesNow.entries()) {
+      //   const pastPrice = prices24hrsAgo.get(key);
 
-        if (pastPrice != null && nowPrice != null) {
-          const priceDiff = nowPrice.minus(pastPrice);
-          const priceChange = priceDiff.div(pastPrice);
+      //   if (pastPrice != null && nowPrice != null) {
+      //     const priceDiff = nowPrice.minus(pastPrice);
+      //     const priceChange = priceDiff.div(pastPrice);
 
-          priceChanges.set(
-            key,
-            priceChange.isNaN()
-              ? 0
-              : Math.round(priceChange.mul(100).toNumber()),
-          );
-        } else {
-          priceChanges.set(key, 0);
-        }
-      }
+      //     priceChanges.set(
+      //       key,
+      //       priceChange.isNaN()
+      //         ? 0
+      //         : Math.round(priceChange.mul(100).toNumber()),
+      //     );
+      //   } else {
+      //     priceChanges.set(key, 0);
+      //   }
+      // }
 
       return priceChanges;
     },

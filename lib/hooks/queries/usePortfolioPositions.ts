@@ -300,9 +300,7 @@ export const usePortfolioPositions = (
         continue;
       }
 
-      const balance = address
-        ? userAssetBalances?.get(address, assetId)?.data?.balance
-        : undefined;
+      const balance = undefined;
       const totalIssuanceForPoolQuery = pool && poolsTotalIssuance[pool.poolId];
       const totalIssuanceData = pool && poolsTotalIssuance[pool.poolId]?.data;
 
@@ -338,7 +336,7 @@ export const usePortfolioPositions = (
 
       let outcome = IOCategoricalAssetId.is(assetId)
         ? market.categories?.[getIndexOf(assetId)]?.name ??
-          JSON.stringify(assetId.CategoricalOutcome)
+        JSON.stringify(assetId.CategoricalOutcome)
         : IOScalarAssetId.is(assetId)
           ? getIndexOf(assetId) == 1
             ? "Short"

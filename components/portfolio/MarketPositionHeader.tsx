@@ -1,4 +1,3 @@
-import { IOBaseAssetId, IOForeignAssetId } from "@zeitgeistpm/sdk";
 import { lookupAssetImagePath } from "lib/constants/foreign-asset";
 import { parseAssetIdString } from "lib/util/parse-asset-id";
 import Image from "next/image";

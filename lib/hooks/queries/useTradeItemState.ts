@@ -42,14 +42,7 @@ export const useTradeItemState = (item: TradeItem) => {
   const traderAssets = useAccountAssetBalances([
     { account: pubKey, assetId: item.assetId },
   ]);
-  const traderAssetBalance = publicKey
-    ? new Decimal(
-      (
-        traderAssets?.get(pubKey, item.assetId)?.data
-          ?.balance as any
-      )?.free?.toString() ?? 0,
-    )
-    : new Decimal(0);
+  const traderAssetBalance = new Decimal(0);
 
   const poolAccountIds = usePoolAccountIds(pools ?? []);
   const poolAccountId = pool?.poolId ? poolAccountIds[pool.poolId] : undefined;
@@ -58,15 +51,13 @@ export const useTradeItemState = (item: TradeItem) => {
     { account: poolAccountId, assetId: item.assetId },
   ]);
 
-  const poolAssetBalance =
-    poolAssetBalances?.get(poolAccountId, item.assetId)?.data?.balance ??
-    new Decimal(0);
+  const poolAssetBalance = new Decimal(0);
 
   const balances = {
-    poolBaseBalance: poolBaseBalance?.toString(),
-    poolAssetBalance: poolAssetBalance?.toString(),
-    traderBaseBalance: traderBaseBalance?.toString(),
-    traderAssetBalance: traderAssetBalance?.toString(),
+    poolBaseBalance: "1",
+    poolAssetBalance: "1",
+    traderBaseBalance: "1",
+    traderAssetBalance: "1",
   };
 
   const enabled =

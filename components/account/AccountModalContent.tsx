@@ -3,7 +3,6 @@ import { LogOut } from "react-feather";
 import AccountSelect, { AccountOption } from "./AccountSelect";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useZtgBalance } from "lib/hooks/queries/useZtgBalance";
-import { ZTG } from "@zeitgeistpm/sdk";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
 import { formatNumberLocalized } from "lib/util";
 

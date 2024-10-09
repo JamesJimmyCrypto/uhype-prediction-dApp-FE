@@ -2,7 +2,7 @@ import { ZrmlCourtDraw } from "@polkadot/types/lookup";
 import { u8aToHex } from "@polkadot/util";
 import { useQueryClient } from "@tanstack/react-query";
 import { FullMarketFragment } from "@zeitgeistpm/indexer";
-import { CategoricalAssetId, isRpcSdk, parseAssetId } from "@zeitgeistpm/sdk";
+import { CategoricalAssetId, parseAssetId } from "@zeitgeistpm/sdk";
 import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
 import TransactionButton from "components/ui/TransactionButton";
 import { voteDrawsRootKey } from "lib/hooks/queries/court/useCourtVoteDraws";

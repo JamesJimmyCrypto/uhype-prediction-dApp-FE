@@ -2,7 +2,7 @@ import { Dialog } from "@headlessui/react";
 import { u8aToHex } from "@polkadot/util";
 import { useQueryClient } from "@tanstack/react-query";
 import { FullMarketFragment } from "@zeitgeistpm/indexer";
-import { CategoricalAssetId, isRpcSdk, parseAssetId } from "@zeitgeistpm/sdk";
+import { CategoricalAssetId, parseAssetId } from "@zeitgeistpm/sdk";
 import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
 import Modal from "components/ui/Modal";
 import TransactionButton from "components/ui/TransactionButton";

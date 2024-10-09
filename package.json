@@ -28,6 +28,7 @@
     "@jup-ag/wallet-adapter": "^0.2.1-alpha.2",
     "@notionhq/client": "^2.2.3",
     "@plaiceholder/next": "^2.5.0",
+    "@polkadot/api": "^14.0.1",
     "@polkadot/ui-keyring": "^2.4.1",
     "@portabletext/react": "^3.0.11",
     "@sanity/client": "^6.10.0",

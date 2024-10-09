@@ -1,4 +1,3 @@
-import { isRpcSdk } from "@zeitgeistpm/sdk";
 import LiquidityModalAmm2 from "components/liquidity/LiquidityModalAmm2";
 import SecondaryButton from "components/ui/SecondaryButton";
 import Table, { TableColumn, TableData } from "components/ui/Table";

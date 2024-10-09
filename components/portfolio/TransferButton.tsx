@@ -2,7 +2,7 @@ import { Dialog } from "@headlessui/react";
 import Decimal from "decimal.js";
 import React, { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { AssetId, IOForeignAssetId, ZTG, isRpcSdk } from "@zeitgeistpm/sdk";
+import { AssetId, IOForeignAssetId } from "@zeitgeistpm/sdk";
 import AddressInput, { AddressOption } from "components/ui/AddressInput";
 import AssetInput from "components/ui/AssetInput";
 import { AssetOption } from "components/ui/AssetSelect";

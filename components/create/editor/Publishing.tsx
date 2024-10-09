@@ -1,6 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import { useQuery } from "@tanstack/react-query";
-import { IOZtgAssetId, ZTG } from "@zeitgeistpm/sdk";
+import { IOZtgAssetId } from "@zeitgeistpm/sdk";
 import { StorageError } from "@zeitgeistpm/web3.storage";
 import Modal from "components/ui/Modal";
 import TransactionButton from "components/ui/TransactionButton";

@@ -1,6 +1,5 @@
 import { Disclosure } from "@headlessui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { isRpcSdk } from "@zeitgeistpm/sdk";
 import TransactionButton from "components/ui/TransactionButton";
 import Decimal from "decimal.js";
 import {
