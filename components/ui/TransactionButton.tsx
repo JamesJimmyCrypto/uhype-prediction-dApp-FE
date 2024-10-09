@@ -1,4 +1,3 @@
-import { SubmittableExtrinsic } from "@polkadot/api/types";
 import { ISubmittableResult } from "@polkadot/types/types";
 import { useUserLocation } from "lib/hooks/useUserLocation";
 import { useAccountModals } from "lib/state/account";
@@ -13,7 +12,6 @@ interface TransactionButtonProps {
   className?: string;
   dataTest?: string;
   type?: "button" | "submit" | "reset";
-  extrinsic?: SubmittableExtrinsic<"promise", ISubmittableResult>;
   disableFeeCheck?: boolean;
   loading?: boolean;
   connectText?: string;
@@ -27,7 +25,6 @@ const TransactionButton: FC<PropsWithChildren<TransactionButtonProps>> = ({
   children,
   preventDefault,
   type = "button",
-  extrinsic,
   disableFeeCheck = false,
   connectText = "Connect Wallet",
   loading,

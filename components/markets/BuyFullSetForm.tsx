@@ -51,12 +51,7 @@ const BuyFullSetForm = ({
 
   useEffect(() => {
     let lowestTokenAmount: Decimal = new Decimal(0);
-    balances?.forEach((balance) => {
-      const free = new Decimal(balance.free.toNumber());
-      if (!lowestTokenAmount || free.lessThan(lowestTokenAmount)) {
-        lowestTokenAmount = free;
-      }
-    });
+
     setMaxTokenSet(lowestTokenAmount);
   }, [balances]);
 
@@ -64,10 +59,7 @@ const BuyFullSetForm = ({
     setAmount(amount);
   };
 
-  const disabled =
-    !baseAssetBalance ||
-    Number(amount) > baseAssetBalance?.div(ZTG).toNumber() ||
-    Number(amount) === 0;
+  const disabled = !baseAssetBalance || Number(amount) === 0;
 
   const handleSignTransaction = async () => {
     if (disabled || !isRpcSdk(sdk)) {
@@ -94,10 +86,7 @@ const BuyFullSetForm = ({
                 className="rounded-full"
               />
             )}
-            <span className="font-medium">
-              {baseAssetBalance?.div(ZTG).toNumber().toFixed(2)}{" "}
-              {metadata?.symbol}
-            </span>
+            <span className="font-medium">{metadata?.symbol}</span>
           </div>
         </div>
         <div className="center mb-7 h-[56px] w-full bg-anti-flash-white">

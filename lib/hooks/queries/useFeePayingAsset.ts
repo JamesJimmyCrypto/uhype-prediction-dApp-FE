@@ -53,21 +53,13 @@ export const useFeePayingAsset = (
       if (enabled) {
         if (assetSelection.label === "Default") {
           // if user has ztg, use that to pay
-          if (nativeBalance.greaterThanOrEqualTo(baseFee)) {
-            return {
-              assetId: { Ztg: null },
-              symbol: constants?.tokenSymbol ?? "",
-              amount: baseFee,
-              sufficientBalance: true,
-            };
-          }
+          return {
+            assetId: { Ztg: null },
+            symbol: constants?.tokenSymbol ?? "",
+            amount: baseFee,
+            sufficientBalance: true,
+          };
 
-          return findBestFeePayingAsset(
-            foreignAssetBalances,
-            assetMetadata,
-            baseFee,
-            constants,
-          );
         } else {
           const isNative = IOZtgAssetId.is(assetSelection.value);
           if (isNative) {

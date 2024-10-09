@@ -61,7 +61,7 @@ export const LimitBuyOrderForm = ({
 
   const { data: baseAssetBalance } = useBalance(pubKey, baseAsset);
 
-  const maxAmount = baseAssetBalance?.div(price ?? 0) ?? new Decimal(0);
+  const maxAmount = new Decimal(0);
 
   return (
     <LimitOrderForm
@@ -130,7 +130,7 @@ export const LimitSellOrderForm = ({
       onAssetChange={(asset) => {
         setSelectedAsset(asset);
       }}
-      maxAmount={selectedAssetBalance}
+      maxAmount={new Decimal(0)}
       isLoading={true}
       fee={{
         symbol: "SOL",

@@ -40,11 +40,7 @@ const AccountModalContent: FC = () => {
               <div className="text-xxs font-bold uppercase text-sky-600">
                 balance
               </div>
-              <div className="font-mono text-sm font-bold text-blue">
-                {`${formatNumberLocalized(Number(activeBalance?.div(ZTG)))} ${
-                  constants?.tokenSymbol ?? ""
-                }`}
-              </div>
+              <div className="font-mono text-sm font-bold text-blue"></div>
             </div>
           </div>
         </div>

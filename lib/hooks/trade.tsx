@@ -1,5 +1,3 @@
-import { SubmittableExtrinsic } from "@polkadot/api/types";
-import { ISubmittableResult } from "@polkadot/types/types";
 import {
   AssetId,
   CategoricalAssetId,
@@ -152,7 +150,7 @@ export const useTradeTransaction = (
   item: TradeItem,
   exactAmountAssetId: AssetId,
   amount: string,
-): SubmittableExtrinsic<"promise", ISubmittableResult> | undefined => {
+): any | undefined => {
   const [sdk] = useSdkv2();
   const { data: itemState } = useTradeItemState(item);
 
@@ -175,9 +173,7 @@ export const useTradeTransaction = (
     market,
   } = itemState;
 
-  let transaction:
-    | SubmittableExtrinsic<"promise", ISubmittableResult>
-    | undefined;
+  let transaction: any;
 
   if (item.action === "buy") {
     const inAssetId = baseAssetId;

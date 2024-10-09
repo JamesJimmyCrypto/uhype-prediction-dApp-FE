@@ -157,18 +157,10 @@ const SellForm = ({
     const subscription = watch((value, { name, type }) => {
       const changedByUser = type != null;
 
-      if (
-        !changedByUser ||
-        !selectedAssetBalance ||
-        selectedAssetBalance.eq(0) ||
-        !maxAmountIn
-      )
-        return;
+      if (!changedByUser || !selectedAssetBalance || !maxAmountIn) return;
 
       if (name === "percentage") {
-        const max = selectedAssetBalance.greaterThan(maxAmountIn)
-          ? maxAmountIn
-          : selectedAssetBalance;
+        const max = maxAmountIn;
         setValue(
           "amount",
           Number(
@@ -214,11 +206,7 @@ const SellForm = ({
                 message: "Value is required",
               },
               validate: (value) => {
-                if (value > (selectedAssetBalance?.div(ZTG).toNumber() ?? 0)) {
-                  return `Insufficient balance. Current balance: ${selectedAssetBalance
-                    ?.div(ZTG)
-                    .toFixed(3)}`;
-                } else if (value <= 0) {
+                if (value <= 0) {
                   return "Value cannot be zero or less";
                 } else if (maxAmountIn?.div(ZTG)?.lessThanOrEqualTo(value)) {
                   return `Maximum amount that can be traded is ${maxAmountIn
@@ -251,9 +239,7 @@ const SellForm = ({
         <input
           className="mb-[10px] mt-[30px] w-full"
           type="range"
-          disabled={
-            !selectedAssetBalance || selectedAssetBalance.lessThanOrEqualTo(0)
-          }
+          disabled={!selectedAssetBalance}
           {...register("percentage", { value: "0" })}
         />
         <div className="mb-[10px] flex w-full flex-col items-center gap-2 text-xs font-normal text-sky-600">

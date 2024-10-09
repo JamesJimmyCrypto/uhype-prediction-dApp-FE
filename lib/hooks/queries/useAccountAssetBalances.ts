@@ -1,7 +1,6 @@
 import { useQueries, UseQueryResult } from "@tanstack/react-query";
 import { AssetId, isRpcSdk } from "@zeitgeistpm/sdk";
 import Decimal from "decimal.js";
-import { getApiAtBlock } from "lib/util/get-api-at";
 import { useSdkv2 } from "../useSdkv2";
 import { fetchAssetBalance } from "./useBalance";
 
@@ -9,22 +8,22 @@ export type UseAccountAssetBalances = {
   /**
    * Get a single balance by account and asset id.
    */
-  get: (
+  get?: (
     account: string,
     assetId: AssetId,
   ) =>
     | UseQueryResult<
-        {
-          pair: AccountAssetIdPair;
-          balance?: Decimal;
-        },
-        unknown
-      >
+      {
+        pair: AccountAssetIdPair;
+        balance?: Decimal;
+      },
+      unknown
+    >
     | undefined;
   /**
    * Raw react query access.
    */
-  query: UseQueryResult<
+  query?: UseQueryResult<
     {
       pair: AccountAssetIdPair;
       balance?: Decimal;
@@ -74,14 +73,11 @@ export const useAccountAssetBalances = (
           blockNumber,
         ],
         queryFn: async () => {
-          const api = await getApiAtBlock(sdk!.asRpc().api, blockNumber);
-          const balance = pair.account
-            ? await fetchAssetBalance(api, pair.account, pair.assetId)
-            : new Decimal(0);
+
 
           return {
             pair,
-            balance,
+            balance: 0,
           };
         },
         enabled:
@@ -103,5 +99,5 @@ export const useAccountAssetBalances = (
     return query;
   };
 
-  return { get, query: queries, isLoading: queries.some((q) => q.isLoading) };
+  return { isLoading: queries.some((q) => q.isLoading) };
 };

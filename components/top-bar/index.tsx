@@ -240,7 +240,7 @@ const GetTokensButton = () => {
     <>
       <Transition
         as={Fragment}
-        show={Boolean(connected && activeBalance?.eq(0))}
+        show={Boolean(connected)}
         enter="transition-all duration-250"
         enterFrom="opacity-0 scale-90"
         enterTo="opacity-100 scale-100"

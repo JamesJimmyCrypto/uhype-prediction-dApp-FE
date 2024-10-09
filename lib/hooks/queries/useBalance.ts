@@ -1,4 +1,3 @@
-import { ApiPromise } from "@polkadot/api";
 import { useQuery } from "@tanstack/react-query";
 import {
   AssetId,
@@ -12,7 +11,6 @@ import {
 import Decimal from "decimal.js";
 import { LAST_MARKET_ID_BEFORE_ASSET_MIGRATION } from "lib/constants";
 import { calculateFreeBalance } from "lib/util/calc-free-balance";
-import { getApiAtBlock } from "lib/util/get-api-at";
 import { useSdkv2 } from "../useSdkv2";
 
 export const balanceRootKey = "balance";
@@ -27,10 +25,7 @@ export const useBalance = (
   const query = useQuery(
     [id, balanceRootKey, address, assetId, blockNumber],
     async () => {
-      if (address && assetId && isRpcSdk(sdk)) {
-        const api = await getApiAtBlock(sdk.api, blockNumber);
-        return fetchAssetBalance(api, address, assetId);
-      }
+
     },
     {
       keepPreviousData: true,
@@ -42,7 +37,7 @@ export const useBalance = (
 };
 
 export const fetchAssetBalance = async (
-  api: ApiPromise,
+  api: any,
   address: string,
   assetId: AssetId,
 ) => {

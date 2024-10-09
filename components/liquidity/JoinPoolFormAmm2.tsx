@@ -47,36 +47,21 @@ const JoinPoolForm = ({
       const changedAsset = name;
       const userInput = value[changedAsset];
       const reserves = Array.from(pool.reserves).map((reserve) => reserve[1]);
-      const restrictiveIndex = calculateRestrictivePoolAsset(
-        reserves,
-        userAssetBalances,
-      );
-
-      const maxInForRestrictiveAsset = userAssetBalances[restrictiveIndex!];
 
       if (name === "percentage" && changedByUser) {
         const percentage = Number(value["percentage"]);
-        const restrictiveAssetAmount = maxInForRestrictiveAsset.mul(
-          percentage / 100,
-        );
-        const restrictiveAssetToPoolRatio = restrictiveAssetAmount.div(
-          reserves[restrictiveIndex!],
-        );
 
         reserves.forEach((reserve, index) => {
           setValue(
             index.toString(),
-            reserve
-              .mul(restrictiveAssetToPoolRatio)
-              .div(ZTG)
-              .toFixed(3, Decimal.ROUND_DOWN),
+            reserve.div(ZTG).toFixed(3, Decimal.ROUND_DOWN),
             { shouldValidate: true },
           );
         });
 
-        setPoolSharesToReceive(
-          pool.totalShares.mul(restrictiveAssetToPoolRatio),
-        );
+        // setPoolSharesToReceive(
+        //   pool.totalShares.mul(restrictiveAssetToPoolRatio),
+        // );
       } else if (
         changedAsset != null &&
         userInput != null &&
@@ -98,20 +83,8 @@ const JoinPoolForm = ({
               shouldValidate: true,
             });
           }
-
-          if (index === restrictiveIndex) {
-            restrictedAssetAmount = amount;
-          }
         });
         setPoolSharesToReceive(pool.totalShares.mul(inputToReserveRatio));
-
-        setValue(
-          "percentage",
-          restrictedAssetAmount
-            ?.div(maxInForRestrictiveAsset.div(ZTG))
-            .mul(100)
-            .toString(),
-        );
       }
     });
     return () => subscription.unsubscribe();
@@ -135,7 +108,6 @@ const JoinPoolForm = ({
         {market &&
           pool?.assetIds.map((assetId, index) => {
             const assetName = lookupAssetMetadata(market, assetId)?.name;
-            const userBalance = userAssetBalances[index]?.div(ZTG).toNumber();
 
             return (
               <div
@@ -163,8 +135,8 @@ const JoinPoolForm = ({
                       message: "Value is required",
                     },
                     validate: (value) => {
-                      if (value > userBalance) {
-                        return `Insufficient balance. Current balance: ${userBalance.toFixed(
+                      if (value) {
+                        return `Insufficient balance. Current balance: ${value.toFixed(
                           3,
                         )}`;
                       } else if (value <= 0) {

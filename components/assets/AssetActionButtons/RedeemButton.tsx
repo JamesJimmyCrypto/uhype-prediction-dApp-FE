@@ -83,19 +83,19 @@ export const RedeemButtonByAssetId = ({
         return zero;
 
       if (!pubKey) return zero;
-      const balance = getAccountAssetBalance(pubKey, resolvedAssetId)?.data
-        ?.balance;
-      return balance?.div(ZTG);
+      const balance = 0;
+      return balance;
     } else {
       if (!pubKey) return zero;
-      const shortBalance = getAccountAssetBalance(pubKey, {
-        ScalarOutcome: [market.marketId as MarketId, "Short"],
-      })?.data?.balance;
+      // const shortBalance = getAccountAssetBalance(pubKey, {
+      //   ScalarOutcome: [market.marketId as MarketId, "Short"],
+      // })?.data?.balance;
 
-      const longBalance = getAccountAssetBalance(pubKey, {
-        ScalarOutcome: [market.marketId as MarketId, "Long"],
-      })?.data?.balance;
-
+      // const longBalance = getAccountAssetBalance(pubKey, {
+      //   ScalarOutcome: [market.marketId as MarketId, "Long"],
+      // })?.data?.balance;
+      const shortBalance = 0;
+      const longBalance = 0;
       if (!shortBalance || !longBalance) return zero;
 
       const bounds = scalarBounds.unwrap();
@@ -107,15 +107,13 @@ export const RedeemButtonByAssetId = ({
         lowerBound,
         upperBound,
         new Decimal(resolvedNumber).div(ZTG),
-        shortBalance.div(ZTG),
-        longBalance.div(ZTG),
+        new Decimal(resolvedNumber).div(ZTG),
+        new Decimal(resolvedNumber).div(ZTG),
       );
     }
   }, [market, assetId, isLoadingAssetBalance, getAccountAssetBalance]);
 
-  return (
-    <RedeemButtonByValue market={market} value={value ?? new Decimal(0)} />
-  );
+  return <RedeemButtonByValue market={market} value={new Decimal(0)} />;
 };
 
 const RedeemButtonByValue = ({

@@ -173,18 +173,10 @@ const BuyForm = ({
     const subscription = watch((value, { name, type }) => {
       const changedByUser = type != null;
 
-      if (
-        !changedByUser ||
-        !maxSpendableBalance ||
-        maxSpendableBalance.eq(0) ||
-        !maxAmountIn
-      )
-        return;
+      if (!changedByUser || !maxSpendableBalance || !maxAmountIn) return;
 
       if (name === "percentage") {
-        const max = maxSpendableBalance.greaterThan(maxAmountIn)
-          ? maxAmountIn
-          : maxSpendableBalance;
+        const max = maxAmountIn;
         setValue(
           "amount",
           Number(
@@ -249,11 +241,7 @@ const BuyForm = ({
                 message: "Value is required",
               },
               validate: (value) => {
-                if (value > (maxSpendableBalance?.div(ZTG).toNumber() ?? 0)) {
-                  return `Insufficient balance (${maxSpendableBalance
-                    ?.div(ZTG)
-                    .toFixed(3)}${baseSymbol})`;
-                } else if (value <= 0) {
+                if (value <= 0) {
                   return "Value cannot be zero or less";
                 } else if (maxAmountIn?.div(ZTG)?.lessThanOrEqualTo(value)) {
                   return `Maximum amount of ${baseSymbol} that can be traded is ${maxAmountIn
@@ -270,9 +258,7 @@ const BuyForm = ({
         <input
           className="mb-[10px] mt-[30px] w-full"
           type="range"
-          disabled={
-            !maxSpendableBalance || maxSpendableBalance.lessThanOrEqualTo(0)
-          }
+          disabled={!maxSpendableBalance}
           {...register("percentage", { value: "0" })}
         />
         <div className="mb-[10px] flex w-full flex-col items-center gap-2 text-xs font-normal text-sky-600 ">

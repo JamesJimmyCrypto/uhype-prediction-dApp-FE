@@ -95,11 +95,6 @@ const Option = (props: OptionProps<AssetOption, false>) => {
         <div className="mr-3 h-[36px] w-[36px] rounded-full bg-ztg-blue"></div>
       )}
       <span>{label}</span>
-      {balance && (
-        <div className="ml-auto text-xs">
-          Balance: {formatNumberLocalized(balance.div(ZTG).toNumber())}
-        </div>
-      )}
       {additionalText && (
         <div className="ml-auto text-xs">{additionalText}</div>
       )}

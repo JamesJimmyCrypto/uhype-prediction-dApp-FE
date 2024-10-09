@@ -180,11 +180,11 @@ const AccountButton: FC<{
                   <Menu.Items className="fixed left-0 z-40 mt-3 h-full w-full origin-top-right divide-y divide-gray-100 overflow-hidden bg-white py-3 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:absolute md:left-auto md:right-0 md:mt-6 md:h-auto md:w-64 md:rounded-md">
                     <div className="">
                       <div className="mb-3 flex flex-col gap-2 border-b-2 px-6 py-2">
-                        <BalanceRow
+                        {/* <BalanceRow
                           imgPath="/currencies/solana.png"
                           units={constants?.tokenSymbol}
                           balance={activeBalance}
-                        />
+                        /> */}
                         <Menu.Item>
                           {({ active }) => (
                             <Link

@@ -52,15 +52,16 @@ export const useMarketSpotPrices = (
     ],
     async () => {
       if (!enabled) return;
-      const spotPrices: MarketPrices =
-        market?.status !== "Resolved"
-          ? market.scoringRule === ScoringRule.AmmCdaHybrid ||
-            market.scoringRule === ScoringRule.Lmsr
-            ? calcMarketPricesAmm2(amm2Pool!)
-            : calcMarketPrices(market, basePoolBalance!, balances!)
-          : calcResolvedMarketPrices(market);
+      // const spotPrices: MarketPrices =
+      //   market?.status !== "Resolved"
+      //     ? market.scoringRule === ScoringRule.AmmCdaHybrid ||
+      //       market.scoringRule === ScoringRule.Lmsr
+      //       : calcMarketPrices(market, basePoolBalance!, balances!)
+      //     : calcResolvedMarketPrices(market);
 
-      return spotPrices;
+      return {
+        1: new Decimal(0),
+      };
     },
     {
       enabled: enabled,

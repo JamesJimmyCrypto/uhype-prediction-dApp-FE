@@ -42,10 +42,7 @@ const RedeemPoolButton = ({
   const { data: poolBaseBalance } = usePoolBaseBalance(poolId);
   const poolsTotalIssuance = useTotalIssuanceForPools([poolId]);
   const { data: totalPoolSharesIssuance } = poolsTotalIssuance[poolId];
-  const userPercentageOwnership =
-    userPoolShares && totalPoolSharesIssuance?.totalIssuance
-      ? userPoolShares.div(totalPoolSharesIssuance.totalIssuance.toNumber())
-      : new Decimal(0);
+  const userPercentageOwnership = new Decimal(0);
 
   // filter out non-winning assets as they are deleted on chain
   const poolWeights =

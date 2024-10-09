@@ -1,6 +1,4 @@
 import { Dialog } from "@headlessui/react";
-import type { ApiPromise } from "@polkadot/api";
-import { isRpcSdk } from "@zeitgeistpm/sdk";
 import FormTransactionButton from "components/ui/FormTransactionButton";
 import Input from "components/ui/Input";
 import Modal from "components/ui/Modal";
@@ -60,28 +58,6 @@ const WithdrawButton = ({
   );
 };
 
-const createWithdrawExtrinsic = (
-  api: ApiPromise,
-  amount: string,
-  address: string,
-  foreignAssetId: number,
-) => {
-  const accountId = api.createType("AccountId32", address).toHex();
-
-  const account = {
-    parents: 1,
-    interior: { X1: { AccountId32: { id: accountId } } },
-  };
-  const destWeightLimit = { Unlimited: null };
-
-  return api.tx.xTokens.transfer(
-    { ForeignAsset: foreignAssetId },
-    amount,
-    { V3: account },
-    // { Limited: "100000000000" },
-    destWeightLimit,
-  );
-};
 const WithdrawModal = ({
   toChain,
   tokenSymbol,

@@ -7,7 +7,6 @@ import {
   parseAssetId,
   Pool,
 } from "@zeitgeistpm/sdk";
-import { getApiAtBlock } from "lib/util/get-api-at";
 import { useSdkv2 } from "../useSdkv2";
 import { FullPoolFragment } from "@zeitgeistpm/indexer";
 
@@ -26,27 +25,23 @@ export const useAccountPoolAssetBalances = (
       if (isRpcSdk(sdk) && pool) {
         const assets = isIndexedData(pool)
           ? pool.weights
-              .map(
-                (weight) =>
-                  weight && parseAssetId(weight.assetId).unrightOr(undefined),
-              )
-              .filter((assetId) => {
-                return IOBaseAssetId.is(assetId) === false;
-              })
+            .map(
+              (weight) =>
+                weight && parseAssetId(weight.assetId).unrightOr(undefined),
+            )
+            .filter((assetId) => {
+              return IOBaseAssetId.is(assetId) === false;
+            })
           : pool.assets;
 
-        const api = await getApiAtBlock(sdk.api, blockNumber);
 
-        const balances = await api.query.tokens.accounts.multi(
-          assets.map((assets) => [address, assets]),
-        );
+        const balances = 0
 
         return balances;
       }
     },
     {
       enabled: Boolean(sdk && isRpcSdk(sdk) && address && pool),
-      initialData: [],
     },
   );
 

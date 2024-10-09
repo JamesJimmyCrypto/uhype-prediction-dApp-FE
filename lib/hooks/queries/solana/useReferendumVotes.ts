@@ -1,4 +1,3 @@
-import "@polkadot/api-augment";
 import { useQuery } from "@tanstack/react-query";
 import Decimal from "decimal.js";
 

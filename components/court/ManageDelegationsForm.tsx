@@ -61,9 +61,9 @@ const ManageDelegationsForm = (props: ManageDelegationsFormProps) => {
   const { publicKey } = useWallet();
   const { data: freeBalance } = useZtgBalance(publicKey?.toString());
 
-  const availableDelegationBalance = new Decimal(
-    freeBalance?.toString() ?? 0,
-  ).add(connectedParticipant?.stake ?? 0);
+  const availableDelegationBalance = new Decimal(0).add(
+    connectedParticipant?.stake ?? 0,
+  );
 
   const queryClient = useQueryClient();
 

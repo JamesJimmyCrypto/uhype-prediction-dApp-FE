@@ -162,26 +162,28 @@ const Inner = ({
       return new Decimal(0);
     } else {
       if (tradeItem.action === "buy") {
-        return calcSpotPrice(
-          tradeItemState.poolBaseBalance.add(new Decimal(baseAmount).mul(ZTG)),
-          tradeItemState.baseWeight,
-          tradeItemState.poolAssetBalance.sub(
-            new Decimal(assetAmount).mul(ZTG),
-          ),
-          tradeItemState.assetWeight,
-          0,
-        );
+        // return calcSpotPrice(
+        //   tradeItemState.poolBaseBalance.add(new Decimal(baseAmount).mul(ZTG)),
+        //   tradeItemState.baseWeight,
+        //   tradeItemState.poolAssetBalance.sub(
+        //     new Decimal(assetAmount).mul(ZTG),
+        //   ),
+        //   tradeItemState.assetWeight,
+        //   0,
+        // );
       } else {
-        return calcSpotPrice(
-          tradeItemState.poolBaseBalance.sub(new Decimal(baseAmount).mul(ZTG)),
-          tradeItemState.baseWeight,
-          tradeItemState.poolAssetBalance.add(
-            new Decimal(assetAmount).mul(ZTG),
-          ),
-          tradeItemState.assetWeight,
-          0,
-        );
+        // return calcSpotPrice(
+        //   tradeItemState.poolBaseBalance.sub(new Decimal(baseAmount).mul(ZTG)),
+        //   tradeItemState.baseWeight,
+        //   tradeItemState.poolAssetBalance.add(
+        //     new Decimal(assetAmount).mul(ZTG),
+        //   ),
+        //   tradeItemState.assetWeight,
+        //   0,
+        // );
       }
+
+      return new Decimal(0);
     }
   }, [assetAmount, baseAmount, tradeItemState]);
 
@@ -593,7 +595,6 @@ const Inner = ({
                 disabled={!formState.isValid}
                 className={`relative h-[56px] `}
                 type="submit"
-                extrinsic={transaction}
                 loading={true}
               >
                 <div>

@@ -106,7 +106,7 @@ const PoolDeployer = ({
 
   const parser = useMemo(() => {
     return IOLiquidity.refine((liquidity) => {
-      return activeBalance?.div(ZTG).greaterThanOrEqualTo(poolCost || 0);
+      return true;
     }, "Insufficient balance to deploy pool.")
       .refine((liquidity) => {
         return new Decimal(liquidity.rows?.[0]?.amount || 0).greaterThan(0);

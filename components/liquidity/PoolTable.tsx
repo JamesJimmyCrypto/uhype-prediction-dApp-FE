@@ -72,16 +72,13 @@ const PoolTable = ({
 
       if (IOBaseAssetId.is(assetId)) {
         amount = basePoolBalance ?? undefined;
-        usdValue = basePoolBalance?.mul(baseAssetUsdPrice ?? 0);
         category = { color: "#ffffff", name: metadata?.symbol };
       } else {
         amount =
           market?.scoringRule === ScoringRule.Cpmm
             ? new Decimal(balances?.[index]?.free.toString() ?? 0)
             : lookupAssetReserve(amm2Pool?.reserves, assetId);
-        usdValue = amount
-          ?.mul(spotPrices?.get(index) ?? 0)
-          ?.mul(baseAssetUsdPrice ?? 0);
+        usdValue = amount?.mul(baseAssetUsdPrice ?? 0);
         category = market?.categories?.[index];
       }
 

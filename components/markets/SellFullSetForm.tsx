@@ -44,12 +44,6 @@ const SellFullSetForm = ({
 
   useEffect(() => {
     let lowestTokenAmount: Decimal = new Decimal(0);
-    balances?.forEach((balance) => {
-      const free = new Decimal(balance.free.toNumber());
-      if (lowestTokenAmount.eq(0) || free.lessThan(lowestTokenAmount)) {
-        lowestTokenAmount = free;
-      }
-    });
     setMaxTokenSet(lowestTokenAmount);
   }, [balances]);
 

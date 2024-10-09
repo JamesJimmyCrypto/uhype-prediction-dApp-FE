@@ -2,7 +2,6 @@ import { Dialog } from "@headlessui/react";
 import Decimal from "decimal.js";
 import React, { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import type { ApiPromise } from "@polkadot/api";
 import { AssetId, IOForeignAssetId, ZTG, isRpcSdk } from "@zeitgeistpm/sdk";
 import AddressInput, { AddressOption } from "components/ui/AddressInput";
 import AssetInput from "components/ui/AssetInput";
@@ -46,16 +45,6 @@ const TransferButton: React.FC<TransferButtonProps> = ({ assetId }) => {
       </Modal>
     </>
   );
-};
-
-const createTransferExtrinsic = (
-  api: ApiPromise,
-  assetId: AssetId,
-  amount: string,
-  destAddress: string,
-) => {
-  amount = new Decimal(amount).mul(ZTG).toFixed(0, Decimal.ROUND_FLOOR);
-  return api.tx.assetManager.transfer(destAddress, assetId, amount);
 };
 
 const TransferModal = ({
@@ -123,34 +112,13 @@ const TransferModal = ({
   const isNativeCurrency = !IOForeignAssetId.is(asset?.assetOption?.value);
 
   const { data: balanceRaw } = useBalance(address, asset?.assetOption?.value);
-  const balance = balanceRaw?.div(ZTG);
+  const balance = 0;
 
   const targetAddress = watch("address");
 
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString() ?? "";
   const [sdk] = useSdkv2();
-
-  const extrinsic = useMemo(() => {
-    if (
-      !(
-        isRpcSdk(sdk) &&
-        pubKey &&
-        asset?.assetOption?.value &&
-        targetAddress?.value &&
-        asset?.amount &&
-        isValid
-      )
-    ) {
-      return;
-    }
-    return createTransferExtrinsic(
-      sdk.api,
-      asset.assetOption.value,
-      asset.amount,
-      targetAddress.value,
-    );
-  }, [pubKey, asset?.assetOption?.value, targetAddress?.value, isValid]);
 
   const fee = 0;
 
@@ -187,7 +155,7 @@ const TransferModal = ({
                 );
               }}
             >
-              Balance: {formatNumberLocalized(balance?.toNumber())}
+              Balance: {formatNumberLocalized(balance)}
             </div>
           )}
         </div>

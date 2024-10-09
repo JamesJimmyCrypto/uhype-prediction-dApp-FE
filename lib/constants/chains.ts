@@ -1,8 +1,5 @@
-import type { ApiPromise } from "@polkadot/api";
 import Decimal from "decimal.js";
 import { CurrencyBalance } from "lib/hooks/queries/useCurrencyBalances";
-import { SubmittableExtrinsic } from "@polkadot/api/types";
-import { ISubmittableResult } from "@polkadot/types/types";
 import { ZTG } from ".";
 import { calculateFreeBalance } from "lib/util/calc-free-balance";
 import { Cluster } from "@solana/web3.js";
@@ -20,25 +17,8 @@ export const SOLANA_CHAINS: SolanaChain[] = [
   },
 ];
 
-interface Chain {
-  name: ChainName;
-  isRelayChain: boolean;
-  endpoints: string[];
-  withdrawFee: string;
-  depositFee: Decimal;
-  fetchCurrencies: (
-    api: ApiPromise,
-    address: string,
-  ) => Promise<CurrencyBalance[]>;
-  createDepositExtrinsic: (
-    api: ApiPromise,
-    address: string,
-    amount: string,
-    parachainId: number,
-  ) => SubmittableExtrinsic<"promise", ISubmittableResult>;
-}
 
-const PROD_CHAINS: Chain[] = [
+const PROD_CHAINS = [
   {
     name: "Solana",
     isRelayChain: true,
@@ -100,7 +80,7 @@ const PROD_CHAINS: Chain[] = [
   },
 ];
 
-export const CHAINS: Chain[] =
+export const CHAINS =
   PROD_CHAINS
 
 
