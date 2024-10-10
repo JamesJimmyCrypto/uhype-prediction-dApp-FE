@@ -194,7 +194,6 @@ export const QuillViewer = dynamic(
 //   };
 // }
 
-export async function getServerSideProps({ params }) {}
 type MarketPageProps = {
   indexedMarket: MarketPageIndexedData;
   chartSeries: ChartSeries[];
