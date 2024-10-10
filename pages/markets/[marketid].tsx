@@ -213,11 +213,14 @@ const Market: NextPage<MarketPageProps> = ({
   const router = useRouter();
   const { marketid } = router.query;
   const { useGetMarketQuery } = useMarketProgram();
+  if (!marketid) {
+    return <NotFoundPage backText="Back To Markets" backLink="/" />;
+  }
   const {
     data: market,
     isLoading,
     error,
-  } = useGetMarketQuery(new PublicKey(marketid!));
+  } = useGetMarketQuery(new PublicKey(marketid));
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString();
   // const { data: orders, isLoading: isOrdersLoading } = useOrders({
@@ -533,7 +536,7 @@ const Market: NextPage<MarketPageProps> = ({
               {/* <LatestTrades limit={3} marketId={marketId} /> */}
               <Link
                 className="w-full text-center text-ztg-blue"
-                href={`/latest-trades?marketId=${marketId}`}
+                href={`/latest-trades?marketId=${marketid}`}
               >
                 View more
               </Link>

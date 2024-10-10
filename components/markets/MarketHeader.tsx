@@ -359,7 +359,6 @@ const MarketHeader: FC<{
     start: "31313131",
     end: "3131313",
   };
-
   const [showMarketHistory, setShowMarketHistory] = useState(false);
   const starts = Number(period.start);
   const ends = Number(period.end);
@@ -484,7 +483,7 @@ const MarketHeader: FC<{
       </div>
 
       <div className="relative mb-4 flex items-center gap-3 pl-1">
-        <AddressDetails title="Creator" address={market.creator.toString()} />
+        <AddressDetails title="Creator" address={market.creator?.toString()} />
 
         <div className="group relative">
           <Image

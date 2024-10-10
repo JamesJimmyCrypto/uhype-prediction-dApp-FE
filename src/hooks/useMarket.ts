@@ -216,14 +216,14 @@ export function useMarketProgram() {
   // Original getMarket function
   const getMarket = async (marketPublicKey: PublicKey): Promise<Market> => {
     try {
-      const marketAccount = await program.account.marketAccount.fetch(marketPublicKey) as MarketResponse;
+      const marketAccount = await program.account.marketAccount.fetch(marketPublicKey) as MarketAccount;
       console.log({ marketAccount })
-      const answers = await getMarketAnswers(marketAccount.account.marketKey);
+      const answers = await getMarketAnswers(marketAccount.marketKey);
       console.log({ answers })
 
       return {
         publicKey: marketPublicKey,
-        ...marketAccount.account,
+        ...marketAccount,
         answers: answers.answers as Answer[],
       };
     } catch (error) {
@@ -247,7 +247,7 @@ export function useMarketProgram() {
       : marketPublicKey;
 
     return useQuery({
-      queryKey: ["getMarket", publicKey.toString()],
+      queryKey: ["getMarket"],
       queryFn: () => getMarket(publicKey),
       enabled: !!publicKey,  // Only run the query if the publicKey is available
     });

@@ -24,11 +24,12 @@ export const HeroBanner = ({
     <div className="main-container md:mt-18 z-2 relative mb-14 mt-12">
       <div className="relative flex flex-col-reverse md:flex-row md:gap-8">
         <div className="md:w-[890px] md:pt-8 lg:w-[690px]">
-        <h1 className="mb-8 text-5xl leading-tight"
+          <h1
+            className="mb-8 text-5xl leading-tight"
             style={{
-              background: 'linear-gradient(90deg, #00BFFF, #8A2BE2)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              background: "linear-gradient(90deg, #00BFFF, #8A2BE2)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
             }}
           >
             Welcome to the Future of Predictions
@@ -38,15 +39,15 @@ export const HeroBanner = ({
             marketplace
           </h2>
           <div className="mb-14 flex gap-4">
-          <Link
+            <Link
               href="https://openverse.tech"
               target="_blank"
               className="flex-1 rounded-md border-2 border-vermilion bg-vermilion px-6 py-3 text-white sm:flex-none"
               style={{
-                fontWeight: 'bold',
-                background: 'linear-gradient(90deg, #FF1493, #FF8C00)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                fontWeight: "bold",
+                background: "linear-gradient(90deg, #FF1493, #FF8C00)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
               }}
             >
               Learn More
@@ -55,7 +56,7 @@ export const HeroBanner = ({
               href="/create-account"
               className="flex-1 rounded-md border-2 border-black bg-transparent px-6 py-3 text-black sm:flex-none"
               style={{
-                fontWeight: 'bold', // Đảm bảo sử dụng camelCase
+                fontWeight: "bold", // Đảm bảo sử dụng camelCase
               }}
             >
               Get Started
@@ -115,7 +116,6 @@ export const HeroBanner = ({
             priority
             className="object-cover"
             blurDataURL={bannerPlaceholder}
-            placeholder="blur"
             src="/banner.jpg"
           />
         </div>
