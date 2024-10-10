@@ -113,19 +113,8 @@ export async function getStaticPaths() {
   if (process.env.NEXT_PUBLIC_SHOW_COURT !== "true") {
     return { paths: [], fallback: "blocking" };
   }
-  const sdk = await create({
-    provider: endpointOptions.map((e) => e.value),
-    indexer: graphQlEndpoint,
-    storage: ZeitgeistIpfs(),
-  });
 
-  const cases = await sdk.api.query.court.courts.keys();
-
-  const paths = cases.map((caseId) => ({
-    params: { caseid: caseId.args[0].toString() },
-  }));
-
-  return { paths, fallback: "blocking" };
+  return { paths: [], fallback: "blocking" };
 }
 
 const CasePage: NextPage = ({
