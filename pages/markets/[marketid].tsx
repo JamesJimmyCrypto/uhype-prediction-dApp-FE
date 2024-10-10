@@ -349,7 +349,7 @@ const Market: NextPage<MarketPageProps> = ({
 
   return (
     <div className="mt-6">
-      <div className="relative flex flex-auto gap-12">
+      <div className="relative flex flex-auto gap-12 md:flex-row">
         <div className="flex-1 overflow-hidden">
           <MarketMeta market={market} />
 
@@ -580,7 +580,6 @@ const Market: NextPage<MarketPageProps> = ({
             </div>
           )}
         </div>
-
         <div className="hidden md:-mr-6 md:block md:w-[320px] lg:mr-auto lg:w-[460px]">
           <div className="sticky top-28">
             <div
@@ -614,12 +613,28 @@ const Market: NextPage<MarketPageProps> = ({
                 <ReferendumSummary referendumIndex={referendumIndex} />
               </div>
             )} */}
-              <SimilarMarketsSection market={market ?? undefined} />
+               <SimilarMarketsSection market={market ?? undefined} size="large" />
             </div>
           </div>
         </div>
         {/* {market && <MobileContextButtons market={market} />} */}
       </div>
+
+      {/* Mobile Sidebar */}
+      <div className="block md:hidden -mr-6 w-full">
+        <div className="sticky top-28">
+          <div
+            className="mb-12 animate-pop-in rounded-lg opacity-100 shadow-lg"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(49, 125, 194, 0.2) 0%, rgba(225, 210, 241, 0.2) 100%)",
+            }}
+          >
+            <SimilarMarketsSection market={market ?? undefined} size="medium" />
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 };

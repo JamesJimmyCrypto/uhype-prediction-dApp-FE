@@ -56,6 +56,7 @@ export interface MarketCardProps {
   numParticipants?: number;
   className?: string;
   disableLink?: boolean;
+  size?: "medium" | "large";
 }
 const defaultMarket = {
   title: "",
@@ -78,6 +79,7 @@ export const MarketCard = ({
   numParticipants = 10,
   className = "",
   disableLink = false,
+  size = "medium",
 }: MarketCardProps) => {
   console.log(market, "marketcard");
   const { marketKey, title, coverUrl, answers, publicKey } = market;
@@ -140,6 +142,8 @@ export const MarketCard = ({
 
   // const { data: cmsMetadata } = useMarketCmsMetadata(marketKey);
 
+  const img_Size = size === "medium" ? '32px' : '54px';
+
   return (
     <MarketCardContext.Provider value={{ baseAsset: "SOL" }}>
       <div
@@ -173,7 +177,7 @@ export const MarketCard = ({
                   objectFit: "cover",
                   objectPosition: "50% 50%",
                 }}
-                sizes={"54px"}
+                sizes={img_Size}
               />
             </div>
             <h5 className="line-clamp-2 h-fit w-full pr-4 text-base duration-200">

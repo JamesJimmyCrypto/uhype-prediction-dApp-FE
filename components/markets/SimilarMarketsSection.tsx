@@ -6,9 +6,11 @@ import { useRecommendedMarkets } from "lib/hooks/queries/useRecommendedMarkets";
 export const SimilarMarketsSection = ({
   market,
   limit,
+  size,
 }: {
   market?: Market;
   limit?: number;
+  size?: "medium" | "large";
 }) => {
   const { data: recommendedMarkets, isFetched: isMarketsFetched } =
     useRecommendedMarkets(market?.publicKey.toString(), limit ?? 2);
@@ -16,6 +18,8 @@ export const SimilarMarketsSection = ({
   const { data: stats, isFetched: isStatsFetched } = useMarketsStats(
     recommendedMarkets?.markets?.map((m) => m.publicKey.toString()) ?? [],
   );
+
+  const fontSize = size === "medium" ? '28px' : '32px';
 
   const isLoading = !isMarketsFetched || !isStatsFetched;
 
@@ -27,7 +31,12 @@ export const SimilarMarketsSection = ({
             <h4
               className="mb-4 animate-pop-in opacity-0"
               style={{
-                animationDelay: `200ms`,
+                background: 'linear-gradient(90deg, #00b7fb, #ff00df, #ff007f)', // sửa lỗi ở đây
+                fontWeight: 'bold', // sửa thành camelCase cho các thuộc tính CSS
+                fontSize: fontSize,
+                WebkitBackgroundClip: 'text', // sửa thành camelCase
+                WebkitTextFillColor: 'transparent', // sửa thành camelCase
+                animationDelay: '200ms', // giá trị chuỗi cho `animationDelay`
               }}
             >
               {recommendedMarkets.type === "similar"
@@ -54,6 +63,7 @@ export const SimilarMarketsSection = ({
                   market={market}
                   numParticipants={stat?.participants}
                   liquidity={stat?.liquidity}
+                  size={size}
                 />
               </div>
             );
