@@ -28,7 +28,7 @@ export const useTradeItemState = (item: TradeItem) => {
 
   const marketId = getMarketIdOf(item.assetId);
   const { data: pools } = usePoolsByIds([{ marketId: marketId }]);
-  const { data: market } = useMarket({ marketId });
+  // const { data: market } = useMarket({ marketId });
 
   const pool = pools?.[0];
   const baseAsset = pool?.baseAsset
@@ -66,8 +66,7 @@ export const useTradeItemState = (item: TradeItem) => {
     !!pool &&
     !!poolBaseBalance &&
     !!poolAssetBalance &&
-    !!baseAsset &&
-    !!market;
+    !!baseAsset
 
   const query = useQuery(
     [
@@ -84,7 +83,7 @@ export const useTradeItemState = (item: TradeItem) => {
       const baseWeight = getAssetWeight(pool, baseAsset).unwrap();
       const assetWeight = getAssetWeight(pool, item.assetId).unwrap();
       const assetIndex = getIndexOf(item.assetId);
-      const asset = market.categories?.[assetIndex];
+      // const asset = market.categories?.[assetIndex];
       const swapFee = new Decimal(
         pool.swapFee === "" ? "0" : pool.swapFee ?? "0",
       ).div(ZTG);
@@ -101,9 +100,7 @@ export const useTradeItemState = (item: TradeItem) => {
       );
 
       return {
-        asset,
         pool,
-        market,
         spotPrice,
         baseAssetId: baseAsset,
         poolAccountId,

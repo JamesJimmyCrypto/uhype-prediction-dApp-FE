@@ -125,13 +125,13 @@ const Inner = ({
     error,
   } = useGetMarketQuery(new PublicKey(tradeItem!));
 
-  const {
-    poolBaseBalance,
-    baseWeight,
-    assetWeight,
-    poolAssetBalance,
-    swapFee,
-  } = tradeItemState ?? {};
+  // const {
+  //   poolBaseBalance,
+  //   baseWeight,
+  //   assetWeight,
+  //   poolAssetBalance,
+  //   swapFee,
+  // } =  {};
 
   const [tabIndex, setTabIndex] = useState<number>(
     tradeItem.action === "buy" ? TradeTabType.Buy : TradeTabType.Sell,
@@ -217,12 +217,7 @@ const Inner = ({
 
   const changeByPercentage = useCallback(
     (percentage: Decimal) => {
-      const [balanceIn, weightIn, balanceOut, weightOut] = [
-        poolBaseBalance,
-        baseWeight,
-        poolAssetBalance,
-        assetWeight,
-      ];
+      const [balanceIn, weightIn, balanceOut, weightOut] = [0, 1, 2, 3];
 
       if (
         tradeItemState == null ||
@@ -286,19 +281,13 @@ const Inner = ({
 
   const changeByAssetAmount = useCallback(
     (assetAmount: Decimal) => {
-      const [balanceIn, weightIn, balanceOut, weightOut] = [
-        poolBaseBalance,
-        baseWeight,
-        poolAssetBalance,
-        assetWeight,
-      ];
+      const [balanceIn, weightIn, balanceOut, weightOut] = [0, 1, 2, 3];
       if (
         tradeItemState == null ||
         balanceIn == null ||
         weightIn == null ||
         balanceOut == null ||
-        weightOut == null ||
-        swapFee == null
+        weightOut == null
       ) {
         return;
       }
@@ -308,22 +297,22 @@ const Inner = ({
         : new Decimal(0);
 
       if (tradeItem.action === "buy") {
-        const amountIn = calcInGivenOut(
-          balanceIn,
-          weightIn,
-          balanceOut,
-          weightOut,
-          assetAmount.mul(ZTG),
-          swapFee,
-          perbillToNumber(
-            new Decimal(market?.creatorFeePercentage.toString() ?? 0),
-          ),
-        );
+        // const amountIn = calcInGivenOut(
+        //   balanceIn,
+        //   weightIn,
+        //   balanceOut,
+        //   weightOut,
+        //   assetAmount.mul(ZTG),
+        //   swapFee,
+        //   perbillToNumber(
+        //     new Decimal(market?.creatorFeePercentage.toString() ?? 0),
+        //   ),
+        // );
 
-        setValue(
-          "baseAmount",
-          amountIn.div(ZTG).toFixed(4, Decimal.ROUND_DOWN),
-        );
+        // setValue(
+        //   "baseAmount",
+        //   amountIn.div(ZTG).toFixed(4, Decimal.ROUND_DOWN),
+        // );
         setPercentageDisplay(percentage.toString());
       } else if (tradeItem.action === "sell") {
         const amountOut = calcOutGivenIn(
@@ -332,7 +321,7 @@ const Inner = ({
           balanceOut,
           weightOut,
           assetAmount.mul(ZTG),
-          swapFee,
+          0,
           perbillToNumber(
             new Decimal(market?.creatorFeePercentage.toString() ?? 0),
           ),
@@ -462,172 +451,170 @@ const Inner = ({
     }
   }, [maxBaseAmount.toString(), maxAssetAmount.toString()]);
 
-  return (
-    <div>
-      {tradeItemState ? (
-        <TradeResult
-          type={tradeItem.action}
-          amount={new Decimal(finalAmounts.asset)}
-          tokenName={tradeItemState.asset?.name ?? undefined}
-          baseTokenAmount={new Decimal(finalAmounts.base)}
-          baseToken={baseSymbol}
-          marketId={tradeItemState?.market.marketId.toString()}
-          marketQuestion={tradeItemState?.market.question ?? undefined}
-          onContinueClick={() => {
-            setPercentageDisplay("0");
-            reset();
-          }}
-        />
-      ) : (
-        <form
-          className="relative rounded-[10px] bg-white"
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <div className="hidden md:block">
-            <Tab.Group
-              defaultIndex={tabIndex}
-              onChange={(index: TradeTabType) => {
-                setTabIndex(index);
-                if (index === TradeTabType.Buy) {
-                  setTradeItem({
-                    ...tradeItem,
-                    action: "buy",
-                  });
-                }
-                if (index === TradeTabType.Sell) {
-                  setTradeItem({
-                    ...tradeItem,
-                    action: "sell",
-                  });
-                }
-                reset();
-                setPercentageDisplay("0");
-              }}
-              selectedIndex={tabIndex}
-            >
-              <Tab.List className="flex h-[60px] justify-between rounded-xl text-center sm:h-[71px]">
-                <Tab
-                  as={TradeTab}
-                  selected={type === "buy"}
-                  className="rounded-tl-xl"
-                >
-                  Buy
-                </Tab>
-                <Tab
-                  as={TradeTab}
-                  selected={type === "sell"}
-                  className="rounded-tr-xl"
-                >
-                  Sell
-                </Tab>
-              </Tab.List>
-            </Tab.Group>
-          </div>
-          <div className="flex flex-col p-[20px] sm:p-[30px]">
-            <div className="center relative">
-              <Input
-                type="number"
-                {...register("assetAmount", {
-                  required: true,
-                  min: "0",
-                  max: maxAssetAmount?.div(ZTG).toFixed(4),
-                  validate: (value) => Number(value) > 0,
-                })}
-                onFocus={() => {}}
-                step="any"
-                className="w-full bg-transparent text-center text-6xl sm:text-4xl lg:text-5xl"
-                autoFocus
-              />
-            </div>
-            <div className="center mb-4 font-semibold">
-              {/* {market && tradeItemState?.assetId && (
-                <MarketContextActionOutcomeSelector
-                  market={market}
-                  selected={tradeItemState?.assetId}
-                  options={outcomeAssets}
-                  onChange={(assetId) => {
-                    reset();
-                    setTradeItem({
-                      action: tradeItem.action,
-                      assetId,
-                    });
-                  }}
-                />
-              )} */}
-            </div>
-            <div className="center relative mb-[20px] h-[56px] rounded-lg bg-anti-flash-white text-ztg-18-150">
-              <Input
-                type="number"
-                {...register("baseAmount", {
-                  required: true,
-                  min: "0",
-                  max: maxBaseAmount?.div(ZTG).toFixed(4),
-                  validate: (value) => Number(value) > 0,
-                })}
-                onFocus={() => {}}
-                step="any"
-                className="w-full bg-transparent text-center"
-              />
-              <div className="absolute right-2 mr-[10px]">{baseSymbol}</div>
-            </div>
-            <RangeInput
-              min="0"
-              max="100"
-              value={percentageDisplay}
-              onValueChange={setPercentageDisplay}
-              onFocus={() => {
-                // if (tradeItemState?.assetId) {
-                //   setLastEditedAssetId(tradeItemState?.assetId);
-                // }
-              }}
-              minLabel="0 %"
-              step="0.1"
-              valueSuffix="%"
-              maxLabel="100 %"
-              className="mb-[20px]"
-              disabled={pubKey == null}
-              {...register("percentage")}
-            />
-            <div className="mb-4 text-center">
-              <div className="text-ztg-12-150 sm:text-ztg-14-150">
-                <div className="mb-[10px]">
-                  <span className="text-sky-600">Average Price: </span>
-                  {averagePrice} {baseSymbol}
-                </div>
-                <div className="mb-[10px]">
-                  <span className="text-sky-600">Prediction After Trade: </span>
-                  {predictionAfterTrade.toFixed(2)} {baseSymbol} (
-                  {predictionAfterTrade.mul(100).toFixed(0)}%)
-                </div>
-                <div className="mb-[10px]">
-                  <span className="text-sky-600">Price impact: </span>
-                  {priceImpact}%
-                </div>
-              </div>
-            </div>
-
-            <div className="relative">
-              <TransactionButton
-                disabled={!formState.isValid}
-                className={`relative h-[56px] `}
-                type="submit"
-                loading={true}
-              >
-                <div>
-                  <div className="center h-[20px] font-normal">
-                    Confirm {`${capitalize(tradeItem?.action)}`}
-                  </div>
-                  <div className="center h-[20px] text-ztg-12-120 font-normal">
-                    Transaction fee: {formatNumberCompact(0)} {"SOL"}
-                  </div>
-                </div>
-              </TransactionButton>
-            </div>
-          </div>
-        </form>
-      )}
-    </div>
-  );
+  return <div></div>;
 };
+
+// {/* {tradeItemState ? (
+//     <TradeResult
+//       type={tradeItem.action}
+//       amount={new Decimal(finalAmounts.asset)}
+//       tokenName={tradeItemState.asset?.name ?? undefined}
+//       baseTokenAmount={new Decimal(finalAmounts.base)}
+//       baseToken={baseSymbol}
+//       marketId={tradeItemState?.market.marketId.toString()}
+//       marketQuestion={tradeItemState?.market.question ?? undefined}
+//       onContinueClick={() => {
+//         setPercentageDisplay("0");
+//         reset();
+//       }}
+//     />
+//   ) : (
+//     <form
+//       className="relative rounded-[10px] bg-white"
+//       onSubmit={(e) => {
+//         e.preventDefault();
+//       }}
+//     >
+//       <div className="hidden md:block">
+//         <Tab.Group
+//           defaultIndex={tabIndex}
+//           onChange={(index: TradeTabType) => {
+//             setTabIndex(index);
+//             if (index === TradeTabType.Buy) {
+//               setTradeItem({
+//                 ...tradeItem,
+//                 action: "buy",
+//               });
+//             }
+//             if (index === TradeTabType.Sell) {
+//               setTradeItem({
+//                 ...tradeItem,
+//                 action: "sell",
+//               });
+//             }
+//             reset();
+//             setPercentageDisplay("0");
+//           }}
+//           selectedIndex={tabIndex}
+//         >
+//           <Tab.List className="flex h-[60px] justify-between rounded-xl text-center sm:h-[71px]">
+//             <Tab
+//               as={TradeTab}
+//               selected={type === "buy"}
+//               className="rounded-tl-xl"
+//             >
+//               Buy
+//             </Tab>
+//             <Tab
+//               as={TradeTab}
+//               selected={type === "sell"}
+//               className="rounded-tr-xl"
+//             >
+//               Sell
+//             </Tab>
+//           </Tab.List>
+//         </Tab.Group>
+//       </div>
+//       <div className="flex flex-col p-[20px] sm:p-[30px]">
+//         <div className="center relative">
+//           <Input
+//             type="number"
+//             {...register("assetAmount", {
+//               required: true,
+//               min: "0",
+//               max: maxAssetAmount?.div(ZTG).toFixed(4),
+//               validate: (value) => Number(value) > 0,
+//             })}
+//             onFocus={() => {}}
+//             step="any"
+//             className="w-full bg-transparent text-center text-6xl sm:text-4xl lg:text-5xl"
+//             autoFocus
+//           />
+//         </div>
+//         <div className="center mb-4 font-semibold">
+//           {/* {market && tradeItemState?.assetId && (
+//             <MarketContextActionOutcomeSelector
+//               market={market}
+//               selected={tradeItemState?.assetId}
+//               options={outcomeAssets}
+//               onChange={(assetId) => {
+//                 reset();
+//                 setTradeItem({
+//                   action: tradeItem.action,
+//                   assetId,
+//                 });
+//               }}
+//             />
+//           )} */}
+//           </div>
+//           <div className="center relative mb-[20px] h-[56px] rounded-lg bg-anti-flash-white text-ztg-18-150">
+//             <Input
+//               type="number"
+//               {...register("baseAmount", {
+//                 required: true,
+//                 min: "0",
+//                 max: maxBaseAmount?.div(ZTG).toFixed(4),
+//                 validate: (value) => Number(value) > 0,
+//               })}
+//               onFocus={() => {}}
+//               step="any"
+//               className="w-full bg-transparent text-center"
+//             />
+//             <div className="absolute right-2 mr-[10px]">{baseSymbol}</div>
+//           </div>
+//           <RangeInput
+//             min="0"
+//             max="100"
+//             value={percentageDisplay}
+//             onValueChange={setPercentageDisplay}
+//             onFocus={() => {
+//               // if (tradeItemState?.assetId) {
+//               //   setLastEditedAssetId(tradeItemState?.assetId);
+//               // }
+//             }}
+//             minLabel="0 %"
+//             step="0.1"
+//             valueSuffix="%"
+//             maxLabel="100 %"
+//             className="mb-[20px]"
+//             disabled={pubKey == null}
+//             {...register("percentage")}
+//           />
+//           <div className="mb-4 text-center">
+//             <div className="text-ztg-12-150 sm:text-ztg-14-150">
+//               <div className="mb-[10px]">
+//                 <span className="text-sky-600">Average Price: </span>
+//                 {averagePrice} {baseSymbol}
+//               </div>
+//               <div className="mb-[10px]">
+//                 <span className="text-sky-600">Prediction After Trade: </span>
+//                 {predictionAfterTrade.toFixed(2)} {baseSymbol} (
+//                 {predictionAfterTrade.mul(100).toFixed(0)}%)
+//               </div>
+//               <div className="mb-[10px]">
+//                 <span className="text-sky-600">Price impact: </span>
+//                 {priceImpact}%
+//               </div>
+//             </div>
+//           </div>
+
+//           <div className="relative">
+//             <TransactionButton
+//               disabled={!formState.isValid}
+//               className={`relative h-[56px] `}
+//               type="submit"
+//               loading={true}
+//             >
+//               <div>
+//                 <div className="center h-[20px] font-normal">
+//                   Confirm {`${capitalize(tradeItem?.action)}`}
+//                 </div>
+//                 <div className="center h-[20px] text-ztg-12-120 font-normal">
+//                   Transaction fee: {formatNumberCompact(0)} {"SOL"}
+//                 </div>
+//               </div>
+//             </TransactionButton>
+//           </div>
+//         </div>
+//       </form>
+//     )} */}
