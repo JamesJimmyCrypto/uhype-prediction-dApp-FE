@@ -112,88 +112,89 @@ export const QuillViewer = dynamic(
   },
 );
 
-export async function getStaticPaths() {
-  const client = new GraphQLClient(graphQlEndpoint);
-  const marketIds = await getRecentMarketIds(client);
+// export async function getStaticPaths() {
+//   const client = new GraphQLClient(graphQlEndpoint);
+//   const marketIds = await getRecentMarketIds(client);
 
-  const paths = marketIds.map((market) => ({
-    params: { marketid: market.toString() },
-  }));
+//   const paths = marketIds.map((market) => ({
+//     params: { marketid: market.toString() },
+//   }));
 
-  return { paths, fallback: "blocking" };
-}
+//   return { paths, fallback: "blocking" };
+// }
 
-export async function getStaticProps({ params }) {
-  const client = new GraphQLClient(graphQlEndpoint);
-  // const { getMarket } = useMarketProgram();
-  // const market = await getMarket(params.marketid);
-  // const [cmsMetadata] = await Promise.all([
-  //   getCmsFullMarketMetadataForMarket(params.marketid),
-  // ]);
+// export async function getStaticProps({ params }) {
+//   const client = new GraphQLClient(graphQlEndpoint);
+//   // const { getMarket } = useMarketProgram();
+//   // const market = await getMarket(params.marketid);
+//   // const [cmsMetadata] = await Promise.all([
+//   //   getCmsFullMarketMetadataForMarket(params.marketid),
+//   // ]);
 
-  // const chartSeries: ChartSeries[] = market?.categories?.map(
-  //   (category, index) => {
-  //     return {
-  //       accessor: `v${index}`,
-  //       label: category.name,
-  //       color: category.color,
-  //     };
-  //   },
-  // );
+//   // const chartSeries: ChartSeries[] = market?.categories?.map(
+//   //   (category, index) => {
+//   //     return {
+//   //       accessor: `v${index}`,
+//   //       label: category.name,
+//   //       color: category.color,
+//   //     };
+//   //   },
+//   // );
 
-  let resolutionTimestamp: string | undefined;
-  // if (market) {
-  //   const { timestamp } = await getResolutionTimestamp(client, market.marketId);
-  //   resolutionTimestamp = timestamp ?? undefined;
+//   let resolutionTimestamp: string | undefined;
+//   // if (market) {
+//   //   const { timestamp } = await getResolutionTimestamp(client, market.marketId);
+//   //   resolutionTimestamp = timestamp ?? undefined;
 
-  //   if (cmsMetadata?.question || cmsMetadata?.description) {
-  //     market.hasEdits = true;
-  //     (market as MarketPageIndexedData & WithCmsEdits).originalMetadata = {};
-  //   }
+//   //   if (cmsMetadata?.question || cmsMetadata?.description) {
+//   //     market.hasEdits = true;
+//   //     (market as MarketPageIndexedData & WithCmsEdits).originalMetadata = {};
+//   //   }
 
-  //   if (cmsMetadata?.imageUrl) {
-  //     market.img = cmsMetadata?.imageUrl;
-  //   }
+//   //   if (cmsMetadata?.imageUrl) {
+//   //     market.img = cmsMetadata?.imageUrl;
+//   //   }
 
-  //   if (cmsMetadata?.question) {
-  //     (
-  //       market as MarketPageIndexedData & WithCmsEdits
-  //     ).originalMetadata.question = market.question;
-  //     market.question = cmsMetadata?.question;
-  //   }
+//   //   if (cmsMetadata?.question) {
+//   //     (
+//   //       market as MarketPageIndexedData & WithCmsEdits
+//   //     ).originalMetadata.question = market.question;
+//   //     market.question = cmsMetadata?.question;
+//   //   }
 
-  //   if (cmsMetadata?.description) {
-  //     (
-  //       market as MarketPageIndexedData & WithCmsEdits
-  //     ).originalMetadata.description = market.description as string;
-  //     market.description = cmsMetadata?.description;
-  //   }
-  // }
+//   //   if (cmsMetadata?.description) {
+//   //     (
+//   //       market as MarketPageIndexedData & WithCmsEdits
+//   //     ).originalMetadata.description = market.description as string;
+//   //     market.description = cmsMetadata?.description;
+//   //   }
+//   // }
 
-  // const hasLiveTwitchStream = await from(async () => {
-  //   const channelName = extractChannelName(cmsMetadata?.twitchStreamUrl);
-  //   if (channelName) {
-  //     return await isLive(channelName);
-  //   }
-  //   return false;
-  // });
+//   // const hasLiveTwitchStream = await from(async () => {
+//   //   const channelName = extractChannelName(cmsMetadata?.twitchStreamUrl);
+//   //   if (channelName) {
+//   //     return await isLive(channelName);
+//   //   }
+//   //   return false;
+//   // });
 
-  return {
-    props: {
-      // indexedMarket: market ?? null,
-      // chartSeries: chartSeries ?? null,
-      // resolutionTimestamp: resolutionTimestamp ?? null,
-      // promotionData: null,
-      // cmsMetadata: cmsMetadata ?? null,
-      // hasLiveTwitchStream: hasLiveTwitchStream,
-    },
-    revalidate:
-      environment === "production"
-        ? 5 * 60 //5min
-        : 60 * 60,
-  };
-}
+//   return {
+//     props: {
+//       // indexedMarket: market ?? null,
+//       // chartSeries: chartSeries ?? null,
+//       // resolutionTimestamp: resolutionTimestamp ?? null,
+//       // promotionData: null,
+//       // cmsMetadata: cmsMetadata ?? null,
+//       // hasLiveTwitchStream: hasLiveTwitchStream,
+//     },
+//     revalidate:
+//       environment === "production"
+//         ? 5 * 60 //5min
+//         : 60 * 60,
+//   };
+// }
 
+export async function getServerSideProps({ params }) {}
 type MarketPageProps = {
   indexedMarket: MarketPageIndexedData;
   chartSeries: ChartSeries[];

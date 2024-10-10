@@ -18,41 +18,41 @@ import Image from "next/image";
 import Link from "next/link";
 import NotFoundPage from "pages/404";
 
-export async function getStaticPaths() {
-  const cmsTopics = await getCmsTopicHeaders();
+// export async function getStaticPaths() {
+//   const cmsTopics = await getCmsTopicHeaders();
 
-  const paths = cmsTopics.map((topic) => ({
-    params: { topic: topic.slug },
-  }));
+//   const paths = cmsTopics.map((topic) => ({
+//     params: { topic: topic.slug },
+//   }));
 
-  return { paths, fallback: "blocking" };
-}
+//   return { paths, fallback: "blocking" };
+// }
 
-export async function getStaticProps({
-  params,
-}: {
-  params: { topic: string };
-}) {
-  const sdk = await create({
-    provider: endpointOptions.map((e) => e.value),
-    indexer: graphQlEndpoint,
-    storage: ZeitgeistIpfs(),
-  });
+// export async function getStaticProps({
+//   params,
+// }: {
+//   params: { topic: string };
+// }) {
+//   const sdk = await create({
+//     provider: endpointOptions.map((e) => e.value),
+//     indexer: graphQlEndpoint,
+//     storage: ZeitgeistIpfs(),
+//   });
 
-  const cmsTopic = await getCmsFullTopic(params.topic);
-  const marketCardsData = await marketsForTopic(cmsTopic, sdk.indexer);
+//   const cmsTopic = await getCmsFullTopic(params.topic);
+//   const marketCardsData = await marketsForTopic(cmsTopic, sdk.indexer);
 
-  return {
-    props: {
-      cmsTopic: cmsTopic ?? null,
-      markets: marketCardsData,
-    },
-    revalidate:
-      environment === "production"
-        ? 5 * 60 //5min
-        : 60 * 60,
-  };
-}
+//   return {
+//     props: {
+//       cmsTopic: cmsTopic ?? null,
+//       markets: marketCardsData,
+//     },
+//     revalidate:
+//       environment === "production"
+//         ? 5 * 60 //5min
+//         : 60 * 60,
+//   };
+// }
 
 const TopicPage: NextPage<{
   cmsTopic: CmsTopicFull;
