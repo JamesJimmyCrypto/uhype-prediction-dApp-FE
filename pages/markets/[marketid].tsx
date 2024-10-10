@@ -212,7 +212,6 @@ const Market: NextPage<MarketPageProps> = ({
 }) => {
   const router = useRouter();
   const { marketid } = router.query;
-  const marketId = Number(marketid);
   const { useGetMarketQuery } = useMarketProgram();
   const {
     data: market,
