@@ -321,7 +321,7 @@ export const MarketEditor = () => {
                     <b>long</b>) bound.{" "}
                     <a
                       className="text-ztg-blue"
-                      href="https://docs.zeitgeist.pm/docs/learn/prediction-markets#scalar-prediction-markets"
+                      href=""
                       target="_blank"
                     >
                       Learn more.

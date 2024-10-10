@@ -70,12 +70,25 @@ const TransactionButton: FC<PropsWithChildren<TransactionButtonProps>> = ({
     }
   };
   return (
+    // <button
+    //   type={type}
+    //   className={`ztg-transition h-[56px] w-[128px] rounded-full text-white 
+    //     focus:outline-none disabled:cursor-default  ${
+    //       !isDisabled && "active:scale-95"
+    //     } ${colorClass} ${className} disabled:!bg-slate-300`}
+    //   onClick={(e) => click(e)}
+    //   disabled={isDisabled}
+    //   data-test={dataTest}
+    // >
+    //   {getButtonChildren()}
+    // </button>
     <button
       type={type}
-      className={`ztg-transition h-[56px] w-full rounded-full text-white 
-        focus:outline-none disabled:cursor-default  ${
-          !isDisabled && "active:scale-95"
-        } ${colorClass} ${className} disabled:!bg-slate-300`}
+      className={`ztg-transition h-[48px] w-[128px] rounded-full text-blue 
+      focus:outline-none disabled:cursor-default ${
+        !isDisabled && "active:scale-95"
+      } bg-gradient-to-r from-yellow-400 to-orange-500 ${className} disabled:!bg-slate-300 
+      px-[12px] py-[12px] text-[14px] font-bold`}
       onClick={(e) => click(e)}
       disabled={isDisabled}
       data-test={dataTest}

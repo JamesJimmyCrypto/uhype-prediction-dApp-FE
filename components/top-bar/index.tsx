@@ -64,10 +64,10 @@ const TopBar = () => {
                 <>
                   <div className="flex gap-2">
                     <Menu.Button className="center relative flex gap-2 font-light text-white">
-                      <div className="relative hidden h-6 w-6 md:block">
+                      {/* <div className="relative hidden h-6 w-6 md:block">
                         <FiGrid size={"100%"} />
-                      </div>
-                      <div className="hidden md:block">Markets</div>
+                      </div> */}
+                      <div className="hidden md:block bold">Markets</div>
                       <div className="block md:hidden">
                         <MenuIcon />
                       </div>
@@ -153,10 +153,10 @@ const TopBar = () => {
                               <button
                                 className={`group mb-4 flex w-full  items-center gap-3 px-2 py-2 text-sm`}
                               >
-                                <div className="relative h-6 w-6">
+                                {/* <div className="relative h-6 w-6">
                                   <FiAward size={"100%"} />
-                                </div>
-                                <h3 className="text-sm font-semibold">
+                                </div> */}
+                                <h3 className="text-sm bold">
                                   Leaderboard
                                 </h3>
                               </button>
@@ -207,14 +207,16 @@ const TopBar = () => {
             }}
           </Menu>
 
+          <div className="w-full h-1 bg-blue-500"></div>
+          
           <Link
             className="md:center relative hidden gap-2 font-light text-white md:flex"
             href="/leaderboard/year"
           >
-            <div className="relative h-6 w-6">
+            {/* <div className="relative h-6 w-6">
               <FiAward size={"100%"} />
-            </div>
-            <div>Leaderboard</div>
+            </div> */}
+            <div className="bold">Leaderboard</div>
           </Link>
         </div>
         <MarketSearch />
