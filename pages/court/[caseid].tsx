@@ -74,7 +74,7 @@ export async function getStaticProps({
   const marketId = await sdk.api.query.court.courtIdToMarketId(params.caseid);
 
   const cmsMetadata = await getCmsFullMarketMetadataForMarket(
-    marketId.unwrap().toNumber(),
+    marketId.unwrap().toString(),
   );
 
   const markets = marketId.isSome
@@ -190,12 +190,12 @@ const CasePage: NextPage = ({
 
   const { unCommitVote } = useCourtVote({
     caseId,
-    marketId: market.marketId,
+    marketId: market.marketId.toString(),
   });
 
   const { resetBackedUpState } = useCourtSalt({
     caseId,
-    marketId: market.marketId,
+    marketId: market.marketId.toString(),
   });
 
   const totalSlashableStake = calculateSlashableStake(

@@ -73,14 +73,6 @@ export const useCourtSalt = ({
   let phraseStorage = saltPhrases[id];
 
   if (!phraseStorage) {
-    phraseStorage = {
-      caseId,
-      marketId,
-      juror: pubKey!,
-      createdAt: Date.now(),
-      phrase: mnemonicGenerate(),
-    };
-
     setSaltPhrases((state) => ({
       ...state,
       [id]: phraseStorage,
@@ -99,11 +91,11 @@ export const useCourtSalt = ({
       );
     }
 
-    if (backup.marketId !== marketId) {
-      error = new Error(
-        "Market id stored in backup file phrase does not match current market. This might be a backup for a different market.",
-      );
-    }
+    // if (backup.marketId !== marketId) {
+    //   error = new Error(
+    //     "Market id stored in backup file phrase does not match current market. This might be a backup for a different market.",
+    //   );
+    // }
 
     if (backup.caseId !== caseId) {
       error = new Error(

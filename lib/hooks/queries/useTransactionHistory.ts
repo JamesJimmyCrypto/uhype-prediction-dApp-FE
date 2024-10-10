@@ -118,11 +118,11 @@ export const useTransactionHistory = (address: string) => {
 
         const marketsMap: Record<number, MarketHeader> = {};
 
-        marketIds.forEach((marketId) => {
-          const market = markets.find((m) => m.marketId === marketId);
-          if (!market) return;
-          marketsMap[marketId] = market;
-        });
+        // marketIds.forEach((marketId) => {
+        //   const market = markets.find((m) => m.marketId === marketId);
+        //   if (!market) return;
+        //   marketsMap[marketId] = market;
+        // });
 
         for (const item of merged) {
           const action: Action = humanReadableEventMap[item.event];
@@ -133,9 +133,8 @@ export const useTransactionHistory = (address: string) => {
           const marketId = getMarketIdOf(assetId);
 
           transactions = [
-            ...transactions,
             {
-              marketId: marketId,
+              marketId: marketId.toString(),
               question: marketsMap[marketId].question,
               action: action,
               time: item.timestamp,

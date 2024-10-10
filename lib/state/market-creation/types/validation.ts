@@ -105,15 +105,15 @@ export const createMarketFormValidator = ({
       creatorFee: IOCreatorFee,
     })
     .superRefine((form, ctx) => {
-      const min = minBaseLiquidity[form.currency];
+      const min = minBaseLiquidity["SOL"];
 
       let baseLiquidity: number | undefined;
 
-      if (form?.liquidity?.amount) {
-        baseLiquidity = Number(form?.liquidity?.amount);
-      } else {
-        baseLiquidity = Number(form.liquidity.amount);
-      }
+      // if (form?.liquidity?.amount) {
+      //   baseLiquidity = Number(form?.liquidity?.amount);
+      // } else {
+      //   baseLiquidity = Number(form.liquidity.amount);
+      // }
 
       if (isNaN(baseLiquidity) || !isNumber(baseLiquidity)) {
         ctx.addIssue({
@@ -123,27 +123,27 @@ export const createMarketFormValidator = ({
         });
       }
 
-      if (form.liquidity.deploy && (!baseLiquidity || baseLiquidity < min)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["liquidity", "base"],
-          message: `Minimum base liquidity is ${min} ${form.currency}`,
-        });
-      }
+      // if (form.liquidity.deploy && (!baseLiquidity || baseLiquidity < min)) {
+      //   ctx.addIssue({
+      //     code: z.ZodIssueCode.custom,
+      //     path: ["liquidity", "base"],
+      //     message: `Minimum base liquidity is ${min} ${form.currency}`,
+      //   });
+      // }
     })
     .superRefine((form, ctx) => {
-      if (
-        form.moderation === "Permissionless" &&
-        form.liquidity?.deploy &&
-        form.liquidity?.rows &&
-        form.liquidity?.rows?.length < 2
-      ) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["liquidity"],
-          message: "Answers section must have a minimum of two valid answers.",
-        });
-      }
+      // if (
+      //   form.moderation === "Permissionless" &&
+      //   form.liquidity?.deploy &&
+      //   form.liquidity?.rows &&
+      //   form.liquidity?.rows?.length < 2
+      // ) {
+      //   ctx.addIssue({
+      //     code: z.ZodIssueCode.custom,
+      //     path: ["liquidity"],
+      //     message: "Answers section must have a minimum of two valid answers.",
+      //   });
+      // }
     });
 };
 

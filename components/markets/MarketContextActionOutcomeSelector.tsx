@@ -206,4 +206,3 @@ const SEARCH_ITEMS_THRESHOLD = 5;
 //     </>
 //   );
 // };
-

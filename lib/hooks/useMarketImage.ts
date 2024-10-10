@@ -9,11 +9,10 @@ export const useMarketImage = (
   },
 ) => {
   const cmsQuery = useMarketCmsMetadata(market.marketId);
-  const fallback = getFallbackImage(market.tags, market.marketId);
 
   return {
     ...cmsQuery,
-    data: cmsQuery.data?.imageUrl ?? opts?.fallback ?? fallback,
+    data: cmsQuery.data?.imageUrl,
   };
 };
 
@@ -21,7 +20,7 @@ export const getFallbackImage = (
   marketTags: FullMarketFragment["tags"],
   marketId: string,
 ) => {
-  const tagIndex = marketTags ? marketId % marketTags.length : 0;
+  const tagIndex = 0;
   const pickedTag = marketTags?.[tagIndex];
 
   const tag = (
@@ -30,6 +29,6 @@ export const getFallbackImage = (
 
   const category = CATEGORY_IMAGES[tag];
 
-  const fallback = category[marketId % category.length];
+  const fallback = category[category.length];
   return fallback;
 };

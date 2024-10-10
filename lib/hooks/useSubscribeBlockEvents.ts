@@ -45,7 +45,7 @@ export const useSubscribeBlockEvents = () => {
         // Here, you would check for AMM-specific logic, similar to accountInfo above
         // For example, you might check specific program accounts or tokens
         // monitoredAMMPools.add("specific-pool-id");
-        const id  = "spec"
+        const id = "spec"
         monitoredAccounts.forEach((account) => {
           queryClient.invalidateQueries([
             id,

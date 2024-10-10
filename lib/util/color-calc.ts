@@ -9,7 +9,7 @@ export const calcColor = (
   assetsLength: number,
   assetIndex: number,
 ) => {
-  const startingPoint = marketId % 360;
+  const startingPoint = 360;
   const assetSpacing = 360 / assetsLength;
   const hue = startingPoint + assetSpacing * assetIndex;
 

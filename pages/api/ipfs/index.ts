@@ -24,8 +24,8 @@ const POST = async (req: NextApiRequest, res: NextApiResponse) => {
     headers: {
       Authorization: `Basic ${Buffer.from(
         process.env.IPFS_NODE_BASIC_AUTH_USERNAME +
-          ":" +
-          process.env.IPFS_NODE_BASIC_AUTH_PASSWORD,
+        ":" +
+        process.env.IPFS_NODE_BASIC_AUTH_PASSWORD,
       ).toString("base64")}`,
     },
   });
@@ -80,9 +80,8 @@ const POST = async (req: NextApiRequest, res: NextApiResponse) => {
     );
 
     return res.status(200).json({
-      message: `Market metadata ${
-        onlyHash ? "hashed" : "pinned"
-      } successfully.`,
+      message: `Market metadata ${onlyHash ? "hashed" : "pinned"
+        } successfully.`,
       cid: cid.toString(),
     });
   } catch (error) {

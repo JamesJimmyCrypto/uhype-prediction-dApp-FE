@@ -35,7 +35,7 @@ const LatestTradeRow = ({ trade }: { trade: TradeItem }) => {
         <Image
           priority
           alt="Market image"
-          src={image}
+          src={image ?? ""}
           width={30}
           height={30}
           className="overflow-hidden rounded-md"

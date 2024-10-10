@@ -16,10 +16,7 @@ const QuillViewer = ({ value }: { value: string }) => {
       const linkContainSpaces = linkText.includes(" ");
 
       if (linkContainSpaces === false) {
-        const newLinkText =
-          linkText.length > maxLength
-            ? linkText.substring(0, maxLength) + "..."
-            : linkText;
+        const newLinkText = linkText;
 
         value = value.replace(`>${linkText}<`, `>${newLinkText}<`);
       }

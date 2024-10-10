@@ -83,33 +83,33 @@ export const BlockPeriodPicker: React.FC<BlockPeriodPickerProps> = ({
     });
   };
 
-  const handleDurationChange = (event: FormEvent<DurationValue>) => {
-    onChange?.({
-      type: "change",
-      target: {
-        name,
-        value: {
-          ...event.target.value,
-          type: "duration",
-          preset: "",
-        },
-      },
-    });
-  };
+  // const handleDurationChange = (event: FormEvent<DurationValue>) => {
+  //   onChange?.({
+  //     type: "change",
+  //     target: {
+  //       name,
+  //       value: {
+  //         ...event.target.value,
+  //         type: "duration",
+  //         preset: "",
+  //       },
+  //     },
+  //   });
+  // };
 
-  const handleDurationBlur = (event: FormEvent<DurationValue>) => {
-    onBlur?.({
-      type: "blur",
-      target: {
-        name,
-        value: {
-          ...event.target.value,
-          type: "duration",
-          preset: "",
-        },
-      },
-    });
-  };
+  // const handleDurationBlur = (event: FormEvent<DurationValue>) => {
+  //   onBlur?.({
+  //     type: "blur",
+  //     target: {
+  //       name,
+  //       value: {
+  //         ...event.target.value,
+  //         type: "duration",
+  //         preset: "",
+  //       },
+  //     },
+  //   });
+  // };
 
   const durationPresets: PeriodDurationOption[] = options.filter(
     (o): o is PeriodDurationOption =>
@@ -134,21 +134,21 @@ export const BlockPeriodPicker: React.FC<BlockPeriodPickerProps> = ({
             }`}
             onClick={() => handleOnClickOption(option)}
           >
-            {option.preset}
+            {/* {option.preset} */}
           </button>
         ))}
       </div>
 
       <div className="flex justify-center gap-3">
-        {hasCustomDurationOption && value?.type === "duration" && (
+        {/* {hasCustomDurationOption && value?.type === "duration" && (
           <DurationInput
             className="overflow-hidden rounded-full md:w-72"
             value={value}
-            onChange={handleDurationChange}
-            onBlur={handleDurationBlur}
+            onChange={() => {}}
+            onBlur={() => {}}
             isSelected={isValid && value?.type === "duration" && !value?.preset}
           />
-        )}
+        )} */}
 
         {hasCustomDateOption && (
           <DateTimePicker
@@ -159,7 +159,7 @@ export const BlockPeriodPicker: React.FC<BlockPeriodPickerProps> = ({
             }`}
             placeholder="Set Custom Date"
             isValid={value?.type === "date" && isValid}
-            value={chainTime && value?.type === "date" ? value.date : undefined}
+            value={undefined}
             onChange={handleDateChange}
             onBlur={handleDateBlur}
           />

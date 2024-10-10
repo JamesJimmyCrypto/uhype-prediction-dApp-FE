@@ -190,10 +190,7 @@ const PoolDeployer = ({
 
               <div className="ml-[27px] text-ztg-12-150 font-bold text-sky-600">
                 Total Cost:
-                <span className="font-mono">
-                  {" "}
-                  {poolCost} {constants?.tokenSymbol}
-                </span>
+                <span className="font-mono">{constants?.tokenSymbol}</span>
               </div>
             </div>
           </div>

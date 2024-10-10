@@ -330,8 +330,7 @@ const DepositPage: NextPage = () => {
     }
   }, [currency, method, paymentMethod]);
 
-  const encodedAddress =
-  pubKey 
+  const encodedAddress = pubKey;
 
   return (
     <>

@@ -12,7 +12,7 @@ export const useCourtStage = ({
   caseId?: number | string;
 }) => {
   const chainTime = useChainTime();
-  const { data: market } = useMarket({ marketId: string(marketId) });
+  const { data: market } = useMarket({ marketId: String(marketId) });
   const { data: courtCase } = useCourtCase(Number(caseId));
 
   const stage = useMemo(() => {

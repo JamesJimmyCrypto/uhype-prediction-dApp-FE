@@ -42,7 +42,7 @@ export default async function GenerateOgImage(request: NextRequest) {
 
   const fallbackImagePath = `${urlBase}${getFallbackImage(
     market.tags,
-    Number(marketId),
+    marketId!,
   )}`;
 
   const question = cmsQuestion ?? market?.question;
