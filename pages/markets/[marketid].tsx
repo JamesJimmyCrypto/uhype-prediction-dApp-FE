@@ -212,15 +212,16 @@ const Market: NextPage<MarketPageProps> = ({
 }) => {
   const router = useRouter();
   const { marketid } = router.query;
+  const marketIdString = Array.isArray(marketid) ? marketid[0] : marketid;
   const { useGetMarketQuery } = useMarketProgram();
-  if (!marketid) {
+  if (!marketIdString) {
     return <NotFoundPage backText="Back To Markets" backLink="/" />;
   }
   const {
     data: market,
     isLoading,
     error,
-  } = useGetMarketQuery(new PublicKey(marketid));
+  } = useGetMarketQuery(new PublicKey(marketIdString));
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString();
   // const { data: orders, isLoading: isOrdersLoading } = useOrders({
@@ -590,9 +591,13 @@ const Market: NextPage<MarketPageProps> = ({
                   "linear-gradient(180deg, rgba(49, 125, 194, 0.2) 0%, rgba(225, 210, 241, 0.2) 100%)",
               }}
             >
+              <Amm2TradeForm
+                marketId={marketIdString}
+                market={market}
+              />
+
               {/* {market?.status === MarketStatus.Active ? (
                 <>
-                  <Amm2TradeForm marketId={marketId} />
                 </>
               ) : market?.status === MarketStatus.Closed && canReport ? (
                 <>
