@@ -20,15 +20,16 @@ import { ScoringRule } from "@zeitgeistpm/indexer";
 import LiquidityModalAmm2 from "./LiquidityModalAmm2";
 import { useMarketsStats } from "lib/hooks/queries/useMarketsStats";
 import { formatNumberCompact } from "lib/util/format-compact";
+import { Market } from "@/src/types";
 
 export const MarketLiquiditySection = ({
   market,
   poll,
 }: {
-  market: FullMarketFragment;
+  market: Market;
   poll?: boolean;
 }) => {
-  const marketHasPool = market.neoPool != null;
+  const marketHasPool = true;
 
   return (
     <>
@@ -47,10 +48,10 @@ export const MarketLiquiditySection = ({
           <div className="mb-8">
             <LiquidityHeader market={market} />
           </div>
-          <PoolTable
+          {/* <PoolTable
             poolId={market.pool?.poolId}
-            marketId={Number(market.marketId)}
-          />
+            marketId={Number(market.publicKey.toString())}
+          /> */}
         </>
       )}
     </>
@@ -86,36 +87,34 @@ const LiquidityHeaderButtonItem: FC<
   );
 };
 
-const LiquidityHeader = ({ market }: { market: FullMarketFragment }) => {
-  const { pool, neoPool } = market;
+const LiquidityHeader = ({ market }: { market: Market }) => {
+  // const { pool, neoPool } = market;
 
-  const { data: stats } = useMarketsStats([market.marketId]);
+  const { data: stats } = useMarketsStats([market.publicKey.toString()]);
   const liquidity = new Decimal(stats?.[0].liquidity ?? 0);
 
-  const swapFee = new Decimal(Number(pool?.swapFee ?? neoPool?.swapFee ?? 0))
-    .div(ZTG)
-    .mul(100)
-    .toNumber();
-  const creatorFee = perbillToNumber(market?.creatorFee ?? 0) * 100;
+  const swapFee = new Decimal(Number(0)).mul(100).toNumber();
+  const creatorFee =
+    perbillToNumber(market?.creatorFeePercentage.toNumber() ?? 0) * 100;
 
-  const baseAssetId = market?.baseAsset
-    ? parseAssetId(market.baseAsset).unrightOr(undefined)
-    : undefined;
-  const { data: metadata } = useAssetMetadata(baseAssetId);
+  // const baseAssetId = market?.baseAsset
+  //   ? parseAssetId(market.baseAsset).unrightOr(undefined)
+  //   : undefined;
+  const { data: metadata } = useAssetMetadata();
 
   const { publicKey } = useWallet();
 
-  const prediction =
-    market && market?.assets && getCurrentPrediction(market.assets, market);
+  // const prediction =
+  //   market && market?.assets && getCurrentPrediction(market.assets, market);
 
   const [manageLiquidityOpen, setManageLiquidityOpen] = useState(false);
 
-  const predictionDisplay =
-    prediction && market && market.scalarType !== undefined
-      ? market.marketType.scalar && isScalarRangeType(market.scalarType)
-        ? formatScalarOutcome(prediction.price, market.scalarType)
-        : `${prediction.name} ${prediction.percentage}%`
-      : "";
+  // const predictionDisplay =
+  //   prediction && market && market.scalarType !== undefined
+  //     ? market.marketType.scalar && isScalarRangeType(market.scalarType)
+  //       ? formatScalarOutcome(prediction.price, market.scalarType)
+  //       : `${prediction.name} ${prediction.percentage}%`
+  //     : "";
 
   return (
     <div className="md:flex md:justify-between">
@@ -163,7 +162,7 @@ const LiquidityHeader = ({ market }: { market: FullMarketFragment }) => {
           <>
             <LiquidityHeaderButtonItem className="border-b-1 sm:border-b-0 sm:border-r-1 md:mr-6 md:border-r-1">
               <BuySellFullSetsButton
-                marketId={market.marketId}
+                marketId={market.publicKey.toString()}
                 buttonClassName="h-8 border-gray-300 border-1 rounded-full text-ztg-10-150 px-1 w-full md:w-auto sm:px-6 mx-auto"
               />
             </LiquidityHeaderButtonItem>
@@ -178,13 +177,13 @@ const LiquidityHeader = ({ market }: { market: FullMarketFragment }) => {
           </>
         )}
       </div>
-      {neoPool && (
+      {/* {neoPool && (
         <LiquidityModalAmm2
           marketId={neoPool.marketId}
           open={manageLiquidityOpen}
           onClose={() => setManageLiquidityOpen(false)}
         />
-      )}
+      )} */}
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { useSdkv2 } from "../useSdkv2";
 
 export const marketPoolIdRootKey = "market-pool-Id";
 
-export const useMarketPoolId = (marketId: number) => {
+export const useMarketPoolId = (marketId: string) => {
   const [sdk, id] = useSdkv2();
 
   const query = useQuery(

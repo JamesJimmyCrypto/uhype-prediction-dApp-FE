@@ -31,7 +31,7 @@ type PoolAccount = {
   fees: Decimal;
 };
 
-export const useAmm2Pool = (marketId?: number) => {
+export const useAmm2Pool = (marketId?: string) => {
   const [sdk, id] = useSdkv2();
 
   const enabled = !!sdk && marketId != null && isRpcSdk(sdk);

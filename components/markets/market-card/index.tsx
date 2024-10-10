@@ -160,7 +160,7 @@ export const MarketCard = ({
         >
           <div className="flex h-[54px] w-full gap-4 whitespace-normal">
             <div className="absolute right-4 top-4">
-              <MarketFavoriteToggle marketId={marketKey?.toNumber()} />
+              <MarketFavoriteToggle marketId={marketKey?.toString()} />
             </div>
             <div className="relative min-h-[54px] min-w-[54px] rounded-lg bg-gray-400 bg-opacity-30">
               <Image

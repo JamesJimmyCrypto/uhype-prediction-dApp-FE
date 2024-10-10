@@ -13,44 +13,44 @@ export const marketDisputesRootKey = "market-disputes";
 export const useMarketDisputes = (
   marketIdentifier: Market<Context> | number,
 ) => {
-  const [sdk, id] = useSdkv2();
+  // const [sdk, id] = useSdkv2();
 
-  const marketId =
-    typeof marketIdentifier === "number"
-      ? marketIdentifier
-      : marketIdentifier.marketId;
+  // const marketId =
+  //   typeof marketIdentifier === "number"
+  //     ? marketIdentifier
+  //     : marketIdentifier.marketId;
 
-  const { data: market } = useMarket({ marketId });
+  // const { data: market } = useMarket({ marketId });
 
-  const enabled = sdk && isRpcSdk(sdk) && market;
+  // const enabled = sdk && isRpcSdk(sdk) && market;
 
-  const query = useQuery(
-    [id, marketDisputesRootKey, marketId],
-    async () => {
-      if (enabled) {
-        const disputeMechanism = getDisputeMechanism(market).unwrap();
+  // const query = useQuery(
+  //   [id, marketDisputesRootKey, marketId],
+  //   async () => {
+  //     if (enabled) {
+  //       const disputeMechanism = getDisputeMechanism(market).unwrap();
 
-        if (disputeMechanism === "Authorized") {
-          return market.disputes ?? [];
-        }
+  //       if (disputeMechanism === "Authorized") {
+  //         return market.disputes ?? [];
+  //       }
 
-        if (disputeMechanism === "Court") {
-          const lastDispute = market.disputes?.[market.disputes.length - 1];
-          return [
-            {
-              at: lastDispute?.at,
-              by: lastDispute?.by,
-            },
-          ];
-        }
+  //       if (disputeMechanism === "Court") {
+  //         const lastDispute = market.disputes?.[market.disputes.length - 1];
+  //         return [
+  //           {
+  //             at: lastDispute?.at,
+  //             by: lastDispute?.by,
+  //           },
+  //         ];
+  //       }
 
-        return [];
-      }
-    },
-    {
-      enabled: Boolean(enabled),
-      staleTime: 100_000,
-    },
-  );
-  return query;
+  //       return [];
+  //     }
+  //   },
+  //   {
+  //     enabled: Boolean(enabled),
+  //     staleTime: 100_000,
+  //   },
+  // );
+  // return query;
 };

@@ -8,7 +8,7 @@ const MarketPositionHeader = ({
   question,
   baseAsset,
 }: {
-  marketId: number;
+  marketId: string;
   question?: string;
   baseAsset: string;
 }) => {

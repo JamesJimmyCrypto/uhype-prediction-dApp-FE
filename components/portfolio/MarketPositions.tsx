@@ -169,7 +169,7 @@ export const MarketPositions = ({
   return (
     <div className={`${className}`}>
       <MarketPositionHeader
-        marketId={market.marketKey.toNumber()}
+        marketId={market.publicKey.toString()}
         question={market.title ?? undefined}
         baseAsset={"SOL"}
       />

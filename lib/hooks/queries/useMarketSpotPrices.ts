@@ -17,7 +17,7 @@ export const marketSpotPricesKey = "market-spot-prices";
 export type MarketPrices = Map<number, Decimal>;
 
 export const useMarketSpotPrices = (
-  marketId?: number,
+  marketId?: string,
   blockNumber?: number,
 ) => {
   const [sdk, id] = useSdkv2();

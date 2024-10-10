@@ -14,7 +14,7 @@ const resolutionQuery = gql`
 //returns ISO string timestamp
 export const getResolutionTimestamp = async (
   client: GraphQLClient,
-  marketId: number,
+  marketId: string,
 ) => {
   const response = await client.request<{
     historicalMarkets: { timestamp: string; blockNumber: number }[];

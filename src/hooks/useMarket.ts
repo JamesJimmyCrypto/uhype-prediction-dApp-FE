@@ -217,8 +217,9 @@ export function useMarketProgram() {
   const getMarket = async (marketPublicKey: PublicKey): Promise<Market> => {
     try {
       const marketAccount = await program.account.marketAccount.fetch(marketPublicKey) as MarketResponse;
-
+      console.log({ marketAccount })
       const answers = await getMarketAnswers(marketAccount.account.marketKey);
+      console.log({ answers })
 
       return {
         publicKey: marketPublicKey,

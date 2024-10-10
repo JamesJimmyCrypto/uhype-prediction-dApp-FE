@@ -160,7 +160,7 @@ export type PorfolioBreakdown = {
  */
 export const usePortfolioPositions = (
   address?: string,
-): UsePortfolioPositions => {
+) => {
   const now = useChainTime();
   const { data: ztgPrice } = useZtgPrice();
   const block24HoursAgo = now?.block ? Math.floor(now?.block - 7200) : NaN;
@@ -190,441 +190,441 @@ export const usePortfolioPositions = (
     })
     .filter(isNotNull);
 
-  const pools = usePoolsByIds(filter);
-  const markets = useMarketsByIds(filter);
-  const amm2MarketIds = markets.data
-    ?.filter(
-      (market) =>
-        market.scoringRule === ScoringRule.AmmCdaHybrid ||
-        market.scoringRule === ScoringRule.Lmsr,
-    )
-    .map((m) => m.marketId);
+  // const pools = usePoolsByIds(filter);
+  // const markets = useMarketsByIds(filter);
+  // const amm2MarketIds = markets.data
+  //   ?.filter(
+  //     (market) =>
+  //       market.scoringRule === ScoringRule.AmmCdaHybrid ||
+  //       market.scoringRule === ScoringRule.Lmsr,
+  //   )
+  //   .map((m) => m.marketId);
 
-  const { data: amm2SpotPrices } = useAmm2MarketSpotPrices(amm2MarketIds);
+  // const { data: amm2SpotPrices } = useAmm2MarketSpotPrices(amm2MarketIds);
 
-  const { data: amm2SpotPrices24HoursAgo } = useAmm2MarketSpotPrices(
-    amm2MarketIds,
-    block24HoursAgo,
-  );
+  // const { data: amm2SpotPrices24HoursAgo } = useAmm2MarketSpotPrices(
+  //   amm2MarketIds,
+  //   block24HoursAgo,
+  // );
 
-  const poolAccountIds = usePoolAccountIds(pools.data);
+  // const poolAccountIds = usePoolAccountIds(pools.data);
 
-  const poolsTotalIssuance = useTotalIssuanceForPools(
-    pools.data?.map((p) => p.poolId) ?? [],
-  );
+  // const poolsTotalIssuance = useTotalIssuanceForPools(
+  //   pools.data?.map((p) => p.poolId) ?? [],
+  // );
 
-  const poolAssetBalancesFilter =
-    rawPositions.data
-      ?.flatMap((position) => {
-        const assetId = parseAssetId(position.assetId).unwrap();
-        const pool = pools.data?.find((pool) => {
-          if (IOPoolShareAssetId.is(assetId)) {
-            return pool.poolId === assetId.PoolShare;
-          }
-          if (IOMarketOutcomeAssetId.is(assetId)) {
-            return pool.marketId === getMarketIdOf(assetId);
-          }
-        });
+  // const poolAssetBalancesFilter =
+  //   rawPositions.data
+  //     ?.flatMap((position) => {
+  //       const assetId = parseAssetId(position.assetId).unwrap();
+  //       const pool = pools.data?.find((pool) => {
+  //         if (IOPoolShareAssetId.is(assetId)) {
+  //           return pool.poolId === assetId.PoolShare;
+  //         }
+  //         if (IOMarketOutcomeAssetId.is(assetId)) {
+  //           return pool.marketId === getMarketIdOf(assetId);
+  //         }
+  //       });
 
-        if (!pool) return null;
+  //       if (!pool) return null;
 
-        const assetIds = pool.weights
-          .map((w) => parseAssetId(w.assetId).unwrap())
-          .filter(IOMarketOutcomeAssetId.is.bind(IOMarketOutcomeAssetId));
+  //       const assetIds = pool.weights
+  //         .map((w) => parseAssetId(w.assetId).unwrap())
+  //         .filter(IOMarketOutcomeAssetId.is.bind(IOMarketOutcomeAssetId));
 
-        return assetIds.map((assetId) => ({
-          assetId,
-          account: poolAccountIds[pool.poolId],
-        }));
-      })
-      .filter(isNotNull) ?? [];
+  //       return assetIds.map((assetId) => ({
+  //         assetId,
+  //         account: poolAccountIds[pool.poolId],
+  //       }));
+  //     })
+  //     .filter(isNotNull) ?? [];
 
-  //Todo: we can use useAccountTokenPositions for this to reduce it to a single query issue #1945
-  const poolAssetBalances = useAccountAssetBalances(poolAssetBalancesFilter);
+  // //Todo: we can use useAccountTokenPositions for this to reduce it to a single query issue #1945
+  // const poolAssetBalances = useAccountAssetBalances(poolAssetBalancesFilter);
 
-  const poolAssetBalances24HoursAgo = useAccountAssetBalances(
-    poolAssetBalancesFilter,
-    block24HoursAgo,
-    { enabled: Boolean(now?.block) },
-  );
+  // const poolAssetBalances24HoursAgo = useAccountAssetBalances(
+  //   poolAssetBalancesFilter,
+  //   block24HoursAgo,
+  //   { enabled: Boolean(now?.block) },
+  // );
 
-  const userAssetBalances = useAccountAssetBalances(
-    rawPositions.data?.map((position) => ({
-      assetId: parseAssetId(position.assetId).unwrap(),
-      account: address,
-    })) ?? [],
-  );
+  // const userAssetBalances = useAccountAssetBalances(
+  //   rawPositions.data?.map((position) => ({
+  //     assetId: parseAssetId(position.assetId).unwrap(),
+  //     account: address,
+  //   })) ?? [],
+  // );
 
-  const positions = useMemo<Position[] | null>(() => {
-    const stillLoading =
-      rawPositions.isLoading ||
-      pools.isLoading ||
-      markets.isLoading ||
-      !ztgPrice ||
-      poolAssetBalances.isLoading ||
-      !poolsTotalIssuance ||
-      userAssetBalances.isLoading ||
-      poolAssetBalances24HoursAgo.isLoading ||
-      isTradeHistoryLoading;
+  // const positions = useMemo<Position[] | null>(() => {
+  //   const stillLoading =
+  //     rawPositions.isLoading ||
+  //     pools.isLoading ||
+  //     markets.isLoading ||
+  //     !ztgPrice ||
+  //     poolAssetBalances.isLoading ||
+  //     !poolsTotalIssuance ||
+  //     userAssetBalances.isLoading ||
+  //     poolAssetBalances24HoursAgo.isLoading ||
+  //     isTradeHistoryLoading;
 
-    if (stillLoading) {
-      return null;
-    }
+  //   if (stillLoading) {
+  //     return null;
+  //   }
 
-    let positionsData: Position[] = [];
+  //   let positionsData: Position[] = [];
 
-    for (const position of rawPositions?.data ?? []) {
-      const assetId = parseAssetId(position.assetId).unwrap();
+  //   for (const position of rawPositions?.data ?? []) {
+  //     const assetId = parseAssetId(position.assetId).unwrap();
 
-      let pool: IndexedPool<Context> | undefined;
-      let marketId: number | undefined;
-      let market: FullMarketFragment | undefined;
+  //     let pool: IndexedPool<Context> | undefined;
+  //     let marketId: string | undefined;
+  //     let market: FullMarketFragment | undefined;
 
-      if (IOZtgAssetId.is(assetId) || IOForeignAssetId.is(assetId)) {
-        continue;
-      }
+  //     if (IOZtgAssetId.is(assetId) || IOForeignAssetId.is(assetId)) {
+  //       continue;
+  //     }
 
-      if (IOPoolShareAssetId.is(assetId)) {
-        pool = pools?.data?.find((pool) => pool.poolId === assetId.PoolShare);
-        marketId = pool?.marketId;
-        market = markets.data?.find((m) => m.marketId === marketId);
-      }
+  //     if (IOPoolShareAssetId.is(assetId)) {
+  //       pool = pools?.data?.find((pool) => pool.poolId === assetId.PoolShare);
+  //       marketId = pool?.marketId;
+  //       market = markets.data?.find((m) => m.marketId === marketId);
+  //     }
 
-      if (IOMarketOutcomeAssetId.is(assetId)) {
-        marketId = getMarketIdOf(assetId);
-        market = markets.data?.find((m) => m.marketId === marketId);
-        pool = pools.data?.find((pool) => pool.marketId === marketId);
-      }
+  //     if (IOMarketOutcomeAssetId.is(assetId)) {
+  //       marketId = getMarketIdOf(assetId);
+  //       market = markets.data?.find((m) => m.marketId === marketId);
+  //       pool = pools.data?.find((pool) => pool.marketId === marketId);
+  //     }
 
-      if (!market) {
-        continue;
-      }
+  //     if (!market) {
+  //       continue;
+  //     }
 
-      const balance = undefined;
-      const totalIssuanceForPoolQuery = pool && poolsTotalIssuance[pool.poolId];
-      const totalIssuanceData = pool && poolsTotalIssuance[pool.poolId]?.data;
+  //     const balance = undefined;
+  //     const totalIssuanceForPoolQuery = pool && poolsTotalIssuance[pool.poolId];
+  //     const totalIssuanceData = pool && poolsTotalIssuance[pool.poolId]?.data;
 
-      const userBalance = balance ?? new Decimal(0);
+  //     const userBalance = balance ?? new Decimal(0);
 
-      const totalIssuance =
-        totalIssuanceForPoolQuery &&
-        new Decimal(
-          totalIssuanceForPoolQuery.data?.totalIssuance.toString() ?? 0,
-        );
+  //     const totalIssuance =
+  //       totalIssuanceForPoolQuery &&
+  //       new Decimal(
+  //         totalIssuanceForPoolQuery.data?.totalIssuance.toString() ?? 0,
+  //       );
 
-      let price: Decimal | undefined;
-      let price24HoursAgo: Decimal | undefined;
+  //     let price: Decimal | undefined;
+  //     let price24HoursAgo: Decimal | undefined;
 
-      if (IOMarketOutcomeAssetId.is(assetId)) {
-        if (market.status === "Resolved") {
-          price = calcResolvedMarketPrices(market).get(getIndexOf(assetId));
-          price24HoursAgo = price;
-        } else {
-          if (
-            market.scoringRule === ScoringRule.AmmCdaHybrid ||
-            market.scoringRule === ScoringRule.Lmsr
-          ) {
-            price = lookupAssetPrice(assetId, amm2SpotPrices);
+  //     if (IOMarketOutcomeAssetId.is(assetId)) {
+  //       if (market.status === "Resolved") {
+  //         price = calcResolvedMarketPrices(market).get(getIndexOf(assetId));
+  //         price24HoursAgo = price;
+  //       } else {
+  //         if (
+  //           market.scoringRule === ScoringRule.AmmCdaHybrid ||
+  //           market.scoringRule === ScoringRule.Lmsr
+  //         ) {
+  //           price = lookupAssetPrice(assetId, amm2SpotPrices);
 
-            price24HoursAgo = lookupAssetPrice(
-              assetId,
-              amm2SpotPrices24HoursAgo,
-            );
-          }
-        }
-      }
+  //           price24HoursAgo = lookupAssetPrice(
+  //             assetId,
+  //             amm2SpotPrices24HoursAgo,
+  //           );
+  //         }
+  //       }
+  //     }
 
-      let outcome = IOCategoricalAssetId.is(assetId)
-        ? market.categories?.[getIndexOf(assetId)]?.name ??
-        JSON.stringify(assetId.CategoricalOutcome)
-        : IOScalarAssetId.is(assetId)
-          ? getIndexOf(assetId) == 1
-            ? "Short"
-            : "Long"
-          : "unknown";
+  //     let outcome = IOCategoricalAssetId.is(assetId)
+  //       ? market.categories?.[getIndexOf(assetId)]?.name ??
+  //       JSON.stringify(assetId.CategoricalOutcome)
+  //       : IOScalarAssetId.is(assetId)
+  //         ? getIndexOf(assetId) == 1
+  //           ? "Short"
+  //           : "Long"
+  //         : "unknown";
 
-      let color = IOScalarAssetId.is(assetId)
-        ? market.categories?.[getIndexOf(assetId)]?.color ?? "#ffffff"
-        : IOScalarAssetId.is(assetId)
-          ? getIndexOf(assetId) == 1
-            ? "rgb(255, 0, 0)"
-            : "rgb(36, 255, 0)"
-          : "unknown";
+  //     let color = IOScalarAssetId.is(assetId)
+  //       ? market.categories?.[getIndexOf(assetId)]?.color ?? "#ffffff"
+  //       : IOScalarAssetId.is(assetId)
+  //         ? getIndexOf(assetId) == 1
+  //           ? "rgb(255, 0, 0)"
+  //           : "rgb(36, 255, 0)"
+  //         : "unknown";
 
-      if (IOPoolShareAssetId.is(assetId)) {
-        outcome = "Pool Share";
-        color = "#DF0076";
-      }
+  //     if (IOPoolShareAssetId.is(assetId)) {
+  //       outcome = "Pool Share";
+  //       color = "#DF0076";
+  //     }
 
-      const avgCost = tradeHistory
-        ?.filter((transaction) => transaction !== undefined)
-        ?.filter((transaction) => transaction.marketId === marketId)
-        .reduce((acc, transaction) => {
-          const assetIn = transaction.assetAmountOut.div(ZTG).toNumber();
-          let totalAssets = 0;
-          let totalCost = 0;
-          const price = transaction.price.toNumber();
-          if (transaction.assetOut === outcome) {
-            if (transaction.assetIn === transaction.baseAssetName) {
-              totalCost += assetIn * price;
-              totalAssets += assetIn;
-            }
-            if (totalAssets > 0 && totalCost > 0) {
-              acc = totalCost / totalAssets;
-            }
-          }
-          return acc;
-        }, 0);
+  //     const avgCost = tradeHistory
+  //       ?.filter((transaction) => transaction !== undefined)
+  //       ?.filter((transaction) => transaction.marketId === marketId)
+  //       .reduce((acc, transaction) => {
+  //         const assetIn = transaction.assetAmountOut.div(ZTG).toNumber();
+  //         let totalAssets = 0;
+  //         let totalCost = 0;
+  //         const price = transaction.price.toNumber();
+  //         if (transaction.assetOut === outcome) {
+  //           if (transaction.assetIn === transaction.baseAssetName) {
+  //             totalCost += assetIn * price;
+  //             totalAssets += assetIn;
+  //           }
+  //           if (totalAssets > 0 && totalCost > 0) {
+  //             acc = totalCost / totalAssets;
+  //           }
+  //         }
+  //         return acc;
+  //       }, 0);
 
-      const calculateFifoPnl = (transactions: TradeHistoryItem[]) => {
-        let buys: Array<{ quantity: number; price: number }> = [];
-        let pnl = 0;
+  //     const calculateFifoPnl = (transactions: TradeHistoryItem[]) => {
+  //       let buys: Array<{ quantity: number; price: number }> = [];
+  //       let pnl = 0;
 
-        transactions
-          .filter(
-            (transaction) =>
-              transaction.marketId === marketId &&
-              (transaction.assetIn === outcome ||
-                transaction.assetOut === outcome),
-          )
-          .sort(
-            (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
-          )
-          .forEach(
-            ({
-              assetIn,
-              assetAmountIn,
-              assetAmountOut,
-              price,
-              baseAssetName,
-            }) => {
-              const quantity = assetAmountIn.div(ZTG).toNumber();
-              const transactionPrice = price.toNumber();
+  //       transactions
+  //         .filter(
+  //           (transaction) =>
+  //             transaction.marketId === marketId &&
+  //             (transaction.assetIn === outcome ||
+  //               transaction.assetOut === outcome),
+  //         )
+  //         .sort(
+  //           (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
+  //         )
+  //         .forEach(
+  //           ({
+  //             assetIn,
+  //             assetAmountIn,
+  //             assetAmountOut,
+  //             price,
+  //             baseAssetName,
+  //           }) => {
+  //             const quantity = assetAmountIn.div(ZTG).toNumber();
+  //             const transactionPrice = price.toNumber();
 
-              if (assetIn === baseAssetName) {
-                buys.push({ quantity, price: transactionPrice });
-              } else {
-                let remainingToSell = assetAmountOut.div(ZTG).toNumber();
+  //             if (assetIn === baseAssetName) {
+  //               buys.push({ quantity, price: transactionPrice });
+  //             } else {
+  //               let remainingToSell = assetAmountOut.div(ZTG).toNumber();
 
-                while (remainingToSell > 0 && buys.length > 0) {
-                  const [currentBuy] = buys;
-                  const sellQuantityFromThisBuy = Math.min(
-                    currentBuy.quantity,
-                    remainingToSell,
-                  );
+  //               while (remainingToSell > 0 && buys.length > 0) {
+  //                 const [currentBuy] = buys;
+  //                 const sellQuantityFromThisBuy = Math.min(
+  //                   currentBuy.quantity,
+  //                   remainingToSell,
+  //                 );
 
-                  pnl +=
-                    sellQuantityFromThisBuy *
-                    (transactionPrice - currentBuy.price);
+  //                 pnl +=
+  //                   sellQuantityFromThisBuy *
+  //                   (transactionPrice - currentBuy.price);
 
-                  remainingToSell -= sellQuantityFromThisBuy;
-                  currentBuy.quantity -= sellQuantityFromThisBuy;
+  //                 remainingToSell -= sellQuantityFromThisBuy;
+  //                 currentBuy.quantity -= sellQuantityFromThisBuy;
 
-                  if (currentBuy.quantity === 0) {
-                    buys = buys.slice(1);
-                  }
-                }
-              }
-            },
-          );
-        return pnl;
-      };
+  //                 if (currentBuy.quantity === 0) {
+  //                   buys = buys.slice(1);
+  //                 }
+  //               }
+  //             }
+  //           },
+  //         );
+  //       return pnl;
+  //     };
 
-      const calculateUnrealizedPnL = (
-        transactions: TradeHistoryItem[],
-        avgCost: number,
-        currentMarketPrice: number,
-      ) => {
-        const filteredTransactions = transactions.filter(
-          (transaction) =>
-            transaction.marketId === marketId &&
-            (transaction.assetIn === outcome ||
-              transaction.assetOut === outcome),
-        );
-        const { totalQuantity } = filteredTransactions.reduce(
-          (acc, transaction) => {
-            if (transaction.assetIn === transaction.baseAssetName) {
-              const quantity = transaction.assetAmountOut.div(ZTG).toNumber();
-              return {
-                totalQuantity: acc.totalQuantity + quantity,
-              };
-            } else if (transaction.assetIn === outcome) {
-              const quantity = transaction.assetAmountIn.div(ZTG).toNumber();
-              return {
-                totalQuantity: acc.totalQuantity - quantity,
-              };
-            } else {
-              return acc;
-            }
-          },
-          { totalQuantity: 0 },
-        );
-        return (currentMarketPrice - avgCost) * totalQuantity;
-      };
+  //     const calculateUnrealizedPnL = (
+  //       transactions: TradeHistoryItem[],
+  //       avgCost: number,
+  //       currentMarketPrice: number,
+  //     ) => {
+  //       const filteredTransactions = transactions.filter(
+  //         (transaction) =>
+  //           transaction.marketId === marketId &&
+  //           (transaction.assetIn === outcome ||
+  //             transaction.assetOut === outcome),
+  //       );
+  //       const { totalQuantity } = filteredTransactions.reduce(
+  //         (acc, transaction) => {
+  //           if (transaction.assetIn === transaction.baseAssetName) {
+  //             const quantity = transaction.assetAmountOut.div(ZTG).toNumber();
+  //             return {
+  //               totalQuantity: acc.totalQuantity + quantity,
+  //             };
+  //           } else if (transaction.assetIn === outcome) {
+  //             const quantity = transaction.assetAmountIn.div(ZTG).toNumber();
+  //             return {
+  //               totalQuantity: acc.totalQuantity - quantity,
+  //             };
+  //           } else {
+  //             return acc;
+  //           }
+  //         },
+  //         { totalQuantity: 0 },
+  //       );
+  //       return (currentMarketPrice - avgCost) * totalQuantity;
+  //     };
 
-      const change = diffChange(
-        new Decimal(price ?? 0),
-        new Decimal(price24HoursAgo ?? 0),
-      );
+  //     const change = diffChange(
+  //       new Decimal(price ?? 0),
+  //       new Decimal(price24HoursAgo ?? 0),
+  //     );
 
-      if (!price) {
-        price = new Decimal(0);
-      }
+  //     if (!price) {
+  //       price = new Decimal(0);
+  //     }
 
-      if (!price24HoursAgo) {
-        price24HoursAgo = new Decimal(0);
-      }
+  //     if (!price24HoursAgo) {
+  //       price24HoursAgo = new Decimal(0);
+  //     }
 
-      positionsData.push({
-        assetId,
-        market,
-        pool,
-        price,
-        avgCost,
-        upnl: calculateUnrealizedPnL(tradeHistory, avgCost, price.toNumber()),
-        rpnl: calculateFifoPnl(tradeHistory),
-        price24HoursAgo,
-        outcome,
-        color,
-        userBalance,
-        changePercentage: change,
-        totalIssuance,
-      });
-    }
+  //     positionsData.push({
+  //       assetId,
+  //       market,
+  //       pool,
+  //       price,
+  //       avgCost,
+  //       upnl: calculateUnrealizedPnL(tradeHistory, avgCost, price.toNumber()),
+  //       rpnl: calculateFifoPnl(tradeHistory),
+  //       price24HoursAgo,
+  //       outcome,
+  //       color,
+  //       userBalance,
+  //       changePercentage: change,
+  //       totalIssuance,
+  //     });
+  //   }
 
-    return positionsData;
-  }, [
-    rawPositions,
-    pools,
-    markets,
-    ztgPrice,
-    poolsTotalIssuance,
-    userAssetBalances,
-    poolAssetBalances,
-    poolAssetBalances24HoursAgo,
-    isTradeHistoryLoading,
-  ]);
+  //   return positionsData;
+  // }, [
+  //   rawPositions,
+  //   pools,
+  //   markets,
+  //   ztgPrice,
+  //   poolsTotalIssuance,
+  //   userAssetBalances,
+  //   poolAssetBalances,
+  //   poolAssetBalances24HoursAgo,
+  //   isTradeHistoryLoading,
+  // ]);
 
-  const marketPositions = useMemo<
-    Position<CategoricalAssetId | ScalarAssetId>[] | null
-  >(
-    () =>
-      positions?.filter(
-        (position): position is Position<CategoricalAssetId | ScalarAssetId> =>
-          IOMarketOutcomeAssetId.is(position.assetId),
-      ) ?? null,
-    [positions],
-  );
+  // const marketPositions = useMemo<
+  //   Position<CategoricalAssetId | ScalarAssetId>[] | null
+  // >(
+  //   () =>
+  //     positions?.filter(
+  //       (position): position is Position<CategoricalAssetId | ScalarAssetId> =>
+  //         IOMarketOutcomeAssetId.is(position.assetId),
+  //     ) ?? null,
+  //   [positions],
+  // );
 
-  const subsidyPositions = useMemo<Position<PoolShareAssetId>[] | null>(
-    () =>
-      positions?.filter((position): position is Position<PoolShareAssetId> =>
-        IOPoolShareAssetId.is(position.assetId),
-      ) ?? null,
-    [positions],
-  );
+  // const subsidyPositions = useMemo<Position<PoolShareAssetId>[] | null>(
+  //   () =>
+  //     positions?.filter((position): position is Position<PoolShareAssetId> =>
+  //       IOPoolShareAssetId.is(position.assetId),
+  //     ) ?? null,
+  //   [positions],
+  // );
 
-  const breakdown = useMemo<PorfolioBreakdown | null>(() => {
-    if (
-      !ztgPrice ||
-      !marketPositions ||
-      !subsidyPositions ||
-      isBondsLoading ||
-      !foreignAssetPrices
-    ) {
-      return null;
-    }
+  // const breakdown = useMemo<PorfolioBreakdown | null>(() => {
+  //   if (
+  //     !ztgPrice ||
+  //     !marketPositions ||
+  //     !subsidyPositions ||
+  //     isBondsLoading ||
+  //     !foreignAssetPrices
+  //   ) {
+  //     return null;
+  //   }
 
-    const tradingPositionsTotal = totalPositionsValue(
-      marketPositions,
-      "price",
-      foreignAssetPrices,
-      ztgPrice,
-    );
-    const tradingPositionsTotal24HoursAgo = totalPositionsValue(
-      marketPositions,
-      "price24HoursAgo",
-      foreignAssetPrices,
-      ztgPrice,
-    );
+  //   const tradingPositionsTotal = totalPositionsValue(
+  //     marketPositions,
+  //     "price",
+  //     foreignAssetPrices,
+  //     ztgPrice,
+  //   );
+  //   const tradingPositionsTotal24HoursAgo = totalPositionsValue(
+  //     marketPositions,
+  //     "price24HoursAgo",
+  //     foreignAssetPrices,
+  //     ztgPrice,
+  //   );
 
-    const tradingPositionsChange = diffChange(
-      tradingPositionsTotal,
-      tradingPositionsTotal24HoursAgo,
-    );
+  //   const tradingPositionsChange = diffChange(
+  //     tradingPositionsTotal,
+  //     tradingPositionsTotal24HoursAgo,
+  //   );
 
-    const subsidyPositionsTotal = totalPositionsValue(
-      subsidyPositions,
-      "price",
-      foreignAssetPrices,
-      ztgPrice,
-    );
+  //   const subsidyPositionsTotal = totalPositionsValue(
+  //     subsidyPositions,
+  //     "price",
+  //     foreignAssetPrices,
+  //     ztgPrice,
+  //   );
 
-    const subsidyPositionsTotal24HoursAgo = totalPositionsValue(
-      subsidyPositions,
-      "price24HoursAgo",
-      foreignAssetPrices,
-      ztgPrice,
-    );
+  //   const subsidyPositionsTotal24HoursAgo = totalPositionsValue(
+  //     subsidyPositions,
+  //     "price24HoursAgo",
+  //     foreignAssetPrices,
+  //     ztgPrice,
+  //   );
 
-    const subsidyPositionsChange = diffChange(
-      subsidyPositionsTotal,
-      subsidyPositionsTotal24HoursAgo,
-    );
+  //   const subsidyPositionsChange = diffChange(
+  //     subsidyPositionsTotal,
+  //     subsidyPositionsTotal24HoursAgo,
+  //   );
 
-    const bondsTotal =
-      marketBonds && marketBonds?.length > 0
-        ? calcTotalBondsValue(marketBonds)
-        : new Decimal(0);
+  //   const bondsTotal =
+  //     marketBonds && marketBonds?.length > 0
+  //       ? calcTotalBondsValue(marketBonds)
+  //       : new Decimal(0);
 
-    const positionsTotal = tradingPositionsTotal
-      .plus(subsidyPositionsTotal)
-      .plus(bondsTotal);
-    const positionsTotal24HoursAgo = tradingPositionsTotal24HoursAgo
-      .plus(subsidyPositionsTotal24HoursAgo)
-      .plus(bondsTotal);
+  //   const positionsTotal = tradingPositionsTotal
+  //     .plus(subsidyPositionsTotal)
+  //     .plus(bondsTotal);
+  //   const positionsTotal24HoursAgo = tradingPositionsTotal24HoursAgo
+  //     .plus(subsidyPositionsTotal24HoursAgo)
+  //     .plus(bondsTotal);
 
-    const totalChange = diffChange(positionsTotal, positionsTotal24HoursAgo);
+  //   const totalChange = diffChange(positionsTotal, positionsTotal24HoursAgo);
 
-    return {
-      usdZtgPrice: ztgPrice,
-      total: {
-        value: positionsTotal,
-        changePercentage: isNaN(totalChange) ? 0 : totalChange,
-      },
-      tradingPositions: {
-        value: tradingPositionsTotal,
-        changePercentage: isNaN(tradingPositionsChange)
-          ? 0
-          : tradingPositionsChange,
-      },
-      subsidy: {
-        value: subsidyPositionsTotal,
-        changePercentage: isNaN(subsidyPositionsChange)
-          ? 0
-          : subsidyPositionsChange,
-      },
-      bonded: {
-        value: bondsTotal,
-        // TODO: load change
-        changePercentage: 0,
-      },
-    };
-  }, [
-    ztgPrice,
-    foreignAssetPrices,
-    subsidyPositions,
-    marketPositions,
-    isBondsLoading,
-    marketBonds,
-  ]);
+  //   return {
+  //     usdZtgPrice: ztgPrice,
+  //     total: {
+  //       value: positionsTotal,
+  //       changePercentage: isNaN(totalChange) ? 0 : totalChange,
+  //     },
+  //     tradingPositions: {
+  //       value: tradingPositionsTotal,
+  //       changePercentage: isNaN(tradingPositionsChange)
+  //         ? 0
+  //         : tradingPositionsChange,
+  //     },
+  //     subsidy: {
+  //       value: subsidyPositionsTotal,
+  //       changePercentage: isNaN(subsidyPositionsChange)
+  //         ? 0
+  //         : subsidyPositionsChange,
+  //     },
+  //     bonded: {
+  //       value: bondsTotal,
+  //       // TODO: load change
+  //       changePercentage: 0,
+  //     },
+  //   };
+  // }, [
+  //   ztgPrice,
+  //   foreignAssetPrices,
+  //   subsidyPositions,
+  //   marketPositions,
+  //   isBondsLoading,
+  //   marketBonds,
+  // ]);
 
-  return {
-    all: positions ?? undefined,
-    markets: marketPositions ?? undefined,
-    subsidy: subsidyPositions ?? undefined,
-    breakdown: breakdown ?? undefined,
-  };
+  // return {
+  //   all: positions ?? undefined,
+  //   markets: marketPositions ?? undefined,
+  //   subsidy: subsidyPositions ?? undefined,
+  //   breakdown: breakdown ?? undefined,
+  // };
 };
 
 /**

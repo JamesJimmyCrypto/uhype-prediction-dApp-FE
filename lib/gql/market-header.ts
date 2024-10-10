@@ -21,7 +21,7 @@ const marketHeaderQuery = gql`
 `;
 
 export type MarketHeader = {
-  marketId: number;
+  marketId: string;
   question: string;
   categories: { name: string }[];
 };

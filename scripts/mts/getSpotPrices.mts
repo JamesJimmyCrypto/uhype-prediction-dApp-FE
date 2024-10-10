@@ -34,7 +34,7 @@ function calcSpotPrice(
   return spotPrice;
 }
 
-async function getSpotPrices(marketId: number, block?: string) {
+async function getSpotPrices(marketId: string, block?: string) {
   const sdk = await getSdk();
   let { api } = sdk;
 

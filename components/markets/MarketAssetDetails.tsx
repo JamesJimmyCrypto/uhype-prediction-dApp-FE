@@ -37,7 +37,7 @@ const MarketAssetDetails = ({
   marketId,
   categories,
 }: {
-  marketId: number;
+  marketId: string;
   categories?: {
     name: string;
   }[];

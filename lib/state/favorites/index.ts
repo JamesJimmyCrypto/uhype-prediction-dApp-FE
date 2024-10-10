@@ -2,13 +2,13 @@ import { useAtom } from "jotai";
 import { persistentAtom } from "../util/persistent-atom";
 
 export type FavoriteMarket = {
-  marketId: number;
+  marketId: string;
 };
 
 export type UseFavoriteMarkets = {
-  add: (marketId: number) => void;
-  remove: (marketId: number) => void;
-  isFavorite: (marketId: number) => boolean;
+  add: (marketId: string) => void;
+  remove: (marketId: string) => void;
+  isFavorite: (marketId: string) => boolean;
   favorites: FavoriteMarket[];
 };
 
@@ -21,7 +21,7 @@ const favoriteMarketsAtom = persistentAtom<{ markets: FavoriteMarket[] }>({
 export const useFavoriteMarketsStorage = (): UseFavoriteMarkets => {
   const [favoriteMarkets, setFavoriteMarkets] = useAtom(favoriteMarketsAtom);
 
-  const add = (marketId: number) => {
+  const add = (marketId: string) => {
     if (
       favoriteMarkets.markets.some((favorite) => favorite.marketId === marketId)
     )
@@ -37,7 +37,7 @@ export const useFavoriteMarketsStorage = (): UseFavoriteMarkets => {
     }));
   };
 
-  const remove = (marketId: number) => {
+  const remove = (marketId: string) => {
     setFavoriteMarkets((state) => ({
       markets: state.markets.filter(
         (favorite) => favorite.marketId !== marketId,
@@ -45,7 +45,7 @@ export const useFavoriteMarketsStorage = (): UseFavoriteMarkets => {
     }));
   };
 
-  const isFavorite = (marketId: number) => {
+  const isFavorite = (marketId: string) => {
     return favoriteMarkets.markets.some(
       (favorite) => favorite.marketId === marketId,
     );

@@ -22,7 +22,7 @@ const Amm2TradeForm = ({
   initialAsset,
   showTabs = true,
 }: {
-  marketId: number;
+  marketId: string;
   selectedTab?: TradeTabType;
   initialAsset?: MarketOutcomeAssetId;
   showTabs?: boolean;
@@ -71,7 +71,7 @@ const Amm2TradeForm = ({
           }
           tokenName={
             outcomeAsset && market?.categories
-              ? market.categories[getIndexOf(outcomeAsset)].name ?? ""
+              ? (market.categories[getIndexOf(outcomeAsset)].name ?? "")
               : ""
           }
           baseTokenAmount={

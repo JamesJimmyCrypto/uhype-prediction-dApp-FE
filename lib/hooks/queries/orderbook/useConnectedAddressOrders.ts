@@ -12,7 +12,7 @@ export type MarketOrder = {
   makerAddress: string;
   makerAmount: Decimal;
   makerAsset: AssetId;
-  marketId: number;
+  marketId: string;
   takerAmount: Decimal;
   takerAsset: AssetId;
 };

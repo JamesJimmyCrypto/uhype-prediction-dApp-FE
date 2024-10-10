@@ -1,11 +1,11 @@
-export const calcMarketColors = (marketId: number, assetsLength: number) => {
+export const calcMarketColors = (marketId: string, assetsLength: number) => {
   return Array.from({ length: assetsLength }, (_, i) =>
     calcColor(marketId, assetsLength, i),
   );
 };
 
 export const calcColor = (
-  marketId: number,
+  marketId: string,
   assetsLength: number,
   assetIndex: number,
 ) => {

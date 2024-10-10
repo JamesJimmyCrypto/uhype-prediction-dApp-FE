@@ -19,7 +19,7 @@ const ExitPoolForm = ({
   baseAssetTicker,
   onSuccess,
 }: {
-  marketId: number;
+  marketId: string;
   pool: Amm2Pool;
   baseAssetTicker?: string;
   onSuccess?: () => void;

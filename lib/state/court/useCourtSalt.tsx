@@ -16,7 +16,7 @@ import { useMarket } from "lib/hooks/queries/useMarket";
 import { getIndexOf } from "@zeitgeistpm/sdk";
 
 export type UseCourtSaltParams = {
-  marketId: number;
+  marketId: string;
   caseId: number;
 };
 

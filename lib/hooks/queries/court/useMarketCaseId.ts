@@ -4,7 +4,7 @@ import { useSdkv2 } from "lib/hooks/useSdkv2";
 
 export const marketCaseIdRootKey = "market-case-id";
 
-export const useMarketCaseId = (marketId?: number) => {
+export const useMarketCaseId = (marketId?: string) => {
   const [sdk, id] = useSdkv2();
 
   const enabled = !!sdk && marketId != null && isRpcSdk(sdk);

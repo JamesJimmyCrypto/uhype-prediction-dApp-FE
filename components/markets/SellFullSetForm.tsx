@@ -21,7 +21,7 @@ const SellFullSetForm = ({
   marketId,
   onSuccess,
 }: {
-  marketId: number;
+  marketId: string;
   onSuccess?: () => void;
 }) => {
   const { publicKey } = useWallet();
@@ -29,15 +29,15 @@ const SellFullSetForm = ({
   const notificationStore = useNotifications();
   const [sdk] = useSdkv2();
 
-  const { data: pool } = usePool({ marketId: marketId });
-  const { data: market } = useMarket({ marketId: marketId });
+  // const { data: pool } = usePool({ marketId: marketId });
+  // const { data: market } = useMarket({ marketId: marketId });
 
-  const baseAssetId = parseAssetIdString(market?.baseAsset);
-  const { data: metadata } = useAssetMetadata(baseAssetId);
+  // const baseAssetId = parseAssetIdString(market?.baseAsset);
+  // const { data: metadata } = useAssetMetadata(baseAssetId);
 
-  const { data: baseAssetBalance } = useBalance(pubKey, baseAssetId);
+  // const { data: baseAssetBalance } = useBalance(pubKey, baseAssetId);
 
-  const { data: balances } = useAccountPoolAssetBalances(pubKey, pool);
+  // const { data: balances } = useAccountPoolAssetBalances(pubKey, pool);
 
   const [amount, setAmount] = useState<string>("0");
   const [maxTokenSet, setMaxTokenSet] = useState<Decimal>(new Decimal(0));
@@ -45,13 +45,12 @@ const SellFullSetForm = ({
   useEffect(() => {
     let lowestTokenAmount: Decimal = new Decimal(0);
     setMaxTokenSet(lowestTokenAmount);
-  }, [balances]);
+  }, []);
 
   const handleAmountChange = (amount: string) => {
     setAmount(amount);
   };
   const disabled =
-    !baseAssetBalance ||
     new Decimal(amount === "" ? 0 : amount).gt(maxTokenSet.div(ZTG)) ||
     new Decimal(amount === "" ? 0 : amount).eq(0);
 
@@ -86,11 +85,12 @@ const SellFullSetForm = ({
       <div>
         <div className="text-center">
           <p className="mb-7 text-lg font-medium">
-            You'll Get {amount ? amount : 0} {metadata?.symbol}
+            You'll Get {amount ? amount : 0}
+            {/* {metadata?.symbol} */}
           </p>
           <p className="mb-7 text-center text-sm">
             <span className="text-sky-600">Price Per Set: </span>1{" "}
-            {metadata?.symbol}
+            {/* {metadata?.symbol} */}
           </p>
         </div>
       </div>

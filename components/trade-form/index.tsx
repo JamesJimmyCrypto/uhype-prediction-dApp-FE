@@ -10,7 +10,8 @@ import {
   ZTG,
   getMarketIdOf,
 } from "@zeitgeistpm/sdk";
-import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+// import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+
 import TradeResult from "components/markets/TradeResult";
 import Input from "components/ui/Input";
 import Decimal from "decimal.js";
@@ -38,6 +39,8 @@ import TransactionButton from "../ui/TransactionButton";
 import TradeTab, { TradeTabType } from "./TradeTab";
 import { useMarket } from "lib/hooks/queries/useMarket";
 import { perbillToNumber } from "lib/util/perbill-to-number";
+import { useMarketProgram } from "@/src/hooks";
+import { PublicKey } from "@solana/web3.js";
 
 const getTradeValuesFromExtrinsicResult = (
   type: TradeType,
@@ -115,9 +118,12 @@ const Inner = ({
 
   const { data: tradeItemState } = useTradeItemState(tradeItem);
 
-  const { data: market } = useMarket({
-    marketId: getMarketIdOf(tradeItem.assetId),
-  });
+  const { useGetMarketQuery } = useMarketProgram();
+  const {
+    data: market,
+    isLoading,
+    error,
+  } = useGetMarketQuery(new PublicKey(tradeItem!));
 
   const {
     poolBaseBalance,
@@ -238,7 +244,9 @@ const Inner = ({
           weightOut,
           amountOut.mul(ZTG),
           tradeItemState.swapFee,
-          perbillToNumber(market?.creatorFee ?? 0),
+          perbillToNumber(
+            new Decimal(market?.creatorFeePercentage.toString() ?? 0),
+          ),
         );
 
         setValue(
@@ -256,7 +264,9 @@ const Inner = ({
           weightIn,
           amountOut.mul(ZTG),
           tradeItemState.swapFee,
-          perbillToNumber(market?.creatorFee ?? 0),
+          perbillToNumber(
+            new Decimal(market?.creatorFeePercentage.toString() ?? 0),
+          ),
         );
 
         setValue("baseAmount", amountOut.toFixed(4, Decimal.ROUND_DOWN));
@@ -305,7 +315,9 @@ const Inner = ({
           weightOut,
           assetAmount.mul(ZTG),
           swapFee,
-          perbillToNumber(market?.creatorFee ?? 0),
+          perbillToNumber(
+            new Decimal(market?.creatorFeePercentage.toString() ?? 0),
+          ),
         );
 
         setValue(
@@ -321,7 +333,9 @@ const Inner = ({
           weightOut,
           assetAmount.mul(ZTG),
           swapFee,
-          perbillToNumber(market?.creatorFee ?? 0),
+          perbillToNumber(
+            new Decimal(market?.creatorFeePercentage.toString() ?? 0),
+          ),
         );
         setValue(
           "baseAmount",
@@ -370,7 +384,9 @@ const Inner = ({
           weightOut,
           baseAmount.mul(ZTG),
           swapFee,
-          perbillToNumber(market?.creatorFee ?? 0),
+          perbillToNumber(
+            new Decimal(market?.creatorFeePercentage.toString() ?? 0),
+          ),
         );
         setValue(
           "assetAmount",
@@ -392,7 +408,9 @@ const Inner = ({
           weightOut,
           baseAmount.mul(ZTG),
           swapFee,
-          perbillToNumber(market?.creatorFee ?? 0),
+          perbillToNumber(
+            new Decimal(market?.creatorFeePercentage.toString() ?? 0),
+          ),
         );
 
         setValue(
@@ -453,7 +471,7 @@ const Inner = ({
           tokenName={tradeItemState.asset?.name ?? undefined}
           baseTokenAmount={new Decimal(finalAmounts.base)}
           baseToken={baseSymbol}
-          marketId={tradeItemState?.market.marketId}
+          marketId={tradeItemState?.market.marketId.toString()}
           marketQuestion={tradeItemState?.market.question ?? undefined}
           onContinueClick={() => {
             setPercentageDisplay("0");

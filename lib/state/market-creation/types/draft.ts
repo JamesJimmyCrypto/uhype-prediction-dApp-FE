@@ -42,7 +42,7 @@ export type MarketDraftState = {
   /**
    * The id of the market if it has been published.
    */
-  marketId?: number;
+  marketId?: string;
 };
 
 /**

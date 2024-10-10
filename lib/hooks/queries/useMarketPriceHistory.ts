@@ -32,7 +32,7 @@ export interface PriceHistory {
   prices: { assetId: string; price: number }[];
 }
 export const useMarketPriceHistory = (
-  marketId: number,
+  marketId: string,
   timeUnit: TimeUnit,
   timeValue: number,
   startTime: string, //ISO timestamp
@@ -65,7 +65,7 @@ export const useMarketPriceHistory = (
 
 export async function getPriceHistory(
   client: GraphQLClient,
-  marketId: number,
+  marketId: string,
   timeUnit: TimeUnit,
   timeValue: number,
   startTime: string,

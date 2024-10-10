@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 const TrendingMarketsCompact = ({ markets }: { markets: Market[] }) => {
   const { data: marketsStats } = useMarketsStats(
-    markets.map((m) => m.marketKey.toNumber()),
+    markets.map((m) => m.publicKey.toString()),
   );
 
   return (
@@ -18,7 +18,7 @@ const TrendingMarketsCompact = ({ markets }: { markets: Market[] }) => {
       <div className="flex w-full flex-col divide-y divide-solid overflow-hidden rounded-lg bg-white text-sm">
         {markets.map((market) => (
           <TrendingMarketRow
-            key={market.marketKey.toNumber()}
+            key={market.publicKey.toString()}
             market={market}
           />
         ))}
@@ -30,7 +30,7 @@ const TrendingMarketsCompact = ({ markets }: { markets: Market[] }) => {
 const TrendingMarketRow = ({ market }: { market: Market }) => {
   const { coverUrl, marketKey, title } = market;
   const image = coverUrl;
-  const marketId = market.marketKey.toNumber();
+  const marketId = market.publicKey.toString();
   // useMarketImage(market, {
   //   fallback:
   //     coverUrl &&

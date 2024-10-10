@@ -6,7 +6,7 @@ import { useSdkv2 } from "../useSdkv2";
 export const marketsStatsRootQuery = "markets-stats";
 
 export const useMarketsStats = (
-  marketIds: number[],
+  marketIds: string[],
 ): UseQueryResult<MarketStats[]> => {
   const [sdk, id] = useSdkv2();
 

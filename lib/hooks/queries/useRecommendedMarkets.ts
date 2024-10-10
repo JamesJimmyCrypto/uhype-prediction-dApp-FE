@@ -9,14 +9,14 @@ import { useMarketProgram } from "@/src/hooks";
 
 export const recommendedMarketsRootKey = "recommended-markets";
 
-export const useRecommendedMarkets = (marketId?: number, limit = 2) => {
+export const useRecommendedMarkets = (marketId?: string, limit = 2) => {
   const { useGetMarketsQuery, useGetMarketQuery } = useMarketProgram();
   const { data: market } = useGetMarketQuery(marketId?.toString());
 
   const { data: markets, isLoading, error } = useGetMarketsQuery();
 
   const query = useQuery(
-    [recommendedMarketsRootKey, market?.marketKey.toNumber()],
+    [recommendedMarketsRootKey, market?.publicKey.toString()],
     async () => {
       const similarMarkets = markets || [];
 

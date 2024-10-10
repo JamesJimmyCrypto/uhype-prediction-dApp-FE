@@ -3,7 +3,7 @@ import { useMarketCmsMetadata } from "./queries/cms/useMarketCmsMetadata";
 import { FullMarketFragment } from "@zeitgeistpm/indexer";
 
 export const useMarketImage = (
-  market: FullMarketFragment | { marketId: number; tags?: string[] },
+  market: FullMarketFragment | { marketId: string; tags?: string[] },
   opts?: {
     fallback?: string;
   },
@@ -19,7 +19,7 @@ export const useMarketImage = (
 
 export const getFallbackImage = (
   marketTags: FullMarketFragment["tags"],
-  marketId: number,
+  marketId: string,
 ) => {
   const tagIndex = marketTags ? marketId % marketTags.length : 0;
   const pickedTag = marketTags?.[tagIndex];

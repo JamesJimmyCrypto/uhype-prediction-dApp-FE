@@ -20,12 +20,12 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { formatNumberCompact } from "lib/util/format-compact";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-
+import { useMarketProgram } from "src/hooks/useMarket";
 const BuyFullSetForm = ({
   marketId,
   onSuccess,
 }: {
-  marketId: number;
+  marketId: string;
   onSuccess?: () => void;
 }) => {
   const [sdk] = useSdkv2();
@@ -33,33 +33,34 @@ const BuyFullSetForm = ({
   const pubKey = publicKey?.toString();
   const notificationStore = useNotifications();
 
-  const { data: market } = useMarket({ marketId: marketId });
-  const { data: pool } = usePool({ marketId: marketId });
+  const { useGetMarketQuery } = useMarketProgram();
+  const { data: market } = useGetMarketQuery(marketId);
+  // const { data: pool } = usePool({ marketId: marketId });
 
-  const baseAssetId = market?.baseAsset
-    ? parseAssetId(market.baseAsset).unrightOr(undefined)
-    : undefined;
+  // const baseAssetId = market?.baseAsset
+  //   ? parseAssetId(market.baseAsset).unrightOr(undefined)
+  //   : undefined;
 
-  const { data: metadata } = useAssetMetadata(baseAssetId);
+  // const { data: metadata } = useAssetMetadata(baseAssetId);
 
   const [amount, setAmount] = useState<string>("0");
   const [maxTokenSet, setMaxTokenSet] = useState<Decimal>(new Decimal(0));
 
-  const { data: baseAssetBalance } = useBalance(pubKey, baseAssetId);
+  // const { data: baseAssetBalance } = useBalance(pubKey, baseAssetId);
 
-  const { data: balances } = useAccountPoolAssetBalances(pubKey, pool);
+  // const { data: balances } = useAccountPoolAssetBalances(pubKey, pool);
 
   useEffect(() => {
     let lowestTokenAmount: Decimal = new Decimal(0);
 
     setMaxTokenSet(lowestTokenAmount);
-  }, [balances]);
+  }, []);
 
   const handleAmountChange = (amount: string) => {
     setAmount(amount);
   };
 
-  const disabled = !baseAssetBalance || Number(amount) === 0;
+  const disabled = Number(amount) === 0;
 
   const handleSignTransaction = async () => {
     if (disabled || !isRpcSdk(sdk)) {
@@ -86,7 +87,7 @@ const BuyFullSetForm = ({
                 className="rounded-full"
               />
             )}
-            <span className="font-medium">{metadata?.symbol}</span>
+            {/* <span className="font-medium">{metadata?.symbol}</span> */}
           </div>
         </div>
         <div className="center mb-7 h-[56px] w-full bg-anti-flash-white">
@@ -107,7 +108,7 @@ const BuyFullSetForm = ({
           </p>
           <p className="mb-7 text-center text-sm">
             <span className="text-sky-600">Price Per Set: </span>1{" "}
-            {metadata?.name}
+            {/* {metadata?.name} */}
           </p>
         </div>
       </div>

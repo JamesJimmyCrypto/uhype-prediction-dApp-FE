@@ -17,12 +17,12 @@ const allMarketsQuery = gql`
 
 async function getAllMarketImages(): Promise<
   {
-    marketId: number;
+    marketId: string;
     img: string | null;
   }[]
 > {
   const res = await client.request<{
-    markets: { marketId: number; img: string | null }[];
+    markets: { marketId: string; img: string | null }[];
   }>(allMarketsQuery);
   return res.markets;
 }

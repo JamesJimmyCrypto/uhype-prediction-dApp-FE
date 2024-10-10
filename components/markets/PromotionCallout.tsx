@@ -1,14 +1,15 @@
+import { Market } from "@/src/types";
 import { Dialog } from "@headlessui/react";
-import { IndexerContext, Market } from "@zeitgeistpm/sdk";
 import Modal from "components/ui/Modal";
 import { PromotedMarket } from "lib/cms/get-promoted-markets";
 import { MarketPageIndexedData } from "lib/gql/markets";
 import { useMarketPromotionState } from "lib/state/promotions";
 import moment from "moment";
 import Image from "next/image";
+import { useState } from "react";
 
 export const MarketPromotionCallout = (props: {
-  market: Market<IndexerContext> | MarketPageIndexedData;
+  market: Market;
   promotion: PromotedMarket;
 }) => {
   const now = new Date();
@@ -21,9 +22,10 @@ export const MarketPromotionCallout = (props: {
   const isActive =
     (startDate && endDate && startDate < now && endDate > now) ?? false;
 
-  const { open, toggle } = useMarketPromotionState(props.market.marketId, {
-    defaultOpenedState: isActive,
-  });
+  // const { open, toggle } = useMarketPromotionState(props.market.marketId, {
+  //   defaultOpenedState: isActive,
+  // });
+  const [open, toggle] = useState(true);
 
   return (
     <>
@@ -32,7 +34,7 @@ export const MarketPromotionCallout = (props: {
           <div className="flex justify-center">
             <div
               className="cursor-pointer rounded-md bg-green-lighter px-2 py-1 text-sm"
-              onClick={() => toggle()}
+              onClick={() => toggle(false)}
             >
               <span>Promo Market</span>
               <span className="text-blue-600"> Rules</span>

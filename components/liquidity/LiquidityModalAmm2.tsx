@@ -31,7 +31,7 @@ const LiquidityModalAmm2 = ({
 }: {
   open: boolean;
   onClose: () => void;
-  marketId: number;
+  marketId: string;
 }) => {
   const { publicKey } = useWallet();
   const { data: pool } = useAmm2Pool(marketId);

@@ -51,7 +51,7 @@ type Action =
   (typeof humanReadableEventMap)[keyof typeof humanReadableEventMap];
 
 export type TradeEvent = {
-  marketId: number;
+  marketId: string;
   question: string;
   action: Action;
   time: string;
@@ -64,7 +64,7 @@ export type TradeEvent = {
 
 type MarketHeader = {
   question: string;
-  marketId: number;
+  marketId: string;
 };
 
 type EventEntry = {

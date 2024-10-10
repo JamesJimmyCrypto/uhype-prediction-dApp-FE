@@ -60,7 +60,7 @@ export const useAccountAmm2Pool = (address?: string) => {
       });
 
       return neoPools.map((pool, index) => {
-        const market = markets.find((m) => m.marketId === pool.marketId);
+        const market = markets.find((m) => m.marketId === pool.marketId.toString());
         const account = pool.liquiditySharesManager.find(
           (l) => l.account === address,
         );

@@ -15,18 +15,18 @@ export const ordersRootKey = "orders";
 
 export type Order = {
   id: string;
-  marketId: number;
+  marketId: string;
   makerAddress: string;
   side: "buy" | "sell";
   price: Decimal;
   outcomeAmount: Decimal;
   outcomeAssetId:
-    | {
-        CategoricalOutcome: [MarketId, number];
-      }
-    | {
-        ScalarOutcome: [MarketId, "Short" | "Long"];
-      };
+  | {
+    CategoricalOutcome: [MarketId, number];
+  }
+  | {
+    ScalarOutcome: [MarketId, "Short" | "Long"];
+  };
   filledPercentage: number;
   status: OrderStatus;
 };
@@ -76,7 +76,7 @@ export const useOrders = (where?: InputMaybe<OrderWhereInput>) => {
 
           const mappedOrder: Order = {
             id: order.id,
-            marketId: order.marketId,
+            marketId: order.marketId.toString(),
             makerAddress: order.makerAccountId,
             side,
             price,

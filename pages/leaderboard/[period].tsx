@@ -57,7 +57,7 @@ const durationLookup: { [key in TimePeriod]: number } = {
 };
 
 type Trade = {
-  marketId: number;
+  marketId: string;
   baseAssetIn: Decimal;
   baseAssetOut: Decimal;
 };
@@ -84,7 +84,7 @@ type TradersByMarket = {
 };
 
 type MarketSummary = {
-  marketId: number;
+  marketId: string;
   question: string;
   baseAssetId: BaseAssetId;
   profit: number;
@@ -206,7 +206,7 @@ export async function getStaticProps({ params }) {
     const assetOutId = parseAssetId(swap.assetOut).unwrap();
     let baseAssetSwapType: "in" | "out" | undefined;
 
-    let marketId: number | undefined;
+    let marketId: string | undefined;
     if (IOMarketOutcomeAssetId.is(assetInId)) {
       marketId = getMarketIdOf(assetInId);
       baseAssetSwapType = "out";

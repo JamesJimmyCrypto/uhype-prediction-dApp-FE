@@ -204,7 +204,6 @@ type MarketPageProps = {
 };
 
 const Market: NextPage<MarketPageProps> = ({
-  indexedMarket,
   chartSeries,
   resolutionTimestamp,
   promotionData,
@@ -214,57 +213,56 @@ const Market: NextPage<MarketPageProps> = ({
   const router = useRouter();
   const { marketid } = router.query;
   const marketId = Number(marketid);
-  const { publicKey } = useWallet();
-  const pubKey = publicKey?.toString();
-  const { data: orders, isLoading: isOrdersLoading } = useOrders({
-    marketId_eq: marketId,
-    makerAccountId_eq: pubKey,
-  });
-
-  const tradeItem = useTradeItem();
-
-  if (indexedMarket == null) {
-    return <NotFoundPage backText="Back To Markets" backLink="/" />;
-  }
-
-  const outcomeAssets = indexedMarket?.outcomeAssets?.map(
-    (assetIdString) =>
-      parseAssetId(assetIdString).unwrap() as MarketOutcomeAssetId,
-  );
-
-  useEffect(() => {
-    tradeItem.set({
-      assetId: outcomeAssets[0],
-      action: "buy",
-    });
-  }, [marketId]);
-
-  const [showLiquidityParam, setShowLiquidityParam, unsetShowLiquidityParam] =
-    useQueryParamState("showLiquidity");
-
-  const showLiquidity = showLiquidityParam != null;
-
-  const [poolDeployed, setPoolDeployed] = useState(false);
-
   const { useGetMarketQuery } = useMarketProgram();
   const {
     data: market,
     isLoading,
     error,
   } = useGetMarketQuery(new PublicKey(marketid!));
+  const { publicKey } = useWallet();
+  const pubKey = publicKey?.toString();
+  // const { data: orders, isLoading: isOrdersLoading } = useOrders({
+  //   marketId_eq: marketId,
+  //   makerAccountId_eq: pubKey,
+  // });
 
-  const { data: disputes } = useMarketDisputes(marketId);
+  // const tradeItem = useTradeItem();
 
-  const { data: marketStage } = useMarketStage(market ?? undefined);
-  const { data: spotPrices } = useMarketSpotPrices(marketId);
-  const { data: poolId, isLoading: poolIdLoading } = useMarketPoolId(marketId);
-  const baseAsset = parseAssetIdString(indexedMarket?.baseAsset);
-  const { data: metadata } = useAssetMetadata(baseAsset);
+  if (market == null) {
+    return <NotFoundPage backText="Back To Markets" backLink="/" />;
+  }
 
-  const [showTwitchChat, setShowTwitchChat] = useState(true);
+  // const outcomeAssets = market?.outcomeAssets?.map(
+  //   (assetIdString) =>
+  //     parseAssetId(assetIdString).unwrap() as MarketOutcomeAssetId,
+  // );
+
+  // useEffect(() => {
+  //   tradeItem.set({
+  //     assetId: outcomeAssets[0],
+  //     action: "buy",
+  //   });
+  // }, [marketId]);
+
+  const [showLiquidityParam, setShowLiquidityParam, unsetShowLiquidityParam] =
+    useQueryParamState("showLiquidity");
+
+  const showLiquidity = showLiquidityParam != null;
+
+  // const [poolDeployed, setPoolDeployed] = useState(false);
+
+  // const { data: disputes } = useMarketDisputes(marketId);
+
+  // const { data: marketStage } = useMarketStage(market ?? undefined);
+  // const { data: spotPrices } = useMarketSpotPrices(marketId);
+  // const { data: poolId, isLoading: poolIdLoading } = useMarketPoolId(marketId);
+  // const baseAsset = parseAssetIdString(indexedMarket?.baseAsset);
+  // const { data: metadata } = useAssetMetadata(baseAsset);
+
+  // const [showTwitchChat, setShowTwitchChat] = useState(true);
 
   const handlePoolDeployed = () => {
-    setPoolDeployed(true);
+    // setPoolDeployed(true);
     setShowLiquidityParam("");
   };
 
@@ -277,46 +275,44 @@ const Market: NextPage<MarketPageProps> = ({
     }
   };
 
-  const token = metadata?.symbol;
+  const token = "SOL";
+  // metadata?.symbol;
 
   // const isOracle = market?.oracle === pubKey;
   const canReport = true;
 
-  const lastDispute = useMemo(() => {
-    if (disputes) {
-      const lastDispute = disputes?.[disputes.length - 1];
-      const at = lastDispute?.at!;
-      const by = lastDispute?.by!;
+  // const lastDispute = useMemo(() => {
+  //   // if (disputes) {
+  //   //   const lastDispute = disputes?.[disputes.length - 1];
+  //   //   const at = lastDispute?.at!;
+  //   //   const by = lastDispute?.by!;
+  //   //   const marketDispute: MarketDispute = {
+  //   //     at,
+  //   //     by,
+  //   //   };
+  //   //   return marketDispute;
+  //   // }
+  // }, [market]);
 
-      const marketDispute: MarketDispute = {
-        at,
-        by,
-      };
+  // const report = useMemo(() => {
+  //   // if (
+  //   //   market?.report &&
+  //   //   market?.status === "Reported" &&
+  //   //   isValidMarketReport(market.report)
+  //   // ) {
+  //   //   const report: MarketReport = {
+  //   //     at: market.report.at,
+  //   //     by: market.report.by,
+  //   //     outcome: isMarketCategoricalOutcome(market.report.outcome)
+  //   //       ? { categorical: market.report.outcome.categorical }
+  //   //       : { scalar: market.report.outcome.scalar?.toString() },
+  //   //   };
+  //   //   return report;
+  //   // }
+  // }, [market]);
 
-      return marketDispute;
-    }
-  }, [market, disputes]);
-
-  const report = useMemo(() => {
-    // if (
-    //   market?.report &&
-    //   market?.status === "Reported" &&
-    //   isValidMarketReport(market.report)
-    // ) {
-    //   const report: MarketReport = {
-    //     at: market.report.at,
-    //     by: market.report.by,
-    //     outcome: isMarketCategoricalOutcome(market.report.outcome)
-    //       ? { categorical: market.report.outcome.categorical }
-    //       : { scalar: market.report.outcome.scalar?.toString() },
-    //   };
-    //   return report;
-    // }
-  }, [market, disputes]);
-
-  const hasChart = Boolean(
-    chartSeries && (indexedMarket?.pool || indexedMarket.neoPool),
-  );
+  const hasChart = Boolean(chartSeries);
+  // const hasChart = Boolean(chartSeries && (market?.pool || market.neoPool));
 
   const twitchStreamChannelName = extractChannelName(
     cmsMetadata?.twitchStreamUrl,
@@ -326,42 +322,42 @@ const Market: NextPage<MarketPageProps> = ({
 
   const activeTabsCount = [hasChart, hasTwitchStream].filter(Boolean).length;
 
-  const { data: hasLiveTwitchStreamClient } = useQuery(
-    [],
-    async () => {
-      if (!twitchStreamChannelName) return undefined;
-      return isLive(twitchStreamChannelName);
-    },
-    {
-      enabled: Boolean(hasTwitchStream),
-      refetchInterval: 1000 * 30,
-      refetchOnWindowFocus: false,
-      initialData: hasLiveTwitchStreamServer,
-    },
-  );
+  // const { data: hasLiveTwitchStreamClient } = useQuery(
+  //   [],
+  //   async () => {
+  //     if (!twitchStreamChannelName) return undefined;
+  //     return isLive(twitchStreamChannelName);
+  //   },
+  //   {
+  //     enabled: Boolean(hasTwitchStream),
+  //     refetchInterval: 1000 * 30,
+  //     refetchOnWindowFocus: false,
+  //     initialData: hasLiveTwitchStreamServer,
+  //   },
+  // );
 
-  const hasLiveTwitchStream =
-    hasLiveTwitchStreamClient || hasLiveTwitchStreamServer;
+  // const hasLiveTwitchStream =
+  //   hasLiveTwitchStreamClient || hasLiveTwitchStreamServer;
 
   const marketHasPool = true;
 
-  const poolCreationDate = new Date(
-    indexedMarket.pool?.createdAt ?? indexedMarket.neoPool?.createdAt ?? "",
-  );
+  // const poolCreationDate = new Date(
+  //   indexedMarket.pool?.createdAt ?? indexedMarket.neoPool?.createdAt ?? "",
+  // );
 
   return (
     <div className="mt-6">
       <div className="relative flex flex-auto gap-12">
         <div className="flex-1 overflow-hidden">
-          <MarketMeta market={indexedMarket} />
+          <MarketMeta market={market} />
 
           <MarketHeader
-            market={indexedMarket}
+            market={market}
             resolvedOutcome={undefined}
             // report={report}
-            disputes={lastDispute}
+            // disputes={lastDispute}
             token={token}
-            marketStage={marketStage ?? undefined}
+            // marketStage={marketStage ?? undefined}
             promotionData={promotionData}
             rejectReason={undefined}
           />
@@ -373,7 +369,7 @@ const Market: NextPage<MarketPageProps> = ({
           // )} */}
 
           <div className="mt-4">
-            <Tab.Group defaultIndex={hasLiveTwitchStream ? 1 : 0}>
+            {/* <Tab.Group defaultIndex={hasLiveTwitchStream ? 1 : 0}>
               <Tab.List
                 className={`flex gap-2 text-sm ${
                   activeTabsCount < 2 ? "hidden" : ""
@@ -468,9 +464,9 @@ const Market: NextPage<MarketPageProps> = ({
                   <></>
                 )}
               </Tab.Panels>
-            </Tab.Group>
+            </Tab.Group> */}
           </div>
-          {publicKey &&
+          {/* {publicKey &&
             isOrdersLoading === false &&
             (orders?.length ?? 0) > 0 && (
               <div className="mt-3 flex flex-col gap-y-3">
@@ -482,7 +478,7 @@ const Market: NextPage<MarketPageProps> = ({
                   }}
                 />
               </div>
-            )}
+            )} */}
           {isLoading === false && (
             <div className="flex h-ztg-22 items-center rounded-ztg-5 bg-vermilion-light p-ztg-20 text-vermilion">
               <div className="h-ztg-20 w-ztg-20">
@@ -521,21 +517,21 @@ const Market: NextPage<MarketPageProps> = ({
                 )}
               </div>
             )} */}
-            <MarketAssetDetails
+            {/* <MarketAssetDetails
               marketId={Number(marketid)}
-              categories={indexedMarket.categories}
-            />
+              categories={market.categories}
+            /> */}
           </div>
 
           <div className="mb-12 max-w-[90vw]">
-            <MarketDescription market={indexedMarket} />
+            {/* <MarketDescription market={market} /> */}
           </div>
 
-          <AddressDetails title="Oracle" address={indexedMarket.oracle} />
+          {/* <AddressDetails title="Oracle" address={market.oracle} /> */}
           {marketHasPool === true && (
             <div className="mt-10 flex flex-col gap-4">
               <h3 className="mb-5 text-2xl">Latest Trades</h3>
-              <LatestTrades limit={3} marketId={marketId} />
+              {/* <LatestTrades limit={3} marketId={marketId} /> */}
               <Link
                 className="w-full text-center text-ztg-blue"
                 href={`/latest-trades?marketId=${marketId}`}
@@ -552,7 +548,7 @@ const Market: NextPage<MarketPageProps> = ({
             />
           )} */}
 
-          {market && (marketHasPool || poolDeployed) && (
+          {market && marketHasPool && (
             <div className="my-12">
               <div
                 className="mb-8 flex cursor-pointer items-center text-mariner"
@@ -575,7 +571,7 @@ const Market: NextPage<MarketPageProps> = ({
                 leave="transition ease-in duration-75"
                 leaveFrom="transform opacity-100 "
                 leaveTo="transform opacity-0 "
-                show={showLiquidity && Boolean(marketHasPool || poolDeployed)}
+                show={showLiquidity && Boolean(marketHasPool)}
               >
                 {/* <MarketLiquiditySection poll={poolDeployed} market={market} /> */}
               </Transition>
@@ -906,31 +902,31 @@ const ReportForm = ({ market }: { market: Market }) => {
   );
 };
 
-const CourtCaseContext = ({ market }: { market: FullMarketFragment }) => {
-  const { data: caseId, isFetched } = useMarketCaseId(market.marketId);
-  const router = useRouter();
+// const CourtCaseContext = ({ market }: { market: FullMarketFragment }) => {
+//   const { data: caseId, isFetched } = useMarketCaseId(market.marketId);
+//   const router = useRouter();
 
-  return (
-    <div className="px-5 py-8">
-      <h4 className="mb-3 flex items-center gap-2">
-        <Image width={22} height={22} src="/icons/court.svg" alt="court" />
-        <span>Market Court Case</span>
-      </h4>
+//   return (
+//     <div className="px-5 py-8">
+//       <h4 className="mb-3 flex items-center gap-2">
+//         <Image width={22} height={22} src="/icons/court.svg" alt="court" />
+//         <span>Market Court Case</span>
+//       </h4>
 
-      <p className="mb-5 text-sm">
-        Market has been disputed and is awaiting a ruling in court.
-      </p>
+//       <p className="mb-5 text-sm">
+//         Market has been disputed and is awaiting a ruling in court.
+//       </p>
 
-      <button
-        disabled={!isFetched}
-        onClick={() => router.push(`/court/${caseId}`)}
-        onMouseEnter={() => router.prefetch(`/court/${caseId}`)}
-        className={`ztg-transition h-[56px] w-full rounded-full bg-purple-400 text-white focus:outline-none disabled:cursor-default disabled:bg-slate-300`}
-      >
-        View Case
-      </button>
-    </div>
-  );
-};
+//       <button
+//         disabled={!isFetched}
+//         onClick={() => router.push(`/court/${caseId}`)}
+//         onMouseEnter={() => router.prefetch(`/court/${caseId}`)}
+//         className={`ztg-transition h-[56px] w-full rounded-full bg-purple-400 text-white focus:outline-none disabled:cursor-default disabled:bg-slate-300`}
+//       >
+//         View Case
+//       </button>
+//     </div>
+//   );
+// };
 
 export default Market;

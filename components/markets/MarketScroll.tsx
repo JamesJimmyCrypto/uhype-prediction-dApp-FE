@@ -28,7 +28,7 @@ const MarketScroll = ({
 
   const hasMounted = useHasMounted();
   const { data: marketsStats } = useMarketsStats(
-    markets.map((m) => m.marketKey?.toNumber()),
+    markets.map((m) => m.publicKey?.toString()),
   );
 
   const gap = 16;
@@ -112,7 +112,7 @@ const MarketScroll = ({
         >
           {markets.map((market, cardIndex) => {
             const stat = marketsStats?.find(
-              (s) => s.marketId === market.marketKey.toNumber(),
+              (s) => s.marketId.toString() === market.publicKey.toString(),
             );
 
             const isShown =

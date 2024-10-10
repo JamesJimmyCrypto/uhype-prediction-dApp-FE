@@ -33,7 +33,7 @@ interface TradeResultProps {
   tokenName?: string;
   baseTokenAmount?: Decimal;
   baseToken?: string;
-  marketId: number;
+  marketId: string;
   marketQuestion?: string;
   onContinueClick?: () => void;
 }

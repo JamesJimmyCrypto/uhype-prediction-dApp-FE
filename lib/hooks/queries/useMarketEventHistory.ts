@@ -20,7 +20,7 @@ export const useMarketEventHistory = (
 ): UseQueryResult<MarketEventHistory> => {
   const [sdk, id] = useSdkv2();
 
-  const { data: market } = useMarket({ marketId: Number(marketId) });
+  const { data: market } = useMarket({ marketId: String(marketId) });
 
   return useQuery(
     [marketsEventsRootQuery, id, marketId],
@@ -28,7 +28,7 @@ export const useMarketEventHistory = (
       if (isIndexedSdk(sdk) && isRpcSdk(sdk) && market) {
         const response = await getMarketHistory(
           sdk.indexer.client,
-          Number(marketId),
+          marketId,
         );
         const start = response.filter((e) => {
           e.timestamp = new Date(e.timestamp).getTime();

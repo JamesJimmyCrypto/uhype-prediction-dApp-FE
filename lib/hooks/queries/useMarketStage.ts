@@ -18,7 +18,7 @@ export const useMarketStage = (market?: Market) => {
   const now = useChainTime();
 
   return useQuery(
-    [id, marketsRootQuery, market?.marketKey.toNumber(), marketStageRootKey],
+    [id, marketsRootQuery, market?.publicKey.toString(), marketStageRootKey],
     async () => {
 
       return null;

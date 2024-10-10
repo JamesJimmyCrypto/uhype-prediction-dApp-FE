@@ -13,12 +13,12 @@ const query = gql`
 export type MarketStats = {
   participants: number;
   liquidity: string;
-  marketId: number;
+  marketId: string;
 };
 
 export const getMarketsStats = async (
   client: GraphQLClient,
-  ids: number[],
+  ids: string[],
 ): Promise<MarketStats[]> => {
   if (ids.length === 0) return [];
   const { marketStats } = await client.request<{

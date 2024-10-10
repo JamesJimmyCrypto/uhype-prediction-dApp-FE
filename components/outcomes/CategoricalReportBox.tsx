@@ -8,7 +8,8 @@ import {
   Market,
   parseAssetId,
 } from "@zeitgeistpm/sdk";
-import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+// import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+
 import TransactionButton from "components/ui/TransactionButton";
 import TruncatedText from "components/ui/TruncatedText";
 import { useSdkv2 } from "lib/hooks/useSdkv2";
@@ -46,16 +47,16 @@ const CategoricalReportBox = ({
   return (
     <>
       <div className="mb-8">
-        {market && selectedOutcome && (
-          <MarketContextActionOutcomeSelector
-            market={market}
-            selected={selectedOutcome}
-            options={outcomeAssets}
-            onChange={(assetId) => {
-              setSelectedOutcome(assetId as CategoricalAssetId);
-            }}
-          />
-        )}
+        {/* {market && selectedOutcome && (
+          // <MarketContextActionOutcomeSelector
+          //   market={market}
+          //   selected={selectedOutcome}
+          //   options={outcomeAssets}
+          //   onChange={(assetId) => {
+          //     setSelectedOutcome(assetId as CategoricalAssetId);
+          //   }}
+          // />
+        )} */}
       </div>
 
       <TransactionButton

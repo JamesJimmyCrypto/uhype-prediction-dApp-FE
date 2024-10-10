@@ -63,11 +63,11 @@ export type BaseMarketDraftEditor = {
   /**
    * The market id of the market. Will be set when its published successfully.
    */
-  marketId?: number;
+  marketId?: string;
   /**
    * Set the market draft as published.
    */
-  published: (marketId: number) => void;
+  published: (marketId: string) => void;
   /**
    * Reset the form draft.
    */
@@ -313,7 +313,7 @@ export const useMarketDraftEditor = (): MarketDraftEditor => {
   /**
    * Set the market as published.
    */
-  const published = (marketId: number) => {
+  const published = (marketId: string) => {
     update({
       ...draft,
       marketId,

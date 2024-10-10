@@ -49,7 +49,7 @@ const LatestTrades = ({
   marketId,
 }: {
   limit?: number;
-  marketId?: number;
+  marketId?: string;
 }) => {
   const { data: trades } = useLatestTrades(limit, marketId);
   const now = moment();

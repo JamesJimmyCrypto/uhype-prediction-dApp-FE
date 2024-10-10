@@ -6,8 +6,8 @@ export type CmsNews = {
   subtitle: string;
   image: string;
   link:
-    | { isMarket: true; market: { marketId: number } }
-    | { isMarket: false | undefined; url: string };
+  | { isMarket: true; market: { marketId: string } }
+  | { isMarket: false | undefined; url: string };
 };
 
 const fields = groq`{

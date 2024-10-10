@@ -3,7 +3,7 @@ import groq from "groq";
 import { sanity } from "./sanity";
 
 export type FullCmsMarketMetadata = {
-  marketId?: number | null;
+  marketId?: string | null;
   question?: string;
   description?: PortableTextBlock[];
   imageUrl?: string | null;
@@ -14,7 +14,7 @@ export type FullCmsMarketMetadata = {
   twitchStreamUrl?: string;
 };
 export type CmsMarketCardMetadata = {
-  marketId?: number | null;
+  marketId?: string | null;
   question?: string;
   imageUrl?: string | null;
 };
@@ -35,7 +35,7 @@ const cardFields = groq`{
 }`;
 
 export const getCmsFullMarketMetadataForMarket = async (
-  marketId: number,
+  marketId: string,
 ): Promise<FullCmsMarketMetadata | null> => {
   const data = await sanity.fetch<FullCmsMarketMetadata>(
     groq`*[_type == "marketMetadata" && market.marketId == ${marketId}]${fullFields}`,

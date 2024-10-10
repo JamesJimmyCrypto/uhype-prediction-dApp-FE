@@ -3,7 +3,8 @@ import { u8aToHex } from "@polkadot/util";
 import { useQueryClient } from "@tanstack/react-query";
 import { FullMarketFragment } from "@zeitgeistpm/indexer";
 import { CategoricalAssetId, parseAssetId } from "@zeitgeistpm/sdk";
-import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+// // import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+
 import TransactionButton from "components/ui/TransactionButton";
 import { voteDrawsRootKey } from "lib/hooks/queries/court/useCourtVoteDraws";
 
@@ -37,33 +38,33 @@ export const CourtVoteRevealForm: React.FC<CourtVoteRevealFormProps> = ({
       parseAssetId(assetIdString).unwrap() as CategoricalAssetId,
   );
 
-  const { vote, setVote, committed } = useCourtVote({
-    caseId,
-    marketId: market.marketId,
-    defaultValue: outcomeAssets[0],
-  });
+  // const { vote, setVote, committed } = useCourtVote({
+  //   caseId,
+  //   marketId: market.marketId,
+  //   defaultValue: outcomeAssets[0],
+  // });
 
-  const { salt, restoreBackup } = useCourtSalt({
-    marketId: market.marketId,
-    caseId: caseId,
-  });
+  // const { salt, restoreBackup } = useCourtSalt({
+  //   marketId: market.marketId,
+  //   caseId: caseId,
+  // });
 
-  const matchingOutcome = useOutcomeMatchingCommitmentHash(
-    salt,
-    secretVote?.commitment.toHex() ?? `0x`,
-    outcomeAssets,
-  );
+  // const matchingOutcome = useOutcomeMatchingCommitmentHash(
+  //   salt,
+  //   secretVote?.commitment.toHex() ?? `0x`,
+  //   outcomeAssets,
+  // );
 
-  const { commitmentHash } = useCourtCommitmentHash({
-    salt,
-    selectedOutcome: matchingOutcome ?? vote,
-  });
+  // const { commitmentHash } = useCourtCommitmentHash({
+  //   salt,
+  //   selectedOutcome: matchingOutcome ?? vote,
+  // });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [hasDroppedFile, setHasDroppedFile] = useState(false);
 
   const onChangeSelectedOutcome = (assetId: CategoricalAssetId) => {
-    setVote(assetId as CategoricalAssetId);
+    // setVote(assetId as CategoricalAssetId);
   };
 
   const onCourtSaltBackupDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -94,14 +95,13 @@ export const CourtVoteRevealForm: React.FC<CourtVoteRevealFormProps> = ({
       const parsed = IOCourtSaltPhraseStorage.safeParse(JSON.parse(raw));
 
       if (parsed.success) {
-        const wasSet = await restoreBackup(parsed.data);
-        setHasDroppedFile(wasSet);
+        // const wasSet = await restoreBackup(parsed.data);
+        // setHasDroppedFile(wasSet);
       }
     }
   };
 
-  const commitmentHashMatches =
-    secretVote?.commitment.toHex() === u8aToHex(commitmentHash);
+  const commitmentHashMatches = true;
 
   return (
     <div className="overflow-hidden rounded-xl shadow-lg">
@@ -110,17 +110,17 @@ export const CourtVoteRevealForm: React.FC<CourtVoteRevealFormProps> = ({
       </div>
       <div className="px-2 py-6 text-center">
         <div className="mb-8 mt-6">
-          <MarketContextActionOutcomeSelector
+          {/* <MarketContextActionOutcomeSelector
             market={market}
             selected={matchingOutcome ?? vote ?? outcomeAssets[0]}
             options={outcomeAssets}
             onChange={onChangeSelectedOutcome}
             disabled={Boolean(committed || matchingOutcome)}
             hideValue={Boolean(committed || matchingOutcome)}
-          />
+          /> */}
         </div>
 
-        {!committed && !matchingOutcome && (
+        {/* {!committed && !matchingOutcome && (
           <>
             <div className="mb-6 w-full rounded-lg bg-provincial-pink p-5 text-sm font-normal">
               <div className="text-sm text-gray-700">
@@ -129,7 +129,7 @@ export const CourtVoteRevealForm: React.FC<CourtVoteRevealFormProps> = ({
               </div>
             </div>
           </>
-        )}
+        )} */}
 
         <input
           type="file"
@@ -138,7 +138,7 @@ export const CourtVoteRevealForm: React.FC<CourtVoteRevealFormProps> = ({
           onChange={onFileInputChange}
         />
 
-        {commitmentHashMatches || matchingOutcome ? (
+        {commitmentHashMatches ? (
           <div
             className="relative mb-6 w-full resize-none rounded-md border-black border-opacity-30 bg-transparent text-center font-semibold"
             onDragOver={onCourtSaltBackupDragOver}
@@ -152,7 +152,7 @@ export const CourtVoteRevealForm: React.FC<CourtVoteRevealFormProps> = ({
                 <AiOutlineCheck />
               </h3>
               <span className="text-xxs italic">
-                {shortenAddress(u8aToHex(commitmentHash))}
+                {/* {shortenAddress(u8aToHex(commitmentHash))} */}
               </span>
             </div>
           </div>

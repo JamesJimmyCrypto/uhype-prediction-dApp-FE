@@ -52,7 +52,7 @@ export type MarketBond = {
   };
   creator: string;
   question: string;
-  marketId: number;
+  marketId: string;
   period: {
     end: string;
   };

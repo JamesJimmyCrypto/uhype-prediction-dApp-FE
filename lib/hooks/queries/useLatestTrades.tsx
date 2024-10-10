@@ -21,7 +21,7 @@ export const transactionHistoryKey = "latest-trades";
 
 export type TradeItem = {
   traderAddress: string;
-  marketId: number;
+  marketId: string;
   question: string;
   type: "buy" | "sell";
   outcomeName: string;
@@ -31,7 +31,7 @@ export type TradeItem = {
   costSymbol: string;
 };
 
-export const useLatestTrades = (limit?: number, marketId?: number) => {
+export const useLatestTrades = (limit?: number, marketId?: string) => {
   const [sdk, id] = useSdkv2();
 
   const query = useQuery(
@@ -156,7 +156,9 @@ const lookupMarket = (asset: string, markets: MarketHeader[]) => {
 
   if (IOMarketOutcomeAssetId.is(assetId)) {
     const marketId = getMarketIdOf(assetId);
-    const market = markets.find((market) => market.marketId === marketId);
+    const market = markets.find(
+      (market) => market.marketId === marketId.toString(),
+    );
     return market;
   }
 };

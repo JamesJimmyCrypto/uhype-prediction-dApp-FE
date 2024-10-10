@@ -14,7 +14,7 @@ import { marketMetaFilter } from "./constants";
 
 export const marketsRootQuery = "markets";
 
-export type UseMarketFilter = { marketId: number } | { poolId: number };
+export type UseMarketFilter = { marketId: string } | { poolId: number };
 
 export const useMarket = (
   filter?: UseMarketFilter,
@@ -40,9 +40,9 @@ export const useMarket = (
       staleTime: 10_000,
       enabled: Boolean(
         sdk &&
-          isIndexedSdk(sdk) &&
-          filter &&
-          ("marketId" in filter || "poolId" in filter),
+        isIndexedSdk(sdk) &&
+        filter &&
+        ("marketId" in filter || "poolId" in filter),
       ),
     },
   );
@@ -58,13 +58,6 @@ const batcher = memoize((sdk: Sdk<IndexerContext>) => {
             marketMetaFilter,
             {
               OR: [
-                {
-                  marketId_in: ids
-                    .filter(
-                      (id): id is { marketId: number } => "marketId" in id,
-                    )
-                    .map((id) => id.marketId),
-                },
                 {
                   pool: {
                     poolId_in: ids
@@ -83,7 +76,7 @@ const batcher = memoize((sdk: Sdk<IndexerContext>) => {
     scheduler: batshit.windowScheduler(10),
     resolver: (data, query) => {
       if ("marketId" in query) {
-        return data.find((m) => m?.marketId === query.marketId);
+        return data.find((m) => m?.marketId.toString() === query.marketId.toString());
       }
       if ("poolId" in query) {
         return data.find((m) => m?.pool?.poolId === query.poolId);

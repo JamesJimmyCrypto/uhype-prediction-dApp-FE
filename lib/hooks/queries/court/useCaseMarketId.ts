@@ -15,7 +15,7 @@ export const useCaseMarketId = (caseId?: number) => {
     [id, caseMarketIdRootKey, caseId],
     async () => {
       if (!enabled) return;
-      return batcher(sdk).fetch(caseId);
+      return batcher(sdk).fetch(caseId).toString();
     },
     {
       enabled: enabled,

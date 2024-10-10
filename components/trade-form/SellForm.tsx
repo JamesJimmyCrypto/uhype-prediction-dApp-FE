@@ -1,7 +1,8 @@
 import { ISubmittableResult } from "@polkadot/types/types";
 import { OrderStatus } from "@zeitgeistpm/indexer";
 import { MarketOutcomeAssetId, parseAssetId, ZTG } from "@zeitgeistpm/sdk";
-import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+// import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+
 import FormTransactionButton from "components/ui/FormTransactionButton";
 import Input from "components/ui/Input";
 import Decimal from "decimal.js";
@@ -38,7 +39,7 @@ const SellForm = ({
   initialAsset,
   onSuccess,
 }: {
-  marketId: number;
+  marketId: string;
   initialAsset?: MarketOutcomeAssetId;
   onSuccess: (
     data: ISubmittableResult,
@@ -70,10 +71,10 @@ const SellForm = ({
   const baseAsset = parseAssetIdString(market?.baseAsset);
   const { data: assetMetadata } = useAssetMetadata(baseAsset);
   const baseSymbol = assetMetadata?.symbol;
-  const { data: orders } = useOrders({
-    marketId_eq: marketId,
-    status_eq: OrderStatus.Placed,
-  });
+  // const { data: orders } = useOrders({
+  //   marketId_eq: marketId,
+  //   status_eq: OrderStatus.Placed,
+  // });
 
   const swapFee = pool?.swapFee.div(ZTG);
   const creatorFee = new Decimal(perbillToNumber(market?.creatorFee ?? 0));
@@ -214,7 +215,7 @@ const SellForm = ({
             })}
           />
           <div>
-            {market && selectedAsset && (
+            {/* {market && selectedAsset && (
               <MarketContextActionOutcomeSelector
                 market={market}
                 selected={selectedAsset}
@@ -223,7 +224,7 @@ const SellForm = ({
                   setSelectedAsset(assetId);
                 }}
               />
-            )}
+            )} */}
           </div>
         </div>
         <div className="text-sm">For</div>

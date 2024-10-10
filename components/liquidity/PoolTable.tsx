@@ -34,7 +34,7 @@ const PoolTable = ({
   marketId,
 }: {
   poolId?: number;
-  marketId: number;
+  marketId: string;
 }) => {
   const { data: pool } = usePool(poolId != null ? { poolId } : undefined);
   const { data: market } = useMarket({ marketId });

@@ -52,7 +52,7 @@ const AccountPoolsTable = ({ address }: { address: string }) => {
         usdValue: pool.addressUsdValue?.toNumber(),
       },
       fees: new Decimal(pool.account?.fees ?? 0).div(ZTG).toFixed(3),
-      buttons: <PoolButtons marketId={pool.marketId} />,
+      buttons: <PoolButtons marketId={pool.marketId.toString()} />,
     };
   });
 
@@ -72,7 +72,7 @@ const AccountPoolsTable = ({ address }: { address: string }) => {
   );
 };
 
-const PoolButtons = ({ marketId }: { marketId: number }) => {
+const PoolButtons = ({ marketId }: { marketId: string }) => {
   const [sdk] = useSdkv2();
   const notificationStore = useNotifications();
   const [showLiqudityModal, setShowLiqudityModal] = useState(false);

@@ -74,7 +74,9 @@ const OrdersTable = ({ where }: { where: InputMaybe<OrderWhereInput> }) => {
       status,
     }) => {
       const index = getIndexOf(outcomeAssetId);
-      const market = markets?.find((market) => market.marketId === marketId);
+      const market = markets?.find(
+        (market) => market.marketId.toString() === marketId,
+      );
       const outcomeName = market?.categories?.[index]?.name;
       const baseAsset = parseAssetIdString(market?.baseAsset) as BaseAssetId;
       const baseSymbol = lookupAssetSymbol(baseAsset);

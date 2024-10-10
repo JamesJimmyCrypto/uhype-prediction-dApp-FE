@@ -62,7 +62,6 @@ export async function getStaticProps() {
 
   const [
     featuredMarkets,
-    trendingMarkets,
     bannerPlaceholder,
     categoryPlaceholders,
     newsImagePlaceholders,
@@ -73,11 +72,13 @@ export async function getStaticProps() {
     topicsMarkets,
   ] = await Promise.all([
     getFeaturedMarkets(client, sdk),
-    getTrendingMarkets(client, sdk),
     getPlaiceholder(`/banner.png`),
-    getPlaiceholders(CATEGORIES?.map((cat) => `${cat.imagePath}`), {
-      dir: `${path.join(process.cwd())}/public/`,
-    }),
+    getPlaiceholders(
+      CATEGORIES?.map((cat) => `${cat.imagePath}`),
+      {
+        dir: `${path.join(process.cwd())}/public/`,
+      },
+    ),
     getPlaiceholders(
       news.map((slide) => slide.image ?? ""),
       { size: 16 },
@@ -102,7 +103,10 @@ export async function getStaticProps() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery([categoryCountsKey], () =>
-    getCategoryCounts(sdk.indexer.client, CATEGORIES?.map((c) => c.name)),
+    getCategoryCounts(
+      sdk.indexer.client,
+      CATEGORIES?.map((c) => c.name),
+    ),
   );
 
   for (const marketCmsData of marketsCmsData) {
@@ -212,7 +216,7 @@ const IndexPage: NextPage<{
                 <div className="mb-4 flex w-full flex-col gap-3 md:flex-row">
                   {topic.markets.map(({ market, stats }) => (
                     <MarketCard
-                      key={market.marketKey.toNumber()}
+                      key={market.publicKey.toString()}
                       market={market}
                       numParticipants={stats.participants}
                       liquidity={stats.liquidity}

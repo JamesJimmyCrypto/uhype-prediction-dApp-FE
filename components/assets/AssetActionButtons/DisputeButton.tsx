@@ -24,7 +24,7 @@ const DisputeButton = ({
 }) => {
   const [sdk] = useSdkv2();
 
-  const { data: disputes } = useMarketDisputes(market);
+  // const { data: disputes } = useMarketDisputes(market);
 
   const [isOpen, setOpen] = useState(false);
 
@@ -35,7 +35,7 @@ const DisputeButton = ({
     const assetIsReported = market.report?.outcome?.categorical === assetIndex;
 
     return (sdk && !isRpcSdk(sdk)) || (isCategorical && assetIsReported);
-  }, [sdk, disputes?.length, market]);
+  }, [sdk, market]);
 
   return (
     <>

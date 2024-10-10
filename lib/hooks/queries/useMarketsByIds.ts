@@ -30,14 +30,14 @@ export const useMarketsByIds = (marketQueries?: UseMarketFilter[]) => {
                         .map((filter) => filter.poolId),
                     },
                   },
-                  {
-                    marketId_in: marketQueries
-                      .filter(
-                        (filter): filter is { marketId: number } =>
-                          "marketId" in filter,
-                      )
-                      .map((filter) => filter.marketId),
-                  },
+                  // {
+                  //   marketId_in: marketQueries
+                  //     .filter(
+                  //       (filter): filter is { marketId: string } =>
+                  //         "marketId" in filter,
+                  //     )
+                  //     .map((filter) => filter.marketId),
+                  // },
                 ],
               },
             ],

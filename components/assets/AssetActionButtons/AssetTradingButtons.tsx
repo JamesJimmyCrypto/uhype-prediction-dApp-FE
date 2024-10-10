@@ -20,7 +20,7 @@ const AssetTradingButtons = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { data: tradeItem, set: setTradeItem } = useTradeItem();
   const marketId = getMarketIdOf(assetId);
-  const { data: market } = useMarket({ marketId });
+  // const { data: market } = useMarket({ marketId });
 
   return (
     <>
@@ -51,7 +51,7 @@ const AssetTradingButtons = ({
       {tradeItem && (
         <Modal open={isOpen} onClose={() => setIsOpen(false)}>
           <Dialog.Panel className="w-full max-w-[564px] rounded-[10px] bg-white">
-            <Amm2TradeForm
+            {/* <Amm2TradeForm
               marketId={marketId}
               initialAsset={assetId}
               selectedTab={
@@ -59,7 +59,7 @@ const AssetTradingButtons = ({
                   ? TradeTabType.Buy
                   : TradeTabType.Sell
               }
-            />
+            /> */}
           </Dialog.Panel>
         </Modal>
       )}

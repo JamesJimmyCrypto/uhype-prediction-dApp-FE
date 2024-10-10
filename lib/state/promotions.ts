@@ -6,7 +6,7 @@ export type MarketPromotions = {
    * A map of market IDs to whether or not the promotion modal is open.
    */
   modals: {
-    [marketId: number]: boolean;
+    [marketId: string]: boolean;
   };
 };
 
@@ -40,7 +40,7 @@ export type UseMarketPromotionState = {
  * @returns UseMarketPromotionState
  */
 export const useMarketPromotionState = (
-  marketId: number,
+  marketId: string,
   opts?: { defaultOpenedState: boolean },
 ): UseMarketPromotionState => {
   const [marketPromotions, setMarketPromotions] = useAtom(marketPromotionsAtom);

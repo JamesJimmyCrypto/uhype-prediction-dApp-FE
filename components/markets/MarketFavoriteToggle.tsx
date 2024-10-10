@@ -6,7 +6,7 @@ export const MarketFavoriteToggle = ({
   marketId,
   size,
 }: {
-  marketId: number;
+  marketId: string;
   size?: number;
 }) => {
   const { add, remove, isFavorite } = useFavoriteMarketsStorage();

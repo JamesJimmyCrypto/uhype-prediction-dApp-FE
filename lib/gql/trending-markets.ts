@@ -52,7 +52,7 @@ const getTrendingMarkets = async (
     historicalMarkets: {
       dVolume: string;
       market: {
-        marketId: number;
+        marketId: string;
       };
     }[];
   }>(marketChangesQuery, {
@@ -75,21 +75,19 @@ const getTrendingMarkets = async (
 
   const basePrices = await getBaseAssetPrices(sdk);
 
-  const trendingMarketIds = calcTrendingMarkets(
-    historicalMarkets,
-    basePrices,
-    markets,
-  );
+  // const trendingMarketIds = calcTrendingMarkets(
+  //   historicalMarkets,
+  //   basePrices,
+  //   markets,
+  // );
 
-  const tm = trendingMarketIds.map((marketId) => {
-    const market = markets.find(
-      (market) => market.marketId === Number(marketId),
-    );
+  // const tm = trendingMarketIds.map((marketId) => {
+  //   const market = markets.find(
+  //     (market) => market.marketId === Number(marketId),
+  //   );
 
-    return market;
-  });
+  return markets;
 
-  return tm.filter(isNotNull);
 };
 
 const lookupPrice = (
@@ -104,12 +102,12 @@ const lookupPrice = (
 const calcTrendingMarkets = (
   transactions: {
     market: {
-      marketId: number;
+      marketId: string;
     };
     dVolume: string;
   }[],
   basePrices: ForeignAssetPrices,
-  markets: { marketId: number; baseAsset: string }[],
+  markets: { marketId: string; baseAsset: string }[],
 ) => {
   const marketVolumes: { [key: string]: Decimal } = {};
   const maxMarkets = 4;
@@ -128,17 +126,17 @@ const calcTrendingMarkets = (
     }
   });
 
-  for (let marketId in marketVolumes) {
-    const base = markets.find((market) => market.marketId === Number(marketId))
-      ?.baseAsset;
+  // for (let marketId in marketVolumes) {
+  //   const base = markets.find((market) => market.marketId === Number(marketId))
+  //     ?.baseAsset;
 
-    const value = lookupPrice(
-      basePrices,
-      parseAssetIdString(base) as BaseAssetId,
-    );
+  //   const value = lookupPrice(
+  //     basePrices,
+  //     parseAssetIdString(base) as BaseAssetId,
+  //   );
 
-    marketVolumes[marketId] = marketVolumes[marketId].mul(value ?? 0);
-  }
+  //   marketVolumes[marketId] = marketVolumes[marketId].mul(value ?? 0);
+  // }
 
   const marketIdsByVolumeDesc = Object.keys(marketVolumes).sort((a, b) => {
     const aVol = marketVolumes[a];

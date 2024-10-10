@@ -11,7 +11,7 @@ import { useMarketProgram } from "@/src/hooks";
 import { PublicKey } from "@solana/web3.js";
 
 interface AssetActionButtonsProps {
-  marketId: number;
+  marketId: string;
   assetId?: ScalarAssetId | CategoricalAssetId;
 }
 

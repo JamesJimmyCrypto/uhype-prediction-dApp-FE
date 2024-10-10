@@ -17,7 +17,7 @@ export type UseVourtVote = {
 
 export type UseCourtVoteProps = {
   caseId: number;
-  marketId: number;
+  marketId: string;
   defaultValue?: CategoricalAssetId;
 };
 

@@ -11,10 +11,10 @@ export const SimilarMarketsSection = ({
   limit?: number;
 }) => {
   const { data: recommendedMarkets, isFetched: isMarketsFetched } =
-    useRecommendedMarkets(market?.marketKey.toNumber(), limit ?? 2);
+    useRecommendedMarkets(market?.publicKey.toString(), limit ?? 2);
 
   const { data: stats, isFetched: isStatsFetched } = useMarketsStats(
-    recommendedMarkets?.markets?.map((m) => m.marketKey.toNumber()) ?? [],
+    recommendedMarkets?.markets?.map((m) => m.publicKey.toString()) ?? [],
   );
 
   const isLoading = !isMarketsFetched || !isStatsFetched;
@@ -37,18 +37,20 @@ export const SimilarMarketsSection = ({
           )}
 
           {recommendedMarkets?.markets.map((market, index) => {
-            const stat = stats?.find((s) => s.marketId === market.marketKey.toNumber());
+            const stat = stats?.find(
+              (s) => s.marketId === market.publicKey.toString(),
+            );
 
             return (
               <div
-                key={`market-${market.marketKey.toNumber()}`}
+                key={`market-${market.publicKey.toString()}`}
                 className="animate-pop-in rounded-xl opacity-0 shadow-lg"
                 style={{
                   animationDelay: `${200 * (index + 1)}ms`,
                 }}
               >
                 <MarketCard
-                  key={market.marketKey.toNumber()}
+                  key={market.publicKey.toString()}
                   market={market}
                   numParticipants={stat?.participants}
                   liquidity={stat?.liquidity}

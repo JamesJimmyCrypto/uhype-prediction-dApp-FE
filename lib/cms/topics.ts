@@ -72,7 +72,7 @@ export const marketsForTopic = async (
 
   const stats = await getMarketsStats(
     indexer.client,
-    markets.map((m) => m.marketId),
+    markets.map((m) => m.marketId.toString()),
   );
 
   const marketCardsData = markets
@@ -81,7 +81,7 @@ export const marketsForTopic = async (
 
       return {
         market,
-        stats: stats.find((s) => s.marketId === market.marketId),
+        stats: stats.find((s) => s.marketId.toString() === market.marketId.toString()),
       };
     })
     .filter(isNotNull);

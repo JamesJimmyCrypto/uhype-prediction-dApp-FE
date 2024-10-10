@@ -61,14 +61,14 @@ const Portfolio: NextPageWithLayout = () => {
   const [marketsTabSelection, setMarketsTabSelection] =
     useQueryParamState<MarketsTabItem>("marketsTab");
 
-  const { markets, breakdown } = usePortfolioPositions(address);
+  // const { markets, breakdown } = usePortfolioPositions(address);
 
   const { data: ztgPrice } = useZtgPrice();
 
-  const marketPositionsByMarket = useMemo(
-    () => markets && groupBy(markets, (position) => position.market.marketId),
-    [markets],
-  );
+  // const marketPositionsByMarket = useMemo(
+  //   () => markets && groupBy(markets, (position) => position.market.marketId),
+  //   [markets],
+  // );
 
   if (!address) {
     return null;
@@ -84,9 +84,9 @@ const Portfolio: NextPageWithLayout = () => {
       <div className="mb-12">
         <PortfolioBreakdown
           address={address}
-          {...(breakdown ?? {
-            loading: true,
-          })}
+          // {...(breakdown ?? {
+          //   loading: true,
+          // })}
         />
       </div>
       <div className="mb-12">
@@ -127,57 +127,12 @@ const Portfolio: NextPageWithLayout = () => {
 
           <Tab.Panels>
             <Tab.Panel className="mt-12">
-              {!marketPositionsByMarket || !ztgPrice ? (
-                range(0, 8).map((i) => (
-                  <MarketPositionsSkeleton className="mb-8" key={i} />
-                ))
-              ) : Object.values(marketPositionsByMarket).length > 0 ? (
-                Object.values(marketPositionsByMarket).map(
-                  (marketPositions) => {
-                    const market = marketPositions[0].market;
-
-                    // marketPositions = marketPositions.filter((position) =>
-                    //   position.userBalance.gt(0),
-                    // );
-
-                    if (
-                      market.status === "Resolved" &&
-                      market.marketType.categorical
-                    ) {
-                      marketPositions = marketPositions.filter(
-                        (position) =>
-                          getIndexOf(position.assetId) ===
-                          Number(market.resolvedOutcome),
-                      );
-                    }
-
-                    if (marketPositions.length === 0) return <></>;
-
-                    return (
-                      <div></div>
-                      // <MarketPositions
-                      //   key={market.marketId}
-                      //   className="mb-8"
-                      //   market={market}
-                      //   usdZtgPrice={ztgPrice}
-                      //   positions={
-                      //     marketPositions
-                      //     // .filter((position) =>
-                      //     // position.userBalance.gt(0),
-                      //     // )
-                      //   }
-                      // />
-                    );
-                  },
-                )
-              ) : (
                 <EmptyPortfolio
                   headerText="You don't have any assets"
                   bodyText="View markets to trade assets"
                   buttonText="View Markets"
                   buttonLink="/markets"
                 />
-              )}
             </Tab.Panel>
             {process.env.NEXT_PUBLIC_SHOW_CROSS_CHAIN === "true" && (
               <Tab.Panel>

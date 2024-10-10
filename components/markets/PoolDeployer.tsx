@@ -34,7 +34,7 @@ const PoolDeployer = ({
   marketId,
   onPoolDeployed,
 }: {
-  marketId: number;
+  marketId: string;
   onPoolDeployed?: () => void;
 }) => {
   const constants = useChainConstants();

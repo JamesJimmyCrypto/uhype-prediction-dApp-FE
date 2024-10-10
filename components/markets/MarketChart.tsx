@@ -27,7 +27,7 @@ export const CategoricalMarketChart = ({
   resolutionDate,
   poolCreationDate,
 }: {
-  marketId: number;
+  marketId: string;
   chartSeries: ChartSeries[];
   baseAsset?: string;
   poolCreationDate: Date;
@@ -100,7 +100,7 @@ export const ScalarMarketChart = ({
   resolutionDate,
   poolCreationDate,
 }: {
-  marketId: number;
+  marketId: string;
   poolCreationDate: Date;
   marketStatus: MarketStatus;
   resolutionDate: Date;

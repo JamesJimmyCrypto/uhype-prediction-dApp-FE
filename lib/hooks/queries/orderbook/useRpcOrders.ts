@@ -21,19 +21,19 @@ type RawMarketOrderData = {
 
 export type MarketOrder = {
   id: number;
-  marketId: number;
+  marketId: string;
   makerAddress: string;
   raw: RawMarketOrderData;
   side: "buy" | "sell";
   price: Decimal;
   outcomeAmount: Decimal;
   outcomeAssetId:
-    | {
-        CategoricalOutcome: [MarketId, number];
-      }
-    | {
-        ScalarOutcome: [MarketId, "Short" | "Long"];
-      };
+  | {
+    CategoricalOutcome: [MarketId, number];
+  }
+  | {
+    ScalarOutcome: [MarketId, "Short" | "Long"];
+  };
 };
 
 export const useRpcOrders = () => {
@@ -72,7 +72,7 @@ export const useRpcOrders = () => {
 
           const order: MarketOrder = {
             id: Number(a[0].toString()),
-            marketId: Number(chainOrder.marketId.toString()),
+            marketId: String(chainOrder.marketId.toString()),
             makerAddress: chainOrder.maker.toString(),
             raw: rawData,
             side,

@@ -2,34 +2,34 @@ import { Dialog, Tab } from "@headlessui/react";
 import { MarketStatus } from "@zeitgeistpm/indexer";
 import Modal from "components/ui/Modal";
 import SecondaryButton from "components/ui/SecondaryButton";
-import { useMarket } from "lib/hooks/queries/useMarket";
 import { useMarketIsTradingEnabled } from "lib/hooks/queries/useMarketIsTradingEnabled";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import BuyFullSetForm from "./BuyFullSetForm";
 import SellFullSetForm from "./SellFullSetForm";
-
+import { useMarketProgram } from "src/hooks/useMarket";
 const BuySellFullSetsButton = ({
   buttonClassName,
   marketId,
 }: {
-  marketId: number;
+  marketId: string;
   buttonClassName?: string;
 }) => {
-  const { data: market } = useMarket({ marketId });
+  const { useGetMarketQuery } = useMarketProgram();
+  const { data: market } = useGetMarketQuery(marketId);
   const enabled = useMarketIsTradingEnabled(market ?? undefined);
 
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <SecondaryButton
+      {/* <SecondaryButton
         disabled={market?.status !== MarketStatus.Active}
         onClick={() => setIsOpen(true)}
         className="max-w-[160px]"
       >
         Buy/Sell Full Set
-      </SecondaryButton>
+      </SecondaryButton> */}
 
       <Modal open={isOpen} onClose={() => setIsOpen(false)}>
         <Dialog.Panel className="w-full max-w-[564px] rounded-[10px] bg-white">

@@ -127,7 +127,7 @@ export const useTradeHistory = (address?: string) => {
 
         const marketsMap: Map<number, MarketHeader> = new Map();
         marketIdsArray.forEach((marketId) => {
-          const market = markets.find((m) => m.marketId === marketId);
+          const market = markets.find((m) => m.marketId === marketId.toString());
           if (market) {
             marketsMap.set(marketId, market);
           }

@@ -6,7 +6,8 @@ import {
   parseAssetId,
   ZTG,
 } from "@zeitgeistpm/sdk";
-import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+// import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+
 import FormTransactionButton from "components/ui/FormTransactionButton";
 import Input from "components/ui/Input";
 import Decimal from "decimal.js";
@@ -43,7 +44,7 @@ const BuyForm = ({
   initialAsset,
   onSuccess,
 }: {
-  marketId: number;
+  marketId: string;
   initialAsset?: MarketOutcomeAssetId;
   onSuccess: (
     data: ISubmittableResult,
@@ -76,10 +77,10 @@ const BuyForm = ({
   const baseSymbol = assetMetadata?.symbol;
   const { data: baseAssetBalance } = useBalance(pubKey, baseAsset);
   const { data: pool } = useAmm2Pool(marketId);
-  const { data: orders } = useOrders({
-    marketId_eq: marketId,
-    status_eq: OrderStatus.Placed,
-  });
+  // const { data: orders } = useOrders({
+  //   marketId_eq: marketId,
+  //   status_eq: OrderStatus.Placed,
+  // });
 
   const swapFee = pool?.swapFee.div(ZTG);
   const creatorFee = new Decimal(perbillToNumber(market?.creatorFee ?? 0));
@@ -215,17 +216,17 @@ const BuyForm = ({
             {amountOut.div(ZTG).abs().toFixed(3)}
           </div>
           <div>
-            {market && selectedAsset && (
-              <MarketContextActionOutcomeSelector
-                market={market}
-                selected={selectedAsset}
-                options={outcomeAssets}
-                onChange={(assetId) => {
-                  setSelectedAsset(assetId);
-                  trigger();
-                }}
-              />
-            )}
+            {/* {market && selectedAsset && (
+              // <MarketContextActionOutcomeSelector
+              //   market={market}
+              //   selected={selectedAsset}
+              //   options={outcomeAssets}
+              //   onChange={(assetId) => {
+              //     setSelectedAsset(assetId);
+              //     trigger();
+              //   }}
+              // />
+            )} */}
           </div>
         </div>
         <div className="text-sm">For</div>

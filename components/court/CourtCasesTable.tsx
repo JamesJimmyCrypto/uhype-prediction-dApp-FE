@@ -28,6 +28,8 @@ import { MdOutlinePendingActions } from "react-icons/md";
 import { courtStageCopy } from "./CourtStageTimer";
 import { groupBy, sortBy } from "lodash-es";
 import { useConnectedCourtParticipant } from "lib/hooks/queries/court/useConnectedCourtParticipant";
+import { useMarketProgram } from "@/src/hooks";
+import { PublicKey } from "@solana/web3.js";
 
 export const CourtCasesTable = () => {
   const { data: cases } = useCourtCases();
@@ -197,11 +199,16 @@ export const CourtCasesTable = () => {
 
 const CaseNameForCaseId = (props: { id: number }) => {
   const { data: marketId } = useCaseMarketId(props.id);
-  const { data: market } = useMarket({ marketId: marketId! });
+  const { useGetMarketQuery } = useMarketProgram();
+  const {
+    data: market,
+    isLoading,
+    error,
+  } = useGetMarketQuery(new PublicKey(marketId!));
   return (
     <>
       {market ? (
-        <div className="break-words text-sm">{market?.question}</div>
+        <div className="break-words text-sm">{market?.title}</div>
       ) : (
         <Skeleton />
       )}

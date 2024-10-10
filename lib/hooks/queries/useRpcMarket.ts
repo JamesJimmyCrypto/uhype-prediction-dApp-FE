@@ -4,7 +4,7 @@ import { useSdkv2 } from "../useSdkv2";
 
 export const rpcMarketRootKey = "rpc-market";
 
-export const useRpcMarket = (marketId: number) => {
+export const useRpcMarket = (marketId: string) => {
   const [sdk, id] = useSdkv2();
 
   const query = useQuery(

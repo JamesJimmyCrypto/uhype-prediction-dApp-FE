@@ -13,7 +13,7 @@ export type CourtCaseJurorCompositeId = Opaque<
  * the committed vote, generated phrase, download of backup state etc.. for each individual round of voting.
  */
 export const courtCaseJurorCompositeId = (params: {
-  marketId: number;
+  marketId: string;
   caseId: number;
   juror: string;
 }): CourtCaseJurorCompositeId => {

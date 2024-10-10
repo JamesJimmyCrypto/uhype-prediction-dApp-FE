@@ -6,7 +6,8 @@ import {
   isRpcSdk,
   parseAssetId,
 } from "@zeitgeistpm/sdk";
-import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+// import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+
 import FormTransactionButton from "components/ui/FormTransactionButton";
 import Input from "components/ui/Input";
 import Decimal from "decimal.js";
@@ -35,14 +36,14 @@ export const LimitBuyOrderForm = ({
   marketId,
   initialAsset,
 }: {
-  marketId: number;
+  marketId: string;
   initialAsset?: MarketOutcomeAssetId;
 }) => {
   const [sdk, id] = useSdkv2();
   const notificationStore = useNotifications();
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString() ?? "";
-  const { data: orders } = useOrders({ marketId_eq: marketId });
+  // const { data: orders } = useOrders({ marketId_eq: marketId });
   const { data: market } = useMarket({
     marketId,
   });
@@ -96,14 +97,14 @@ export const LimitSellOrderForm = ({
   marketId,
   initialAsset,
 }: {
-  marketId: number;
+  marketId: string;
   initialAsset?: MarketOutcomeAssetId;
 }) => {
   const [sdk, id] = useSdkv2();
   const notificationStore = useNotifications();
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString() ?? "";
-  const { data: orders } = useOrders({ marketId_eq: marketId });
+  // const { data: orders } = useOrders({ marketId_eq: marketId });
   const { data: market } = useMarket({
     marketId,
   });
@@ -158,7 +159,7 @@ const LimitOrderForm = ({
   isLoading,
   fee,
 }: {
-  marketId: number;
+  marketId: string;
   asset?: MarketOutcomeAssetId;
   maxPrice?: Decimal;
   minPrice?: Decimal;
@@ -287,7 +288,7 @@ const LimitOrderForm = ({
               })}
             />
             <div>
-              {market && asset && (
+              {/* {market && asset && (
                 <MarketContextActionOutcomeSelector
                   market={market}
                   selected={asset}
@@ -296,7 +297,7 @@ const LimitOrderForm = ({
                     onAssetChange?.(assetId);
                   }}
                 />
-              )}
+              )} */}
             </div>
           </div>
         </div>

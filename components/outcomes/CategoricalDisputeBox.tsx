@@ -27,7 +27,7 @@ const CategoricalDisputeBox = ({
   onSuccess?: () => void;
 }) => {
   const [sdk, id] = useSdkv2();
-  const { data: disputes } = useMarketDisputes(market);
+  // const { data: disputes } = useMarketDisputes(market);
   const notificationStore = useNotifications();
   const queryClient = useQueryClient();
   const constants = useChainConstants();
@@ -44,7 +44,7 @@ const CategoricalDisputeBox = ({
   const disputeBond = constants?.markets.disputeBond;
   const tokenSymbol = constants?.tokenSymbol;
 
-  const bondAmount = disputes ? disputeBond : undefined;
+  const bondAmount =  undefined;
 
   const getPreviousReportName = () => {
     const reportIndex = market.report?.outcome?.categorical;

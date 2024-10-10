@@ -15,9 +15,7 @@ import Modal from "components/ui/Modal";
 import Skeleton from "components/ui/Skeleton";
 import Decimal from "decimal.js";
 import { PromotedMarket } from "lib/cms/get-promoted-markets";
-import { BLOCK_TIME_SECONDS, ZTG } from "lib/constants";
 import { lookupAssetImagePath } from "lib/constants/foreign-asset";
-import { MarketPageIndexedData } from "lib/gql/markets";
 import { useMarketCaseId } from "lib/hooks/queries/court/useMarketCaseId";
 import {
   MarketEventHistory,
@@ -45,6 +43,7 @@ import { AddressDetails } from "./MarketAddresses";
 import { MarketTimer, MarketTimerSkeleton } from "./MarketTimer";
 import { MarketPromotionCallout } from "./PromotionCallout";
 import Link from "next/link";
+import { Market } from "@/src/types";
 
 export const QuillViewer = dynamic(
   () => import("../../components/ui/QuillViewer"),
@@ -325,7 +324,7 @@ const MarketHistory: FC<
 };
 
 const MarketHeader: FC<{
-  market: MarketPageIndexedData;
+  market: Market;
   report?: MarketReport;
   disputes?: MarketDispute;
   resolvedOutcome?: string;
@@ -344,67 +343,67 @@ const MarketHeader: FC<{
   promotionData,
 }) => {
   const {
-    categories,
-    status,
-    question,
-    period,
-    marketType,
-    pool,
-    scalarType,
-    neoPool,
+    title,
+
+    coverUrl,
+    answers,
   } = market;
+
+  const marketType = "";
+  const pool = "";
+  const neoPool = "";
+  const oracle = "";
+  const categories: string[] = [];
+  const status = false;
+  const period = {
+    start: "31313131",
+    end: "3131313",
+  };
+
   const [showMarketHistory, setShowMarketHistory] = useState(false);
   const starts = Number(period.start);
   const ends = Number(period.end);
-  const volume = new Decimal(market.volume).div(ZTG).toNumber();
+  const volume = new Decimal(0).toNumber();
 
-  const { outcome, by } = getMarketStatusDetails(
-    marketType,
-    categories,
-    status,
-    scalarType,
-    disputes,
-    report,
-    resolvedOutcome,
-  );
+  // const { outcome, by } = getMarketStatusDetails(
+  //   marketType,
+  //   categories,
+  //   status,
+  //   disputes,
+  //   report,
+  //   resolvedOutcome,
+  // );
 
   const { data: marketHistory } = useMarketEventHistory(
-    market.marketId.toString(),
+    market.publicKey.toString(),
   );
 
   const { data: stats, isLoading: isStatsLoading } = useMarketsStats([
-    market.marketId,
+    market.publicKey.toString(),
   ]);
 
   const liquidity = stats?.[0].liquidity;
   const participants = stats?.[0].participants;
 
-  const oracleReported = marketHistory?.reported?.by === market.oracle;
+  const oracleReported = marketHistory?.reported?.by === oracle;
 
-  const gracePeriodMS =
-    Number(market.deadlines?.gracePeriod ?? 0) * BLOCK_TIME_SECONDS * 1000;
-  const reportsOpenAt = Number(market.period.end) + gracePeriodMS;
-  const resolutionDateEstimate = estimateMarketResolutionDate(
-    new Date(Number(market.period.end)),
-    BLOCK_TIME_SECONDS,
-    Number(market.deadlines?.gracePeriod ?? 0),
-    Number(market.deadlines?.oracleDuration ?? 0),
-    Number(market.deadlines?.disputeDuration ?? 0),
-  );
+  // const gracePeriodMS =
+  //   Number(market.deadlines?.gracePeriod ?? 0) * BLOCK_TIME_SECONDS * 1000;
+  // const reportsOpenAt = Number(period.end) + gracePeriodMS;
+  // const resolutionDateEstimate = estimateMarketResolutionDate(
+  //   new Date(Number(market.period.end)),
+  //   BLOCK_TIME_SECONDS,
+  //   Number(market.deadlines?.gracePeriod ?? 0),
+  //   Number(market.deadlines?.oracleDuration ?? 0),
+  //   Number(market.deadlines?.disputeDuration ?? 0),
+  // );
 
   const assetId = "SOL";
   const imagePath = lookupAssetImagePath(assetId);
 
-  const { data: caseId } = useMarketCaseId(market.marketId);
+  const { data: caseId } = useMarketCaseId(market.publicKey.toString());
 
-  const { data: marketImage } = useMarketImage(market, {
-    fallback:
-      market.img &&
-      isAbsoluteUrl(market.img) &&
-      !isMarketImageBase64Encoded(market.img)
-        ? market.img
-        : undefined,
-  });
+  const marketImage = coverUrl;
 
   return (
     <header className="flex w-full flex-col gap-4">
@@ -426,7 +425,7 @@ const MarketHeader: FC<{
         </div>
 
         <div>
-          <h1 className="text-[32px] font-extrabold">{question}</h1>
+          <h1 className="text-[32px] font-extrabold">{title}</h1>
           {rejectReason && rejectReason.length > 0 && (
             <div className="mt-2.5">Market rejected: {rejectReason}</div>
           )}
@@ -441,20 +440,20 @@ const MarketHeader: FC<{
                 dateStyle: "medium",
               }).format(ends)}
             </HeaderStat>
-            {(market.status === "Active" || market.status === "Closed") && (
+            {/* {(market.status === "Active" || market.status === "Closed") && (
               <HeaderStat label="Resolves">
                 {new Intl.DateTimeFormat("default", {
                   dateStyle: "medium",
                 }).format(resolutionDateEstimate)}
               </HeaderStat>
-            )}
-            {market.status === "Proposed" && (
+            )} */}
+            {/* {market.status === "Proposed" && (
               <HeaderStat label="Reports Open">
                 {new Intl.DateTimeFormat("default", {
                   dateStyle: "medium",
                 }).format(reportsOpenAt)}
               </HeaderStat>
-            )}
+            )} */}
             {token ? (
               <HeaderStat label="Volume">
                 {formatNumberCompact(volume)}
@@ -466,9 +465,7 @@ const MarketHeader: FC<{
             )}
             {isStatsLoading === false && token ? (
               <HeaderStat label="Liquidity" border={true}>
-                {formatNumberCompact(
-                  new Decimal(liquidity ?? 0)?.div(ZTG).toNumber(),
-                )}
+                {formatNumberCompact(new Decimal(liquidity ?? 0).toNumber())}
                 &nbsp;
                 {token}
               </HeaderStat>
@@ -487,7 +484,7 @@ const MarketHeader: FC<{
       </div>
 
       <div className="relative mb-4 flex items-center gap-3 pl-1">
-        <AddressDetails title="Creator" address={market.creator} />
+        <AddressDetails title="Creator" address={market.creator.toString()} />
 
         <div className="group relative">
           <Image
@@ -505,7 +502,7 @@ const MarketHeader: FC<{
           </div>
         </div>
 
-        {market.disputeMechanism === "Court" && (
+        {/* {market.disputeMechanism === "Court" && (
           <div className="group relative">
             <Image width={22} height={22} src="/icons/court.svg" alt="court" />
             <div className="absolute bottom-0 right-0 z-10 translate-x-[50%] translate-y-[115%] whitespace-nowrap pt-1 opacity-0 transition-opacity group-hover:opacity-100">
@@ -514,7 +511,7 @@ const MarketHeader: FC<{
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         <div className="group relative">
           <Image
@@ -530,7 +527,7 @@ const MarketHeader: FC<{
           </div>
         </div>
 
-        {!market.disputeMechanism && (
+        {/* {!market.disputeMechanism && (
           <div className="group relative">
             <InfoPopover
               position="bottom-end"
@@ -561,9 +558,9 @@ const MarketHeader: FC<{
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
-        {market.hasEdits && (
+        {/* {market.hasEdits && (
           <div className="group relative">
             <InfoPopover
               position="bottom-end"
@@ -610,10 +607,13 @@ const MarketHeader: FC<{
               </div>
             </div>
           </div>
-        )}
+        )} */}
         <div className="group relative flex items-center">
           <div className="pt-1">
-            <MarketFavoriteToggle size={24} marketId={market.marketId} />
+            <MarketFavoriteToggle
+              size={24}
+              marketId={market.publicKey.toString()}
+            />
           </div>
           <div className="absolute bottom-0 right-0 z-10 translate-x-[50%] translate-y-[115%] whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
             <div className="rounded-lg bg-pink-300 px-2 py-1 text-sm">
@@ -622,9 +622,9 @@ const MarketHeader: FC<{
           </div>
         </div>
 
-        {promotionData && (
+        {/* {promotionData && (
           <MarketPromotionCallout market={market} promotion={promotionData} />
-        )}
+        )} */}
       </div>
 
       <div className="flex w-full">
@@ -644,7 +644,7 @@ const MarketHeader: FC<{
         )}
       </div>
 
-      {(status === "Reported" ||
+      {/* {(status === "Reported" ||
         status === "Disputed" ||
         status === "Resolved") &&
         marketHistory && (
@@ -655,9 +655,9 @@ const MarketHeader: FC<{
             by={by}
             marketHistory={marketHistory}
           />
-        )}
+        )} */}
 
-      <Modal
+      {/* <Modal
         open={showMarketHistory}
         onClose={() => setShowMarketHistory(false)}
       >
@@ -673,7 +673,7 @@ const MarketHeader: FC<{
             scalarType={scalarType}
           />
         )}
-      </Modal>
+      </Modal> */}
     </header>
   );
 };

@@ -84,7 +84,7 @@ const marketQuery = gql`
 `;
 
 export type MarketPageIndexedData = {
-  marketId: number;
+  marketId: string;
   slug: string;
   question: string;
   description: string | PortableTextBlock[];
@@ -141,14 +141,14 @@ export type NoCmsEdits = {
 
 export const getRecentMarketIds = async (
   client: GraphQLClient,
-): Promise<number[]> => {
+): Promise<string[]> => {
   const timestampOneMonthAgo = new Date(
     new Date().getTime() - DAY_SECONDS * 31 * 1000,
   ).getTime();
 
   const response = await client.request<{
     markets: {
-      marketId: number;
+      marketId: string;
     }[];
   }>(marketIdsQuery, {
     end: timestampOneMonthAgo,
@@ -161,7 +161,7 @@ export const getMarket = async (client: GraphQLClient, marketId: string) => {
   const response = await client.request<{
     markets: MarketPageIndexedData[];
   }>(marketQuery, {
-    marketId: Number(marketId),
+    marketId: String(marketId),
   });
 
   return response.markets[0];
@@ -169,11 +169,11 @@ export const getMarket = async (client: GraphQLClient, marketId: string) => {
 
 export const checkMarketExists = async (
   client: GraphQLClient,
-  marketId: number,
+  marketId: string,
 ): Promise<boolean> => {
   const response = await client.request<{
     markets: {
-      marketId: number;
+      marketId: string;
     }[];
   }>(
     gql`

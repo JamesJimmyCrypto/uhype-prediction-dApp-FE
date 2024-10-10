@@ -35,7 +35,7 @@ export type MarketEvent = {
 
 export const getMarketHistory = async (
   client: GraphQLClient,
-  marketId: number,
+  marketId: string,
 ): Promise<MarketEvent[]> => {
   const response = await client.request<{
     historicalMarkets: MarketEvent[];

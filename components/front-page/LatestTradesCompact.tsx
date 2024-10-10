@@ -24,7 +24,7 @@ const LatestTradeRow = ({ trade }: { trade: TradeItem }) => {
 
   const { data: image } = useMarketImage({ marketId: trade.marketId });
 
-  const { data: cmsMetadata } = useMarketCmsMetadata(trade.marketId);
+  const { data: cmsMetadata } = useMarketCmsMetadata(trade.marketId.toString());
 
   return (
     <Link

@@ -3,7 +3,8 @@ import { u8aToHex } from "@polkadot/util";
 import { useQueryClient } from "@tanstack/react-query";
 import { FullMarketFragment } from "@zeitgeistpm/indexer";
 import { CategoricalAssetId, parseAssetId } from "@zeitgeistpm/sdk";
-import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+// // import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
+
 import Modal from "components/ui/Modal";
 import TransactionButton from "components/ui/TransactionButton";
 import { voteDrawsRootKey } from "lib/hooks/queries/court/useCourtVoteDraws";
@@ -36,26 +37,26 @@ export const CourtVoteForm: React.FC<CourtVoteFormProps> = ({
       parseAssetId(assetIdString).unwrap() as CategoricalAssetId,
   );
 
-  const { vote, setVote, committed, commitVote } = useCourtVote({
-    caseId,
-    marketId: market.marketId,
-    defaultValue: outcomeAssets[0],
-  });
+  // const { vote, setVote, committed, commitVote } = useCourtVote({
+  //   caseId,
+  //   marketId: market.marketId,
+  //   defaultValue: outcomeAssets[0],
+  // });
 
-  const { salt, phraseStorage, downloadBackup, isBackedUp } = useCourtSalt({
-    marketId: market.marketId,
-    caseId: caseId,
-  });
+  // const { salt, phraseStorage, downloadBackup, isBackedUp } = useCourtSalt({
+  //   marketId: market.marketId,
+  //   caseId: caseId,
+  // });
 
-  const { commitmentHash } = useCourtCommitmentHash({
-    salt,
-    selectedOutcome: vote,
-  });
+  // const { commitmentHash } = useCourtCommitmentHash({
+  //   salt,
+  //   selectedOutcome: vote,
+  // });
 
   const [showDetails, setShowDetails] = useState(false);
 
   const onClickDownloadSeed = () => {
-    downloadBackup();
+    // downloadBackup();
   };
 
   return (
@@ -65,15 +66,15 @@ export const CourtVoteForm: React.FC<CourtVoteFormProps> = ({
       </div>
       <div className="px-2 py-6 text-center">
         <div className="mb-8 mt-6">
-          <MarketContextActionOutcomeSelector
+          {/* <MarketContextActionOutcomeSelector
             market={market}
             selected={vote ?? outcomeAssets[0]}
             options={outcomeAssets}
             disabled={committed}
             onChange={(assetId) => {
-              setVote(assetId as CategoricalAssetId);
-            }}
-          />
+              // setVote(assetId as CategoricalAssetId);
+            }} */}
+          {/* /> */}
         </div>
 
         <div className="mb-6 w-full rounded-lg bg-provincial-pink p-5 text-sm font-normal">
@@ -125,18 +126,18 @@ export const CourtVoteForm: React.FC<CourtVoteFormProps> = ({
                   correct.
                 </p>
                 <code className="mb-4 block text-xs">
-                  <span>
+                  {/* <span>
                     vote_item = VoteItem::Outcome(OutcomeReport::Categorical(
                     {vote?.CategoricalOutcome[1] ?? "null"})) {"->"}{" "}
                     {vote
                       ? market.categories?.[vote.CategoricalOutcome[1]]?.ticker
                       : "--"}
-                  </span>
+                  </span> */}
                   <br />
                   <span className="text-black">salt</span> ={" "}
                   <span className="text-blue-400">BlakeTwo256Hash</span>
                   (secretPhrase) {"->"}{" "}
-                  <span className="text-xxs">{u8aToHex(salt)}</span>
+                  {/* <span className="text-xxs">{u8aToHex(salt)}</span> */}
                   <br />
                   <br />
                   <span className="text-black">commitmentHash</span> ={" "}
@@ -145,7 +146,7 @@ export const CourtVoteForm: React.FC<CourtVoteFormProps> = ({
                 </code>
                 <div className="mb-4 flex items-center gap-2 pl-2 text-xs text-blue-400">
                   <FaArrowRight size={12} />
-                  {commitmentHash && u8aToHex(commitmentHash)}
+                  {/* {commitmentHash && u8aToHex(commitmentHash)} */}
                 </div>
                 <h3 className="mb-2 text-base">Salt Seed Backup</h3>
                 <p className="mb-3 text-sm">
@@ -153,7 +154,7 @@ export const CourtVoteForm: React.FC<CourtVoteFormProps> = ({
                   data used to generate the commitment hash.
                 </p>
                 <pre className="mb-5 text-xs">
-                  {JSON.stringify(phraseStorage, undefined, 2)}
+                  {/* {JSON.stringify(phraseStorage, undefined, 2)} */}
                 </pre>
               </div>
               <div className="relative h-64 w-full">

@@ -5,7 +5,7 @@ export const shortenAddress = (
   sliceStart: number = 6,
   sliceEnd: number = 4,
 ) => {
-  return `${address.slice(0, sliceStart)}...${address.slice(-sliceEnd)}`;
+  return `${address?.slice(0, sliceStart)}...${address.slice(-sliceEnd)}`;
 };
 
 const hexChars = [

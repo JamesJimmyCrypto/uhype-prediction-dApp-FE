@@ -83,7 +83,7 @@ const MarketsList = ({ className = "" }: MarketsListProps) => {
   const count = markets?.length ?? 0;
 
   const { data: stats } = useMarketsStats(
-    markets.map((m) => m?.marketKey.toNumber()),
+    markets.map((m) => m?.publicKey.toString()),
   );
 
   return (
@@ -101,7 +101,7 @@ const MarketsList = ({ className = "" }: MarketsListProps) => {
       <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3">
         {markets?.map((market) => {
           const stat = stats?.find(
-            (s) => s.marketId === market.marketKey.toNumber(),
+            (s) => s.marketId.toString() === market.publicKey.toString(),
           );
 
           return (

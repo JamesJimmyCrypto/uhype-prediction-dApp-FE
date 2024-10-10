@@ -15,7 +15,7 @@ const getBlock24hrsAgo = (blockTimeSec: number, currentBlock: number) => {
   return currentBlock - dayBlocks;
 };
 
-export const useMarket24hrPriceChanges = (marketId: number) => {
+export const useMarket24hrPriceChanges = (marketId: string) => {
   const [sdk, id] = useSdkv2();
   const [debouncedBlockNumber, setDebouncedBlockNumber] = useState<number>();
 

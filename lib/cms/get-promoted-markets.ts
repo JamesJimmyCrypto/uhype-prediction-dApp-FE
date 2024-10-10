@@ -4,7 +4,7 @@ import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
 export type PromotedMarket = {
-  marketId?: number;
+  marketId?: string;
   imageUrl?: string;
   tradeRequirement?: number;
   prize?: number;
@@ -12,24 +12,23 @@ export type PromotedMarket = {
 };
 
 export const getMarketPromotion = async (
-  marketId: number,
+  marketId: string,
 ): Promise<PromotedMarket | null> => {
   if (!process.env.NOTION_API_KEY) {
     return null;
   }
 
-  const { results: promotedMarketsData } = await notion.databases.query({
-    database_id: "eb2394e2272047878350217dc03bb8eb",
-    filter: {
-      property: "MarketId",
-      number: {
-        equals: marketId,
-      },
-    },
-  });
+  // const { results: promotedMarketsData } = await notion.databases.query({
+  //   database_id: "eb2394e2272047878350217dc03bb8eb",
+  //   filter: {
+  //     property: "MarketId",
+  //     number: {
+  //       equals: marketId,
+  //     },
+  //   },
+  // });
 
   return (
-    promotedMarketsData.filter(isFullPage).map(parsePromotedMarketData)[0] ??
     null
   );
 };
@@ -37,13 +36,13 @@ export const getMarketPromotion = async (
 export const parsePromotedMarketData = (data: PageObjectResponse) => {
   const promotedMarket: PromotedMarket = {};
 
-  if (data.properties.MarketId.type === "number") {
-    promotedMarket.marketId = data.properties.MarketId.number ?? undefined;
-  }
+  // if (data.properties.MarketId.type === "number") {
+  //   promotedMarket.marketId = data.properties.MarketId.number ?? undefined;
+  // }
 
-  if (data.properties.Image.type === "url") {
-    promotedMarket.imageUrl = data.properties.Image.url ?? undefined;
-  }
+  // if (data.properties.Image.type === "url") {
+  //   promotedMarket.imageUrl = data.properties.Image.url ?? undefined;
+  // }
 
   if (data.properties.TradeRequirement.type === "number") {
     promotedMarket.tradeRequirement =
