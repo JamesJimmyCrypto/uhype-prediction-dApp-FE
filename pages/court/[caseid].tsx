@@ -344,7 +344,7 @@ const CasePage: NextPage = ({
               <div className="relative h-16 w-16 overflow-hidden rounded-lg">
                 <Image
                   alt={"Market image"}
-                  src={marketImage}
+                  src={marketImage || ""}
                   fill
                   className="overflow-hidden rounded-lg"
                   style={{
@@ -468,12 +468,12 @@ const CasePage: NextPage = ({
         {stage?.type !== "reassigned" && (
           <section>
             <h3 className="mb-3">Jurors</h3>
-            <SelectedDrawsTable
+            {/* <SelectedDrawsTable
               caseId={caseId}
               stage={stage}
               market={market}
               selectedDraws={selectedDraws}
-            />
+            /> */}
           </section>
         )}
       </main>

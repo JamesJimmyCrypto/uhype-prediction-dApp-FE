@@ -11,10 +11,7 @@ const LatestTradesPage: NextPage = () => {
       <h1 className="mb-7 text-center sm:col-span-2 sm:text-start">
         Latest Trades
       </h1>
-      <LatestTrades
-        limit={30}
-        marketId={marketId ? Number(marketId) : undefined}
-      />
+      <LatestTrades limit={30} marketId={marketId?.[0]} />
     </div>
   );
 };

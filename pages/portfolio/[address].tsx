@@ -81,14 +81,7 @@ const Portfolio: NextPageWithLayout = () => {
   return (
     <div className="mt-8 overflow-hidden">
       {address && <PortfolioIdentity address={address} />}
-      <div className="mb-12">
-        <PortfolioBreakdown
-          address={address}
-          // {...(breakdown ?? {
-          //   loading: true,
-          // })}
-        />
-      </div>
+      <div className="mb-12"></div>
       <div className="mb-12">
         <Tab.Group
           defaultIndex={0}
@@ -127,12 +120,12 @@ const Portfolio: NextPageWithLayout = () => {
 
           <Tab.Panels>
             <Tab.Panel className="mt-12">
-                <EmptyPortfolio
-                  headerText="You don't have any assets"
-                  bodyText="View markets to trade assets"
-                  buttonText="View Markets"
-                  buttonLink="/markets"
-                />
+              <EmptyPortfolio
+                headerText="You don't have any assets"
+                bodyText="View markets to trade assets"
+                buttonText="View Markets"
+                buttonLink="/markets"
+              />
             </Tab.Panel>
             {process.env.NEXT_PUBLIC_SHOW_CROSS_CHAIN === "true" && (
               <Tab.Panel>

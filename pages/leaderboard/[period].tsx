@@ -124,7 +124,7 @@ const convertEventToTrade = (
           : longTokenVaue
         : new Decimal(1);
       const trade: Trade = {
-        marketId,
+        marketId: marketId.toString(),
         baseAssetIn: new Decimal(0),
         baseAssetOut: new Decimal(event.dBalance).mul(assetValue ?? 1).abs(),
       };
@@ -132,7 +132,7 @@ const convertEventToTrade = (
       return trade;
     } else if (event.event === "SoldCompleteSet") {
       const trade: Trade = {
-        marketId,
+        marketId: marketId.toString(),
         baseAssetIn: new Decimal(0),
         baseAssetOut: new Decimal(event.dBalance).abs(),
       };
@@ -144,7 +144,7 @@ const convertEventToTrade = (
       event.event === "BoughtCompleteSet"
     ) {
       const trade: Trade = {
-        marketId,
+        marketId: marketId.toString(),
         baseAssetIn: new Decimal(event.dBalance).abs(),
         baseAssetOut: new Decimal(0),
       };
@@ -208,10 +208,10 @@ export async function getStaticProps({ params }) {
 
     let marketId: string | undefined;
     if (IOMarketOutcomeAssetId.is(assetInId)) {
-      marketId = getMarketIdOf(assetInId);
+      marketId = getMarketIdOf(assetInId).toString();
       baseAssetSwapType = "out";
     } else if (IOMarketOutcomeAssetId.is(assetOutId)) {
-      marketId = getMarketIdOf(assetOutId);
+      marketId = getMarketIdOf(assetOutId).toString();
       baseAssetSwapType = "in";
     }
 
@@ -414,7 +414,7 @@ export async function getStaticProps({ params }) {
 
         marketsSummary.push({
           question: market.question,
-          marketId: market.marketId,
+          marketId: market.marketId.toString(),
           baseAssetId: parseAssetIdString(market.baseAsset) as BaseAssetId,
           profit: usdProfitLoss.div(ZTG).toNumber(),
         });

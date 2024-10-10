@@ -148,7 +148,7 @@ const PoolDetails: NextPage = () => {
         </div>
       </div>
       <div className="">
-        <MarketLiquiditySection market={market} />
+        {/* <MarketLiquiditySection market={market} /> */}
       </div>
     </>
   );

@@ -28,7 +28,12 @@ const IndexPage: NextPage = () => {
 
       <HeroBanner
         bannerPlaceholder="" // You can replace with the relevant placeholder logic.
-        ztgHistory={[]} // If you have specific price history data.
+        ztgHistory={{
+          prices: [
+            [1, 0],
+            [1, 0],
+          ],
+        }} // If you have specific price history data.
       />
 
       <div className="mb-12">
@@ -39,7 +44,7 @@ const IndexPage: NextPage = () => {
         />
       </div>
 
-      {markets?.length > 0 && (
+      {markets?.length && markets.length > 0 && (
         <div className="mb-12">
           <MarketScroll
             title="Featured Markets"

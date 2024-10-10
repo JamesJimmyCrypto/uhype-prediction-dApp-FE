@@ -118,8 +118,10 @@ export async function getStaticProps() {
     }
   }
 
-  for (const market of [...featuredMarkets, ...trendingMarkets]) {
-    const cmsData = marketsCmsData.find((m) => m.marketId === market.marketId);
+  for (const market of [...featuredMarkets]) {
+    const cmsData = marketsCmsData.find(
+      (m) => m.marketId?.toString() === market.marketId.toString(),
+    );
     if (cmsData?.question) market.question = cmsData.question;
     if (cmsData?.imageUrl) market.img = cmsData.imageUrl;
   }
@@ -129,7 +131,7 @@ export async function getStaticProps() {
       dehydratedState: dehydrate(queryClient),
       news: news,
       featuredMarkets: featuredMarkets ?? [],
-      trendingMarkets: trendingMarkets ?? [],
+      trendingMarkets: featuredMarkets ?? [],
       bannerPlaceholder: bannerPlaceholder.base64 ?? "",
       categoryPlaceholders: categoryPlaceholders.map((c) => c.base64) ?? [],
       newsImagePlaceholders: newsImagePlaceholders.map((c) => c.base64) ?? [],
