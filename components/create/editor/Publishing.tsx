@@ -110,6 +110,9 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
   const foreignAssetBalanceDelta = foreignCurrencyCost;
 
   const handleCreateMarket = async () => {
+    console.log("Creating market with params:", creationParams);
+    if (!creationParams) return;
+    const { description, question: title, tags } = creationParams?.metadata;
     if (!publicKey) {
       alert("Please connect your wallet!");
       return;
@@ -117,13 +120,13 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
     try {
       // Create the market using the hook's createMarket mutation
       const { signature } = await createMarket.mutateAsync({
-        title: "Will SOL hit $500 by 2024?",
-        description: "ok",
+        title,
+        description,
         coverUrl:
           "https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png",
         answers: ["Yes", "No"],
-        serviceFeePercentage: new BN(1),
-        creatorFeePercentage: new BN(2),
+        serviceFeePercentage: new BN(0.3),
+        creatorFeePercentage: new BN(1),
       });
 
       const explorerUrl = getExplorerUrl(signature, "devnet"); // Replace "devnet" with "mainnet-beta" for production
