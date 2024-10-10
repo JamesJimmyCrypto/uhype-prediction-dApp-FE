@@ -15,14 +15,18 @@ import LimitOrderForm, {
   LimitSellOrderForm,
 } from "./LimitOrderForm";
 import { ChevronDown } from "react-feather";
+import { BN } from "@coral-xyz/anchor";
+import { Market } from "@/src/types";
 
 const Amm2TradeForm = ({
   marketId,
+  market,
   selectedTab,
   initialAsset,
   showTabs = true,
 }: {
   marketId: string;
+  market: Market;
   selectedTab?: TradeTabType;
   initialAsset?: MarketOutcomeAssetId;
   showTabs?: boolean;
@@ -33,10 +37,10 @@ const Amm2TradeForm = ({
   const [amountReceived, setAmountReceived] = useState<Decimal>();
   const [amountIn, setAmountIn] = useState<Decimal>();
   const [outcomeAsset, setOutcomeAsset] = useState<MarketOutcomeAssetId>();
-  const { data: market } = useMarket({ marketId });
-  const baseAsset = parseAssetIdString(market?.baseAsset);
-  const { data: assetMetadata } = useAssetMetadata(baseAsset);
-  const baseSymbol = assetMetadata?.symbol;
+  // const { data: market } = useMarket({ marketId });
+  // const baseAsset = parseAssetIdString(market?.baseAsset);
+  // const { data: assetMetadata } = useAssetMetadata(baseAsset);
+  const baseSymbol = "SOL";
 
   useEffect(() => {
     setTabType(selectedTab ?? TradeTabType.Buy);
@@ -69,11 +73,7 @@ const Amm2TradeForm = ({
               ? amountReceived?.div(ZTG)
               : amountIn?.div(ZTG)
           }
-          tokenName={
-            outcomeAsset && market?.categories
-              ? (market.categories[getIndexOf(outcomeAsset)].name ?? "")
-              : ""
-          }
+          tokenName={"SOL"}
           baseTokenAmount={
             tabType === TradeTabType.Buy
               ? amountIn?.div(ZTG)
@@ -81,7 +81,7 @@ const Amm2TradeForm = ({
           }
           baseToken={baseSymbol}
           marketId={marketId}
-          marketQuestion={market?.question ?? ""}
+          marketQuestion={market?.title ?? ""}
           onContinueClick={() => {
             setShowSuccessBox(false);
           }}
@@ -127,6 +127,7 @@ const Amm2TradeForm = ({
                 <Tab.Panel>
                   <BuyForm
                     marketId={marketId}
+                    market={market}
                     initialAsset={initialAsset}
                     onSuccess={(data, asset, amount) => {
                       handleSuccess(data);

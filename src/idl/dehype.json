@@ -76,8 +76,20 @@
           }
         },
         {
-          "name": "creatorFeePercentage",
-          "type": "u64"
+          "name": "outcomeTokenNames",
+          "type": {
+            "option": {
+              "vec": "string"
+            }
+          }
+        },
+        {
+          "name": "outcomeTokenLogos",
+          "type": {
+            "option": {
+              "vec": "string"
+            }
+          }
         },
         {
           "name": "serviceFeePercentage",
@@ -291,15 +303,7 @@
             "type": "u64"
           },
           {
-            "name": "serviceFeePercentage",
-            "type": "u64"
-          },
-          {
             "name": "marketTotalTokens",
-            "type": "u64"
-          },
-          {
-            "name": "marketRemainTokens",
             "type": "u64"
           },
           {
@@ -339,6 +343,14 @@
           {
             "name": "answerTotalTokens",
             "type": "u64"
+          },
+          {
+            "name": "outcomeTokenName",
+            "type": "string"
+          },
+          {
+            "name": "outcomeTokenLogo",
+            "type": "string"
           }
         ]
       }
@@ -408,10 +420,20 @@
     {
       "code": 6012,
       "name": "InsufficientBalance",
-      "msg": "Market/Receive: Insufficient balance"
+      "msg": "Market/Retrive: Insufficient balance"
+    },
+    {
+      "code": 6013,
+      "name": "CreatorFeeTooHigh",
+      "msg": "Market/Create: Creator fee is too high"
+    },
+    {
+      "code": 6014,
+      "name": "InvalidArguments",
+      "msg": "Invalid arguments"
     }
   ],
   "metadata": {
-    "address": "NKTKmCPzV3GUtBZLp7QPgaww5VE78rX3mmn4cnrHsgp"
+    "address": "7fKSTrQLMk4K8svWTZ6dpD7mFVVfQdZ2TUb9MfqfAUWK"
   }
 }
