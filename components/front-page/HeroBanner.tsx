@@ -116,10 +116,7 @@ export const HeroBanner = ({
             priority
             className="object-cover"
             blurDataURL={bannerPlaceholder}
-<<<<<<< HEAD
-=======
             // placeholder="blur"
->>>>>>> 839c44dc5df72d0cbb15262e721ddb362b37d14f
             src="/banner.jpg"
           />
         </div>
