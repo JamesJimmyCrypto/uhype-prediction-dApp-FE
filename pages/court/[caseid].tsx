@@ -430,9 +430,9 @@ const CasePage: NextPage = ({
             )}
           </div>
 
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <MarketDescription market={market} />
-          </div>
+          </div> */}
 
           {stage?.type !== "reassigned" && (
             <>

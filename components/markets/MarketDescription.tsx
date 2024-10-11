@@ -1,22 +1,14 @@
 import { PortableText } from "@portabletext/react";
-import { useMarketCmsMetadata } from "lib/hooks/queries/cms/useMarketCmsMetadata";
 import { isArray, isString } from "lodash-es";
-import { FullMarketFragment } from "@zeitgeistpm/indexer";
-import { MarketPageIndexedData } from "lib/gql/markets";
 import dynamic from "next/dynamic";
+import { Market } from "@/src/types";
 
 const QuillViewer = dynamic(() => import("components/ui/QuillViewer"), {
   ssr: false,
 });
 
-export const MarketDescription = ({
-  market,
-}: {
-  market: FullMarketFragment | MarketPageIndexedData | MarketPageIndexedData;
-}) => {
-  const { data: marketCmsMetadata } = useMarketCmsMetadata(market.marketId);
-
-  const description = marketCmsMetadata?.description ?? market.description;
+export const MarketDescription = ({ market }: { market: Market }) => {
+  const description = market.description;
 
   return (
     <>

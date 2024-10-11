@@ -537,7 +537,7 @@ const Market = () => {
           </div>
 
           <div className="mb-12 max-w-[90vw]">
-            {/* <MarketDescription market={market} /> */}
+            <MarketDescription market={market} />
           </div>
 
           {/* <AddressDetails title="Oracle" address={market.oracle} /> */}
@@ -625,7 +625,10 @@ const Market = () => {
                 <ReferendumSummary referendumIndex={referendumIndex} />
               </div>
             )} */}
-               <SimilarMarketsSection market={market ?? undefined} size="large" />
+              <SimilarMarketsSection
+                market={market ?? undefined}
+                size="large"
+              />
             </div>
           </div>
         </div>
@@ -633,7 +636,7 @@ const Market = () => {
       </div>
 
       {/* Mobile Sidebar */}
-      <div className="block md:hidden -mr-6 w-full">
+      <div className="-mr-6 block w-full md:hidden">
         <div className="sticky top-28">
           <div
             className="mb-12 animate-pop-in rounded-lg opacity-100 shadow-lg"
@@ -646,7 +649,6 @@ const Market = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };
