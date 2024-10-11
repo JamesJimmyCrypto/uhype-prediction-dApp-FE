@@ -626,7 +626,7 @@ const MarketHeader: FC<{
         )} */}
       </div>
 
-      <div className="flex w-full">
+      {/* <div className="flex w-full">
         {marketStage?.type === "Court" ? (
           <div className="w-full">
             <h3 className="mb-2 text-sm text-gray-700">Market is in court</h3>
@@ -641,7 +641,7 @@ const MarketHeader: FC<{
         ) : (
           <MarketTimerSkeleton />
         )}
-      </div>
+      </div> */}
 
       {/* {(status === "Reported" ||
         status === "Disputed" ||
