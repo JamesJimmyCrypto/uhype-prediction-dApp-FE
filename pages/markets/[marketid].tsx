@@ -492,7 +492,7 @@ const Market = () => {
                 />
               </div>
             )} */}
-          {isLoading === false && (
+          {/* {isLoading === false && (
             <div className="flex h-ztg-22 items-center rounded-ztg-5 bg-vermilion-light p-ztg-20 text-vermilion">
               <div className="h-ztg-20 w-ztg-20">
                 <AlertTriangle size={20} />
@@ -505,7 +505,7 @@ const Market = () => {
                 be traded
               </div>
             </div>
-          )}
+          )} */}
           <div className="my-8">
             {/* {indexedMarket?.marketType?.scalar !== null && (
               <div className="mx-auto mb-8 max-w-[800px]">
@@ -559,9 +559,8 @@ const Market = () => {
               marketId={marketId}
               onPoolDeployed={handlePoolDeployed}
             />
-          )} */}
-
-          {market && marketHasPool && (
+          )} 
+              {market && marketHasPool && (
             <div className="my-12">
               <div
                 className="mb-8 flex cursor-pointer items-center text-mariner"
@@ -586,10 +585,11 @@ const Market = () => {
                 leaveTo="transform opacity-0 "
                 show={showLiquidity && Boolean(marketHasPool)}
               >
-                {/* <MarketLiquiditySection poll={poolDeployed} market={market} /> */}
+                <MarketLiquiditySection poll={poolDeployed} market={market} /> 
               </Transition>
             </div>
           )}
+           */}
         </div>
 
         <div className="hidden md:-mr-6 md:block md:w-[320px] lg:mr-auto lg:w-[460px]">
