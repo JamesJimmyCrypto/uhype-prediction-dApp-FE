@@ -232,12 +232,12 @@ const SellForm = ({
           <div className="mr-4">{amountOut.div(ZTG).abs().toFixed(3)}</div>
           <div className="mr-[10px]">{baseSymbol}</div>
         </div>
-        <input
+        {/* <input
           className="mb-[10px] mt-[30px] w-full"
           type="range"
           disabled={!selectedAssetBalance}
           {...register("percentage", { value: "0" })}
-        />
+        /> */}
         <div className="mb-[10px] flex w-full flex-col items-center gap-2 text-xs font-normal text-sky-600">
           <div className="h-[16px] text-xs text-vermilion">
             <>{formState.errors["amount"]?.message}</>
@@ -253,7 +253,7 @@ const SellForm = ({
           className="w-full max-w-[250px]"
           disabled={formState.isValid === false || true}
           disableFeeCheck={true}
-          loading={true}
+          loading={false}
         >
           <div>
             <div className="center h-[20px] font-normal">Sell</div>

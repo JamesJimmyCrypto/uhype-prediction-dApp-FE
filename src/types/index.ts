@@ -10,9 +10,11 @@ export interface ConfigAccount {
 }
 
 export type Answer = {
-  answerKey: string;             // string
-  name: string;                  // string
-  answerTotalTokens: string;     // string
+  answerKey: string;              // Unique key for the answer
+  name: string;                   // Display name of the answer
+  answerTotalTokens: string;      // Total tokens associated with the answer
+  outcomeTokenName: string;       // Name of the outcome token
+  outcomeTokenLogo: string;       // URL of the outcome token logo
 };
 // Define the MarketAccount type
 export type MarketAccount = {

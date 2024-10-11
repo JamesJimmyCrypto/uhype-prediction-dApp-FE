@@ -41,6 +41,7 @@ const Amm2TradeForm = ({
   // const baseAsset = parseAssetIdString(market?.baseAsset);
   // const { data: assetMetadata } = useAssetMetadata(baseAsset);
   const baseSymbol = "SOL";
+  const { answers } = market;
 
   useEffect(() => {
     setTabType(selectedTab ?? TradeTabType.Buy);
@@ -104,14 +105,14 @@ const Amm2TradeForm = ({
                 selected={tabType === TradeTabType.Buy}
                 className="rounded-tl-[10px]"
               >
-                Buy
+                {answers[0].name.toString()}
               </Tab>
               <Tab
                 as={TradeTab}
                 selected={tabType === TradeTabType.Sell}
                 className="rounded-tr-[10px]"
               >
-                Sell
+                {answers[1].name.toString()}
               </Tab>
             </Tab.List>
             <OrderTypeSelector
@@ -137,8 +138,9 @@ const Amm2TradeForm = ({
                   />
                 </Tab.Panel>
                 <Tab.Panel>
-                  <SellForm
+                  <BuyForm
                     marketId={marketId}
+                    market={market}
                     initialAsset={initialAsset}
                     onSuccess={(data, asset, amount) => {
                       handleSuccess(data);
@@ -223,14 +225,14 @@ const OrderTypeSelector = ({
           >
             Market
           </button>
-          <button
+          {/* <button
             className={`${
               value === "limit" ? "font-medium text-black" : "text-sky-600"
             } `}
             onClick={() => handleTypeClick("limit")}
           >
             Limit
-          </button>
+          </button> */}
         </div>
       )}
     </div>
