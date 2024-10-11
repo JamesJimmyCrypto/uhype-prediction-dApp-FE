@@ -530,10 +530,7 @@ const Market = () => {
                 )}
               </div>
             )} */}
-            {/* <MarketAssetDetails
-              marketId={Number(marketid)}
-              categories={market.categories}
-            /> */}
+            <MarketAssetDetails marketId={marketIdString} answers={market.answers} />
           </div>
 
           <div className="mb-12 max-w-[90vw]">
