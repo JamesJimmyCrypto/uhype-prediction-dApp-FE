@@ -7,16 +7,19 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { SystemProgram } from "@solana/web3.js";
 import { Answer, Market, MarketAccount, MarketResponse } from "src/types/index";
 import { ComputeBudgetProgram, SendTransactionError } from "@solana/web3.js";
+import { useNotifications } from "@/lib/state/notifications";
+import { getExplorerUrl } from "@/lib/util";
 export function useMarketProgram() {
   const provider = useAnchorProvider();
   const { publicKey, sendTransaction, signTransaction } = useWallet();
   const { connection } = useConnection();
   const program = new Program(
     marketIDL as Idl,
-    "4RtM2Uf1xfeMbjXMjXYPZnwoTx9Jom2sFQyZstX2zQvk",
+    "7fKSTrQLMk4K8svWTZ6dpD7mFVVfQdZ2TUb9MfqfAUWK",
     provider,
   );
   const queryClient = useQueryClient();
+  const notificationStore = useNotifications();
 
   const createMarket = useMutation({
     mutationKey: ["createMarket"],
@@ -26,7 +29,7 @@ export function useMarketProgram() {
       coverUrl,
       answers,
       creatorFeePercentage,
-      serviceFeePercentage
+      serviceFeePercentage,
     }: {
       title: string;
       description: string;
@@ -35,26 +38,23 @@ export function useMarketProgram() {
       creatorFeePercentage: BN; // u64
       serviceFeePercentage: BN; // u64
     }) => {
-      const marketKey = new BN(Math.floor(Math.random() * 10000))
-      console.log({ connection, publicKey, signTransaction })
+      const marketKey = new BN(Math.floor(Math.random() * 10000));
+      console.log({ connection, publicKey, signTransaction });
       if (!publicKey) throw new Error("Wallet not connected");
       const [marketPDA] = PublicKey.findProgramAddressSync(
         [Buffer.from("market"), marketKey.toArrayLike(Buffer, "le", 8)],
-        program.programId
+        program.programId,
       );
 
       const [answerPDA] = PublicKey.findProgramAddressSync(
         [Buffer.from("answer"), marketKey.toArrayLike(Buffer, "le", 8)],
-        program.programId
+        program.programId,
       );
-
-
 
       const [vaultPDA] = PublicKey.findProgramAddressSync(
         [Buffer.from("market_vault"), marketKey.toArrayLike(Buffer, "le", 8)],
-        program.programId
+        program.programId,
       );
-
 
       // Create a transaction to increase compute units
       // Add the createMarket instruction to the transaction
@@ -65,8 +65,9 @@ export function useMarketProgram() {
           description,
           coverUrl,
           answers,
+          ["WIN", "LOSE"],
+          [coverUrl, coverUrl],
           creatorFeePercentage,
-          serviceFeePercentage,
         )
         .accounts({
           creator: publicKey,
@@ -77,22 +78,24 @@ export function useMarketProgram() {
         })
         .transaction(); // Use `instruction()` to get the instruction instead of transaction
 
-
       const { blockhash } = await connection.getLatestBlockhash();
       transaction.recentBlockhash = blockhash;
       transaction.feePayer = publicKey;
 
       // Sign the transaction with the wallet
       if (!signTransaction) {
-        throw new Error("Wallet not connected or signTransaction method is not available.");
+        throw new Error(
+          "Wallet not connected or signTransaction method is not available.",
+        );
       }
-
 
       try {
         const signedTransaction = await signTransaction(transaction);
 
         const serializedTransaction = signedTransaction.serialize();
-        const signature = await connection.sendRawTransaction(serializedTransaction);
+        const signature = await connection.sendRawTransaction(
+          serializedTransaction,
+        );
         await connection.confirmTransaction(signature, "confirmed");
 
         console.log("Transaction Signature:", signature);
@@ -110,10 +113,6 @@ export function useMarketProgram() {
       queryClient.invalidateQueries({ queryKey: ["getMarketAccounts"] });
     },
   });
-
-
-
-
 
   // const createMarket = useMutation({
   //   mutationKey: ["createMarket"],
@@ -186,7 +185,8 @@ export function useMarketProgram() {
 
   const getMarkets = async (): Promise<Market[]> => {
     try {
-      const responses = (await program.account.marketAccount.all()) as MarketResponse[];
+      const responses =
+        (await program.account.marketAccount.all()) as MarketResponse[];
 
       const marketsWithAnswers = await Promise.all(
         responses.map(async (market) => {
@@ -197,7 +197,7 @@ export function useMarketProgram() {
             publicKey: market.publicKey,
             answers: answers.answers as Answer[],
           };
-        })
+        }),
       );
       return marketsWithAnswers;
     } catch (error) {
@@ -216,14 +216,16 @@ export function useMarketProgram() {
   // Original getMarket function
   const getMarket = async (marketPublicKey: PublicKey): Promise<Market> => {
     try {
-      const marketAccount = await program.account.marketAccount.fetch(marketPublicKey) as MarketResponse;
-      console.log({ marketAccount })
-      const answers = await getMarketAnswers(marketAccount.account.marketKey);
-      console.log({ answers })
+      const marketAccount = (await program.account.marketAccount.fetch(
+        marketPublicKey,
+      )) as MarketAccount;
+      console.log({ marketAccount });
+      const answers = await getMarketAnswers(marketAccount.marketKey);
+      console.log({ answers });
 
       return {
         publicKey: marketPublicKey,
-        ...marketAccount.account,
+        ...marketAccount,
         answers: answers.answers as Answer[],
       };
     } catch (error) {
@@ -242,14 +244,15 @@ export function useMarketProgram() {
       };
     }
     // Convert string to PublicKey if necessary
-    const publicKey = typeof marketPublicKey === "string"
-      ? new PublicKey(marketPublicKey)
-      : marketPublicKey;
+    const publicKey =
+      typeof marketPublicKey === "string"
+        ? new PublicKey(marketPublicKey)
+        : marketPublicKey;
 
     return useQuery({
-      queryKey: ["getMarket", publicKey.toString()],
+      queryKey: ["getMarket"],
       queryFn: () => getMarket(publicKey),
-      enabled: !!publicKey,  // Only run the query if the publicKey is available
+      enabled: !!publicKey, // Only run the query if the publicKey is available
     });
   };
 
@@ -268,8 +271,6 @@ export function useMarketProgram() {
   //     throw error;
   //   }
   // };
-
-
 
   const resolveMarket = useMutation({
     mutationKey: ["resolveMarket"],
@@ -297,7 +298,9 @@ export function useMarketProgram() {
 
       // Sign the transaction with the user's wallet
       if (!signTransaction) {
-        throw new Error("Wallet not connected or signTransaction method is not available.");
+        throw new Error(
+          "Wallet not connected or signTransaction method is not available.",
+        );
       }
 
       const signedTransaction = await signTransaction(transaction);
@@ -311,10 +314,12 @@ export function useMarketProgram() {
         const serializedTransaction = signedTransaction.serialize();
 
         // Send the raw transaction to the Solana network
-        const signature = await connection.sendRawTransaction(serializedTransaction);
+        const signature = await connection.sendRawTransaction(
+          serializedTransaction,
+        );
 
         // Confirm the transaction
-        await connection.confirmTransaction(signature, 'confirmed');
+        await connection.confirmTransaction(signature, "confirmed");
 
         console.log("Transaction Signature:", signature);
         return signature;
@@ -328,12 +333,10 @@ export function useMarketProgram() {
     },
   });
 
-
-
   const answerPDA = (marketKey: BN): PublicKey => {
     return PublicKey.findProgramAddressSync(
       [Buffer.from("answer"), marketKey.toArrayLike(Buffer, "le", 8)],
-      program.programId
+      program.programId,
     )[0];
   };
 
@@ -342,6 +345,125 @@ export function useMarketProgram() {
     const answerData = await program.account.answerAccount.fetch(answerPDAKey);
     return answerData;
   };
+
+  const placeBet = async ({
+    voter,
+    marketKey,
+    betAmount,
+    answerKey,
+  }: {
+    voter: PublicKey;
+    marketKey: BN;
+    betAmount: BN;
+    answerKey: string;
+  }): Promise<string> => {
+    if (!publicKey) throw new Error("Wallet not connected");
+
+    // Create the transaction to place the bet
+    const transaction = await program.methods
+      .bet(answerKey, betAmount)
+      .accounts({
+        voter: voter,
+        marketAccount: PublicKey.findProgramAddressSync(
+          [Buffer.from("market"), marketKey.toArrayLike(Buffer, "le", 8)],
+          program.programId,
+        )[0],
+        vaultAccount: PublicKey.findProgramAddressSync(
+          [Buffer.from("market_vault"), marketKey.toArrayLike(Buffer, "le", 8)],
+          program.programId,
+        )[0],
+        answerAccount: PublicKey.findProgramAddressSync(
+          [Buffer.from("answer"), marketKey.toArrayLike(Buffer, "le", 8)],
+          program.programId,
+        )[0],
+        betAccount: PublicKey.findProgramAddressSync(
+          [
+            Buffer.from("betting"),
+            voter.toBuffer(),
+            marketKey.toArrayLike(Buffer, "le", 8),
+            new BN(answerKey).toArrayLike(Buffer, "le", 8),
+          ],
+          program.programId,
+        )[0],
+        systemProgram: SystemProgram.programId,
+      })
+      .transaction();
+
+    const { blockhash } = await connection.getLatestBlockhash();
+    transaction.recentBlockhash = blockhash;
+    transaction.feePayer = publicKey;
+
+    // Sign the transaction
+    if (!signTransaction) {
+      throw new Error(
+        "Wallet not connected or signTransaction method is not available.",
+      );
+    }
+
+    const signedTransaction = await signTransaction(transaction);
+
+    if (!signedTransaction) {
+      throw new Error("Failed to sign the transaction with the wallet.");
+    }
+
+    try {
+      // Serialize the signed transaction
+      const serializedTransaction = signedTransaction.serialize();
+
+      // Send the raw transaction to the Solana network
+      const signature = await connection.sendRawTransaction(
+        serializedTransaction,
+      );
+
+      // Confirm the transaction
+      await connection.confirmTransaction(signature, "confirmed");
+
+      console.log("Transaction Signature:", signature);
+      return signature; // You might want to return the signature or the transaction
+    } catch (error) {
+      if (error instanceof SendTransactionError) {
+        // If the error is a SendTransactionError, get logs
+        console.error("Transaction logs:", await error.getLogs(connection));
+      }
+
+      console.error("Transaction Error:", error);
+      throw error;
+    }
+  };
+
+  // Mutation to use the placeBet function
+  // Mutation to use the placeBet function
+  const useMutateBet = useMutation({
+    mutationKey: ["placeBet"],
+    mutationFn: placeBet,
+    onSuccess: (signature) => {
+      console.log("onsuccess", signature);
+      const explorerUrl = getExplorerUrl(signature, "devnet");
+      notificationStore.pushNotification(
+        <>
+          Bet placed successfully! View the transaction on{" "}
+          <a
+            href={explorerUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "#007bff",
+              fontWeight: "bold",
+              textDecoration: "underline",
+            }}
+          >
+            Explorer
+          </a>
+        </>,
+        {
+          autoRemove: true,
+          type: "Success",
+          lifetime: 15,
+        },
+      );
+      queryClient.invalidateQueries({ queryKey: ["getMarketAccounts"] });
+    },
+  });
 
   return {
     program,
@@ -352,10 +474,10 @@ export function useMarketProgram() {
     useGetMarketsQuery,
     useGetMarketQuery,
     getMarketAnswers,
-    answerPDA
+    answerPDA,
+    mutateBet: useMutateBet.mutate,
   };
 }
-
 
 // old market
 // const dep-createMarket = useMutation({

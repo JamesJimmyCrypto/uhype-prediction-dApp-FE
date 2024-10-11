@@ -1,11 +1,6 @@
 import { ISubmittableResult } from "@polkadot/types/types";
 import { OrderStatus } from "@zeitgeistpm/indexer";
-import {
-  isRpcSdk,
-  MarketOutcomeAssetId,
-  parseAssetId,
-  ZTG,
-} from "@zeitgeistpm/sdk";
+import { MarketOutcomeAssetId, parseAssetId, ZTG } from "@zeitgeistpm/sdk";
 // import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
 
 import FormTransactionButton from "components/ui/FormTransactionButton";
@@ -21,7 +16,6 @@ import { useAssetMetadata } from "lib/hooks/queries/useAssetMetadata";
 import { useBalance } from "lib/hooks/queries/useBalance";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
 import { useMarket } from "lib/hooks/queries/useMarket";
-import { useSdkv2 } from "lib/hooks/useSdkv2";
 import { useNotifications } from "lib/state/notifications";
 import { useWallet } from "@solana/wallet-adapter-react";
 import {
@@ -38,13 +32,20 @@ import { parseAssetIdString } from "lib/util/parse-asset-id";
 import { perbillToNumber } from "lib/util/perbill-to-number";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useMarketProgram } from "@/src/hooks";
+import { PublicKey } from "@solana/web3.js";
+import { BN } from "@coral-xyz/anchor";
+import { Market } from "@/src/types";
+import { getExplorerUrl } from "@/lib/util";
 
 const BuyForm = ({
   marketId,
+  market,
   initialAsset,
   onSuccess,
 }: {
   marketId: string;
+  market: Market;
   initialAsset?: MarketOutcomeAssetId;
   onSuccess: (
     data: ISubmittableResult,
@@ -52,7 +53,7 @@ const BuyForm = ({
     amountIn: Decimal,
   ) => void;
 }) => {
-  const constants = useChainConstants();
+  const { mutateBet } = useMarketProgram();
   const {
     register,
     handleSubmit,
@@ -65,17 +66,13 @@ const BuyForm = ({
     reValidateMode: "onChange",
     mode: "onChange",
   });
-  const [sdk] = useSdkv2();
   const notificationStore = useNotifications();
-  const { data: market } = useMarket({
-    marketId,
-  });
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString() ?? "";
-  const baseAsset = parseAssetIdString(market?.baseAsset);
-  const { data: assetMetadata } = useAssetMetadata(baseAsset);
-  const baseSymbol = assetMetadata?.symbol;
-  const { data: baseAssetBalance } = useBalance(pubKey, baseAsset);
+  // const baseAsset = parseAssetIdString(market?.baseAsset);
+  // const { data: assetMetadata } = useAssetMetadata(baseAsset);
+  // const baseSymbol = assetMetadata?.symbol;
+  // const { data: baseAssetBalance } = useBalance(pubKey, baseAsset);
   const { data: pool } = useAmm2Pool(marketId);
   // const { data: orders } = useOrders({
   //   marketId_eq: marketId,
@@ -83,92 +80,66 @@ const BuyForm = ({
   // });
 
   const swapFee = pool?.swapFee.div(ZTG);
-  const creatorFee = new Decimal(perbillToNumber(market?.creatorFee ?? 0));
+  const creatorFee = new Decimal(perbillToNumber(0));
 
-  const outcomeAssets = market?.outcomeAssets.map(
-    (assetIdString) =>
-      parseAssetId(assetIdString).unwrap() as MarketOutcomeAssetId,
-  );
-  const [selectedAsset, setSelectedAsset] = useState<
-    MarketOutcomeAssetId | undefined
-  >(initialAsset ?? outcomeAssets?.[0]);
+  // const outcomeAssets = market?.outcomeAssets.map(
+  //   (assetIdString) =>
+  //     parseAssetId(assetIdString).unwrap() as MarketOutcomeAssetId,
+  // );
+  // const [selectedAsset, setSelectedAsset] = useState<
+  //   MarketOutcomeAssetId | undefined
+  // >(initialAsset ?? outcomeAssets?.[0]);
 
   const formAmount = getValues("amount");
 
   const amountIn = new Decimal(
     formAmount && formAmount !== "" ? formAmount : 0,
   ).mul(ZTG);
-  const assetReserve =
-    pool?.reserves && lookupAssetReserve(pool?.reserves, selectedAsset);
+  // const assetReserve =
+  //   pool?.reserves && lookupAssetReserve(pool?.reserves, selectedAsset);
 
   const validBuy = useMemo(() => {
-    return (
-      assetReserve &&
-      pool.liquidity &&
-      swapFee &&
-      isValidBuyAmount(
-        assetReserve,
-        amountIn,
-        pool.liquidity,
-        swapFee,
-        creatorFee,
-      )
-    );
-  }, [assetReserve, pool?.liquidity, amountIn]);
+    return swapFee;
+  }, [pool?.liquidity, amountIn]);
 
   const maxAmountIn = useMemo(() => {
-    return (
-      assetReserve &&
-      pool &&
-      approximateMaxAmountInForBuy(assetReserve, pool.liquidity)
-    );
-  }, [assetReserve, pool?.liquidity]);
+    return pool;
+  }, [pool?.liquidity]);
 
   const { amountOut, spotPrice, newSpotPrice, priceImpact, maxProfit } =
     useMemo(() => {
-      const amountOut =
-        assetReserve && pool.liquidity && swapFee
-          ? calculateSwapAmountOutForBuy(
-              assetReserve,
-              amountIn,
-              pool.liquidity,
-              swapFee,
-              creatorFee,
-            )
-          : new Decimal(0);
+      const amountOut = new Decimal(0);
 
-      const spotPrice =
-        assetReserve && calculateSpotPrice(assetReserve, pool?.liquidity);
+      // const spotPrice =
+      //   assetReserve && calculateSpotPrice(assetReserve, pool?.liquidity);
 
-      const newSpotPrice =
-        pool?.liquidity &&
-        assetReserve &&
-        swapFee &&
-        calculateSpotPriceAfterBuy(
-          assetReserve,
-          pool.liquidity,
-          amountOut,
-          amountIn,
-          swapFee,
-          creatorFee,
-        );
+      // const newSpotPrice =
+      //   pool?.liquidity &&
+      //   assetReserve &&
+      //   swapFee &&
+      //   calculateSpotPriceAfterBuy(
+      //     assetReserve,
+      //     pool.liquidity,
+      //     amountOut,
+      //     amountIn,
+      //     swapFee,
+      //     creatorFee,
+      //   );
 
-      const priceImpact = spotPrice
-        ? newSpotPrice?.div(spotPrice).minus(1).mul(100)
-        : new Decimal(0);
+      const priceImpact = new Decimal(0);
 
       const maxProfit = amountOut.minus(amountIn);
 
       return {
         amountOut,
-        spotPrice,
-        newSpotPrice,
+        spotPrice: new Decimal(0),
+        newSpotPrice: new Decimal(0),
         priceImpact,
         maxProfit,
       };
-    }, [amountIn, pool?.liquidity, assetReserve]);
+    }, [amountIn, pool?.liquidity]);
 
-  const maxSpendableBalance = baseAssetBalance;
+  const maxSpendableBalance = 0;
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
@@ -178,17 +149,7 @@ const BuyForm = ({
 
       if (name === "percentage") {
         const max = maxAmountIn;
-        setValue(
-          "amount",
-          Number(
-            max
-              .mul(value.percentage)
-              .abs()
-              .div(100)
-              .div(ZTG)
-              .toFixed(3, Decimal.ROUND_DOWN),
-          ),
-        );
+        // setValue("amount", Number(Decimal.ROUND_DOWN)));
       } else if (name === "amount" && value.amount !== "") {
         setValue(
           "percentage",
@@ -204,7 +165,31 @@ const BuyForm = ({
     return () => subscription.unsubscribe();
   }, [watch, maxSpendableBalance, maxAmountIn]);
 
-  const onSubmit = () => {};
+  const handlePlaceBet = async () => {
+    if (!publicKey) return;
+    try {
+      await mutateBet({
+        voter: publicKey,
+        marketKey: market.marketKey, // replace with actual market ID
+        betAmount: new BN(0.1), // amount to bet
+        answerKey: market.answers[0].answerKey, // outcome for the bet
+      });
+      // console.log("Bet placed successfully with signature:", signature);
+
+      // Optionally call onSuccess if you want to perform further actions
+      // onSuccess(signature, market.answers[0].answerKey, new Decimal(0.1));
+    } catch (error) {
+      console.error("Error placing bet:", error);
+      notificationStore.pushNotification("Failed to place bet.", {
+        autoRemove: true,
+        type: "Error",
+        lifetime: 15,
+      });
+    }
+  };
+  const onSubmit = () => {
+    handlePlaceBet();
+  };
   return (
     <div className="flex w-full flex-col items-center gap-8 text-ztg-18-150 font-semibold">
       <form
@@ -244,33 +229,29 @@ const BuyForm = ({
               validate: (value) => {
                 if (value <= 0) {
                   return "Value cannot be zero or less";
-                } else if (maxAmountIn?.div(ZTG)?.lessThanOrEqualTo(value)) {
-                  return `Maximum amount of ${baseSymbol} that can be traded is ${maxAmountIn
-                    .div(ZTG)
-                    .toFixed(3)}`;
-                } else if (validBuy?.isValid === false) {
-                  return validBuy.message;
+                } else if (value == 0) {
+                  return `Maximum amount of that can be traded `;
+                } else if (validBuy) {
+                  return "OK";
                 }
               },
             })}
           />
-          <div className="absolute right-0 mr-[10px]">{baseSymbol}</div>
+          {/* <div className="absolute right-0 mr-[10px]">{baseSymbol}</div> */}
         </div>
-        <input
+        {/* <input
           className="mb-[10px] mt-[30px] w-full"
           type="range"
           disabled={!maxSpendableBalance}
           {...register("percentage", { value: "0" })}
-        />
+        /> */}
         <div className="mb-[10px] flex w-full flex-col items-center gap-2 text-xs font-normal text-sky-600 ">
           <div className="h-[16px] text-xs text-vermilion">
             <>{formState.errors["amount"]?.message}</>
           </div>
           <div className="flex w-full justify-between">
             <div>Max profit:</div>
-            <div className="text-black">
-              {maxProfit.div(ZTG).toFixed(2)} {baseSymbol}
-            </div>
+            <div className="text-black">{maxProfit.toFixed(2)}</div>
           </div>
           <div className="flex w-full justify-between">
             <div>Price after trade:</div>
@@ -283,7 +264,7 @@ const BuyForm = ({
           className="w-full max-w-[250px]"
           disabled={formState.isValid}
           disableFeeCheck={true}
-          loading={true}
+          loading={false}
         >
           <div>
             <div className="center h-[20px] font-normal">Buy</div>

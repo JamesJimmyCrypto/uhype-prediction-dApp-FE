@@ -319,11 +319,7 @@ export const MarketEditor = () => {
                     date in a the range specified by the lower(<b>short</b>) and
                     upper(
                     <b>long</b>) bound.{" "}
-                    <a
-                      className="text-ztg-blue"
-                      href=""
-                      target="_blank"
-                    >
+                    <a className="text-ztg-blue" href="" target="_blank">
                       Learn more.
                     </a>
                   </p>
@@ -422,7 +418,7 @@ export const MarketEditor = () => {
               </div> */}
 
               <div className="mb-6 ">
-                <div className="mb-4 text-center">
+                {/* <div className="mb-4 text-center">
                   <h2 className="flex items-center justify-center gap-2 text-base">
                     Set Report Period
                     <InfoPopover
@@ -442,7 +438,7 @@ export const MarketEditor = () => {
                       </p>
                     </InfoPopover>
                   </h2>
-                </div>
+                </div> */}
                 {/* <div className="flex justify-center">
                   <BlockPeriodPicker
                     disabled={!fieldsState.endDate.isValid}
@@ -458,7 +454,7 @@ export const MarketEditor = () => {
               </div>
 
               <div className="mb-0">
-                <div className="mb-4 text-center">
+                {/* <div className="mb-4 text-center">
                   <h2 className="flex items-center justify-center gap-2 text-base">
                     Set Dispute Period
                     <InfoPopover
@@ -476,7 +472,7 @@ export const MarketEditor = () => {
                       </p>
                     </InfoPopover>
                   </h2>
-                </div>
+                </div> */}
                 {/* <div className="flex justify-center">
                   <BlockPeriodPicker
                     disabled={!fieldsState.endDate.isValid}

@@ -203,24 +203,24 @@ type MarketPageProps = {
   hasLiveTwitchStream: boolean;
 };
 
-const Market: NextPage<MarketPageProps> = ({
-  chartSeries,
-  resolutionTimestamp,
-  promotionData,
-  cmsMetadata,
-  hasLiveTwitchStream: hasLiveTwitchStreamServer,
-}) => {
+export async function getServerSideProps(context) {
+  const { marketid } = context.params;
+  // Fetch your data here
+  return {
+    props: {
+      // Your props
+    },
+  };
+}
+
+const Market = () => {
   const router = useRouter();
   const { marketid } = router.query;
-  const marketId = Number(marketid);
+  const marketIdString = Array.isArray(marketid) ? marketid[0] : marketid;
   const { useGetMarketQuery } = useMarketProgram();
-  const {
-    data: market,
-    isLoading,
-    error,
-  } = useGetMarketQuery(new PublicKey(marketid!));
   const { publicKey } = useWallet();
-  const pubKey = publicKey?.toString();
+  const [showLiquidity, setShowLiquidity] = useState(false);
+  const [showTwitchChat, setShowTwitchChat] = useState(true);
   // const { data: orders, isLoading: isOrdersLoading } = useOrders({
   //   marketId_eq: marketId,
   //   makerAccountId_eq: pubKey,
@@ -228,7 +228,22 @@ const Market: NextPage<MarketPageProps> = ({
 
   // const tradeItem = useTradeItem();
 
-  if (market == null) {
+  const {
+    data: market,
+    isLoading,
+    error,
+  } = useGetMarketQuery(
+    marketIdString ? new PublicKey(marketIdString) : undefined,
+  );
+  if (!marketIdString) {
+    return <NotFoundPage backText="Back To Markets" backLink="/" />;
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error || !market) {
     return <NotFoundPage backText="Back To Markets" backLink="/" />;
   }
 
@@ -244,10 +259,8 @@ const Market: NextPage<MarketPageProps> = ({
   //   });
   // }, [marketId]);
 
-  const [showLiquidityParam, setShowLiquidityParam, unsetShowLiquidityParam] =
+  const [_, setShowLiquidityParam, unsetShowLiquidityParam] =
     useQueryParamState("showLiquidity");
-
-  const showLiquidity = showLiquidityParam != null;
 
   // const [poolDeployed, setPoolDeployed] = useState(false);
 
@@ -311,16 +324,16 @@ const Market: NextPage<MarketPageProps> = ({
   //   // }
   // }, [market]);
 
-  const hasChart = Boolean(chartSeries);
+  const hasChart = Boolean(false);
   // const hasChart = Boolean(chartSeries && (market?.pool || market.neoPool));
 
-  const twitchStreamChannelName = extractChannelName(
-    cmsMetadata?.twitchStreamUrl,
-  );
+  // const twitchStreamChannelName = extractChannelName(
+  //   cmsMetadata?.twitchStreamUrl,
+  // );
 
-  const hasTwitchStream = Boolean(twitchStreamChannelName);
+  // const hasTwitchStream = Boolean(twitchStreamChannelName);
 
-  const activeTabsCount = [hasChart, hasTwitchStream].filter(Boolean).length;
+  // const activeTabsCount = [hasChart, hasTwitchStream].filter(Boolean).length;
 
   // const { data: hasLiveTwitchStreamClient } = useQuery(
   //   [],
@@ -358,7 +371,7 @@ const Market: NextPage<MarketPageProps> = ({
             // disputes={lastDispute}
             token={token}
             // marketStage={marketStage ?? undefined}
-            promotionData={promotionData}
+            promotionData={null}
             rejectReason={undefined}
           />
 
@@ -479,7 +492,7 @@ const Market: NextPage<MarketPageProps> = ({
                 />
               </div>
             )} */}
-          {isLoading === false && (
+          {/* {isLoading === false && (
             <div className="flex h-ztg-22 items-center rounded-ztg-5 bg-vermilion-light p-ztg-20 text-vermilion">
               <div className="h-ztg-20 w-ztg-20">
                 <AlertTriangle size={20} />
@@ -492,7 +505,7 @@ const Market: NextPage<MarketPageProps> = ({
                 be traded
               </div>
             </div>
-          )}
+          )} */}
           <div className="my-8">
             {/* {indexedMarket?.marketType?.scalar !== null && (
               <div className="mx-auto mb-8 max-w-[800px]">
@@ -534,7 +547,7 @@ const Market: NextPage<MarketPageProps> = ({
               {/* <LatestTrades limit={3} marketId={marketId} /> */}
               <Link
                 className="w-full text-center text-ztg-blue"
-                href={`/latest-trades?marketId=${marketId}`}
+                href={`/latest-trades?marketId=${marketid}`}
               >
                 View more
               </Link>
@@ -546,9 +559,8 @@ const Market: NextPage<MarketPageProps> = ({
               marketId={marketId}
               onPoolDeployed={handlePoolDeployed}
             />
-          )} */}
-
-          {market && marketHasPool && (
+          )} 
+              {market && marketHasPool && (
             <div className="my-12">
               <div
                 className="mb-8 flex cursor-pointer items-center text-mariner"
@@ -573,10 +585,11 @@ const Market: NextPage<MarketPageProps> = ({
                 leaveTo="transform opacity-0 "
                 show={showLiquidity && Boolean(marketHasPool)}
               >
-                {/* <MarketLiquiditySection poll={poolDeployed} market={market} /> */}
+                <MarketLiquiditySection poll={poolDeployed} market={market} /> 
               </Transition>
             </div>
           )}
+           */}
         </div>
 
         <div className="hidden md:-mr-6 md:block md:w-[320px] lg:mr-auto lg:w-[460px]">
@@ -588,9 +601,10 @@ const Market: NextPage<MarketPageProps> = ({
                   "linear-gradient(180deg, rgba(49, 125, 194, 0.2) 0%, rgba(225, 210, 241, 0.2) 100%)",
               }}
             >
+              <Amm2TradeForm marketId={marketIdString} market={market} />
+
               {/* {market?.status === MarketStatus.Active ? (
                 <>
-                  <Amm2TradeForm marketId={marketId} />
                 </>
               ) : market?.status === MarketStatus.Closed && canReport ? (
                 <>

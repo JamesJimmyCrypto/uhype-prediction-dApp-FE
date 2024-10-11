@@ -1,6 +1,3 @@
-Here's a `README.md` for the frontend of **Dehype** using Solana, Next.js, and Jotai for state management:
-
-```markdown
 # Dehype Frontend
 
 ## Overview
