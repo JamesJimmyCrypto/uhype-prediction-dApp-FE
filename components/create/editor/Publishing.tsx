@@ -120,7 +120,7 @@ export const Publishing = ({ editor, creationParams }: PublishingProps) => {
     try {
       // Create the market using the hook's createMarket mutation
       const { signature } = await createMarket.mutateAsync({
-        title,
+        title: title ?? "Will SOL reached 1000$ at the end of this year?",
         description,
         coverUrl:
           "https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png",
