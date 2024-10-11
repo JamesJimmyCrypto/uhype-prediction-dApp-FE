@@ -67,7 +67,7 @@ const TopBar = () => {
                       {/* <div className="relative hidden h-6 w-6 md:block">
                         <FiGrid size={"100%"} />
                       </div> */}
-                      <div className="hidden md:block bold">Markets</div>
+                      <div className="bold hidden md:block">Markets</div>
                       <div className="block md:hidden">
                         <MenuIcon />
                       </div>
@@ -156,9 +156,7 @@ const TopBar = () => {
                                 {/* <div className="relative h-6 w-6">
                                   <FiAward size={"100%"} />
                                 </div> */}
-                                <h3 className="text-sm bold">
-                                  Leaderboard
-                                </h3>
+                                <h3 className="bold text-sm">Leaderboard</h3>
                               </button>
                             </Link>
                           )}
@@ -207,8 +205,8 @@ const TopBar = () => {
             }}
           </Menu>
 
-          <div className="w-full h-1 bg-blue-500"></div>
-          
+          <div className="h-1 w-full bg-blue-500"></div>
+
           <Link
             className="md:center relative hidden gap-2 font-light text-white md:flex"
             href="/leaderboard/year"
@@ -221,11 +219,11 @@ const TopBar = () => {
         </div>
         <MarketSearch />
         <div className="center relative ml-auto gap-3">
-          {process.env.NEXT_PUBLIC_SHOW_AIRDROP !== "true" ? (
+          {/* {process.env.NEXT_PUBLIC_SHOW_AIRDROP !== "true" ? (
             <GetTokensButton />
           ) : (
             <AirdropButton />
-          )}
+          )} */}
           <AccountButton />
           <Alerts />
         </div>
