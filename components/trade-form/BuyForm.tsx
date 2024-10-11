@@ -239,12 +239,12 @@ const BuyForm = ({
           />
           {/* <div className="absolute right-0 mr-[10px]">{baseSymbol}</div> */}
         </div>
-        <input
+        {/* <input
           className="mb-[10px] mt-[30px] w-full"
           type="range"
           disabled={!maxSpendableBalance}
           {...register("percentage", { value: "0" })}
-        />
+        /> */}
         <div className="mb-[10px] flex w-full flex-col items-center gap-2 text-xs font-normal text-sky-600 ">
           <div className="h-[16px] text-xs text-vermilion">
             <>{formState.errors["amount"]?.message}</>
