@@ -203,27 +203,24 @@ type MarketPageProps = {
   hasLiveTwitchStream: boolean;
 };
 
-const Market: NextPage<MarketPageProps> = ({
-  chartSeries,
-  resolutionTimestamp,
-  promotionData,
-  cmsMetadata,
-  hasLiveTwitchStream: hasLiveTwitchStreamServer,
-}) => {
+export async function getServerSideProps(context) {
+  const { marketid } = context.params;
+  // Fetch your data here
+  return {
+    props: {
+      // Your props
+    },
+  };
+}
+
+const Market = () => {
   const router = useRouter();
   const { marketid } = router.query;
   const marketIdString = Array.isArray(marketid) ? marketid[0] : marketid;
   const { useGetMarketQuery } = useMarketProgram();
-  if (!marketIdString) {
-    return <NotFoundPage backText="Back To Markets" backLink="/" />;
-  }
-  const {
-    data: market,
-    isLoading,
-    error,
-  } = useGetMarketQuery(new PublicKey(marketIdString));
   const { publicKey } = useWallet();
-  const pubKey = publicKey?.toString();
+  const [showLiquidity, setShowLiquidity] = useState(false);
+  const [showTwitchChat, setShowTwitchChat] = useState(true);
   // const { data: orders, isLoading: isOrdersLoading } = useOrders({
   //   marketId_eq: marketId,
   //   makerAccountId_eq: pubKey,
@@ -231,7 +228,22 @@ const Market: NextPage<MarketPageProps> = ({
 
   // const tradeItem = useTradeItem();
 
-  if (market == null) {
+  const {
+    data: market,
+    isLoading,
+    error,
+  } = useGetMarketQuery(
+    marketIdString ? new PublicKey(marketIdString) : undefined,
+  );
+  if (!marketIdString) {
+    return <NotFoundPage backText="Back To Markets" backLink="/" />;
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error || !market) {
     return <NotFoundPage backText="Back To Markets" backLink="/" />;
   }
 
@@ -247,10 +259,8 @@ const Market: NextPage<MarketPageProps> = ({
   //   });
   // }, [marketId]);
 
-  const [showLiquidityParam, setShowLiquidityParam, unsetShowLiquidityParam] =
+  const [_, setShowLiquidityParam, unsetShowLiquidityParam] =
     useQueryParamState("showLiquidity");
-
-  const showLiquidity = showLiquidityParam != null;
 
   // const [poolDeployed, setPoolDeployed] = useState(false);
 
@@ -314,16 +324,16 @@ const Market: NextPage<MarketPageProps> = ({
   //   // }
   // }, [market]);
 
-  const hasChart = Boolean(chartSeries);
+  const hasChart = Boolean(false);
   // const hasChart = Boolean(chartSeries && (market?.pool || market.neoPool));
 
-  const twitchStreamChannelName = extractChannelName(
-    cmsMetadata?.twitchStreamUrl,
-  );
+  // const twitchStreamChannelName = extractChannelName(
+  //   cmsMetadata?.twitchStreamUrl,
+  // );
 
-  const hasTwitchStream = Boolean(twitchStreamChannelName);
+  // const hasTwitchStream = Boolean(twitchStreamChannelName);
 
-  const activeTabsCount = [hasChart, hasTwitchStream].filter(Boolean).length;
+  // const activeTabsCount = [hasChart, hasTwitchStream].filter(Boolean).length;
 
   // const { data: hasLiveTwitchStreamClient } = useQuery(
   //   [],
@@ -361,7 +371,7 @@ const Market: NextPage<MarketPageProps> = ({
             // disputes={lastDispute}
             token={token}
             // marketStage={marketStage ?? undefined}
-            promotionData={promotionData}
+            promotionData={null}
             rejectReason={undefined}
           />
 
@@ -591,10 +601,7 @@ const Market: NextPage<MarketPageProps> = ({
                   "linear-gradient(180deg, rgba(49, 125, 194, 0.2) 0%, rgba(225, 210, 241, 0.2) 100%)",
               }}
             >
-              <Amm2TradeForm
-                marketId={marketIdString}
-                market={market}
-              />
+              <Amm2TradeForm marketId={marketIdString} market={market} />
 
               {/* {market?.status === MarketStatus.Active ? (
                 <>
