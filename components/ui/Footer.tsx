@@ -92,7 +92,10 @@ const Footer = () => {
           <div className="flex w-full justify-between gap-7">
             <FooterMenu
               title="General"
-              links={[{ text: "Website", href: "https://openverse.tech" }]}
+              links={[
+                { text: "Website", href: "https://openverse.tech" },
+                { text: "Dehype's Docs", href: "https://docs.dehype.fun" },
+              ]}
             />
             <FooterMenu
               title="Technology"
@@ -103,7 +106,14 @@ const Footer = () => {
             <FooterMenu
               title="Community"
               links={[
-                { text: "Twitter", href: "https://twitter.com/OpenverseHQ" },
+                {
+                  text: "Project Twitter",
+                  href: "https://twitter.com/dehype_fun",
+                },
+                {
+                  text: "Openverse Twitter",
+                  href: "https://twitter.com/OpenverseHQ",
+                },
               ]}
             />
           </div>
