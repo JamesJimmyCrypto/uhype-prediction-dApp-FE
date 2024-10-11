@@ -4,6 +4,7 @@ import { useAccountModals } from "lib/state/account";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { FC, PropsWithChildren, useMemo } from "react";
 import { Loader } from "./Loader";
+import { useState } from "react";
 
 interface TransactionButtonProps {
   preventDefault?: boolean;
@@ -33,6 +34,8 @@ const TransactionButton: FC<PropsWithChildren<TransactionButtonProps>> = ({
   const pubKey = publicKey?.toString() ?? "";
   const accountModals = useAccountModals();
   const { locationAllowed } = useUserLocation();
+
+  const [isHovered, setIsHovered] = useState(false);
 
   const click = (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (preventDefault) {
@@ -73,19 +76,25 @@ const TransactionButton: FC<PropsWithChildren<TransactionButtonProps>> = ({
   return (
     <>
       {publicKey && (
-        <button
-          type={type}
-          className={`ztg-transition h-[48px] w-[128px] rounded-full text-blue 
-            focus:outline-none disabled:cursor-default ${
-              !isDisabled ? "active:scale-95" : ""
-            } bg-gradient-to-r from-yellow-400 to-orange-500 ${className} px-[12px] 
-            py-[12px] text-[14px] font-bold disabled:!bg-slate-300`}
-          onClick={(e) => click(e)}
-          disabled={isDisabled}
-          data-test={dataTest}
-        >
-          {getButtonChildren()}
-        </button>
+         <button
+         type={type}
+         className={`ztg-transition h-[48px] w-[128px] rounded-xl
+           focus:outline-none disabled:cursor-default ${
+             !isDisabled ? "active:scale-95" : ""
+           } ${className} h-[54px] w-[248px] px-[12px] py-[12px] text-[14px] font-bold disabled:!bg-slate-300`}
+         style={{
+           backgroundColor: "#00fc81", // Màu nền xanh lá cây
+           color: "#00794c", // Màu chữ xanh lá đậm
+           opacity: isHovered ? 0.8 : 1, // Thay đổi độ mờ khi hover
+         }}
+         onMouseEnter={() => setIsHovered(true)} // Khi di chuột vào
+         onMouseLeave={() => setIsHovered(false)} // Khi di chuột ra
+         onClick={(e) => click(e)}
+         disabled={isDisabled}
+         data-test={dataTest}
+       >
+         {getButtonChildren()}
+       </button>
       )}
     </>
   );
