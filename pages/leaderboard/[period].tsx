@@ -19,13 +19,7 @@ import Avatar from "components/ui/Avatar";
 import Modal from "components/ui/Modal";
 import Table, { TableColumn, TableData } from "components/ui/Table";
 import Decimal from "decimal.js";
-import {
-  DAY_SECONDS,
-  endpointOptions,
-  environment,
-  graphQlEndpoint,
-  ZTG,
-} from "lib/constants";
+import { DAY_SECONDS, endpointOptions, ZTG } from "lib/constants";
 import { getDisplayName } from "lib/gql/display-name";
 import {
   getBaseAssetHistoricalPrices,
@@ -169,7 +163,7 @@ export async function getStaticProps({ params }) {
   const [sdk] = await Promise.all([
     create({
       provider: endpointOptions.map((e) => e.value),
-      indexer: graphQlEndpoint,
+      indexer: "graphQlEndpoint",
       storage: ZeitgeistIpfs(),
     }),
   ]);

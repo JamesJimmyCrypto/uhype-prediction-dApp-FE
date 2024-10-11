@@ -1,6 +1,6 @@
 import { Context, create$, Sdk, ZeitgeistIpfsApi } from "@zeitgeistpm/sdk";
 import { atom, useAtom } from "jotai";
-import { endpointOptions as endpoints, graphQlEndpoint } from "lib/constants";
+import { endpointOptions as endpoints } from "lib/constants";
 import { memoize } from "lodash-es";
 import { useEffect, useState } from "react";
 import { Subscription } from "rxjs";
@@ -32,15 +32,12 @@ export const useSdkv2 = (): UseSdkv2 => {
   const [sub, setSub] = useState<Subscription>();
   const [sdk, setSdk] = useAtom(sdkAtom);
 
-  const id = identify(
-    endpoints.map((e) => e.value),
-    graphQlEndpoint,
-  );
+  const id = "sdk"
   const prevId = usePrevious(id);
 
   useEffect(() => {
     const endpointVals = endpoints.map((e) => e.value);
-    if ((id && endpoints) || graphQlEndpoint) {
+    if ((id && endpoints)) {
       if (sub && prevId && id !== prevId) {
         setTimeout(() => {
           init.cache.delete(prevId);
@@ -48,16 +45,16 @@ export const useSdkv2 = (): UseSdkv2 => {
         }, 500);
       }
 
-      const sdk$ = init(endpointVals, graphQlEndpoint);
-      const nextSub = sdk$.subscribe((sdk) => {
-        setSdk(sdk);
-      });
+      // const sdk$ = init(endpointVals, graphQlEndpoint);
+      // const nextSub = sdk$.subscribe((sdk) => {
+      //   setSdk(sdk);
+      // });
 
-      setSub(nextSub);
+      // setSub(nextSub);
 
       return () => {
         setTimeout(() => {
-          nextSub.unsubscribe();
+          // nextSub.unsubscribe();
         }, 500);
       };
     }

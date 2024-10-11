@@ -1,7 +1,6 @@
 import { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCategoryCounts } from "lib/hooks/queries/useCategoryCounts";
 
 export const CATEGORIES = [
   { name: "Sports", imagePath: "/category/sports.png" },
@@ -66,7 +65,7 @@ const Category = ({
 const PopularCategories: FC<{
   imagePlaceholders: string[];
 }> = ({ imagePlaceholders }) => {
-  const { data: counts } = useCategoryCounts();
+  const counts = 6;
 
   const topCategories = CATEGORIES.map((category, index) => ({
     ...category,

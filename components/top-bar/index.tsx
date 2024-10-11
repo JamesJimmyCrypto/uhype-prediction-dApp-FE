@@ -16,7 +16,6 @@ import {
   FiPlusSquare,
   FiList,
 } from "react-icons/fi";
-import { useCategoryCounts } from "lib/hooks/queries/useCategoryCounts";
 import MarketSearch from "components/markets/MarketSearch";
 import { Alerts } from "./Alerts";
 import Modal from "components/ui/Modal";
@@ -304,8 +303,7 @@ const AirdropButton = () => {
 };
 
 const CategoriesMenu = ({ onSelect }: { onSelect: () => void }) => {
-  const { data: counts } = useCategoryCounts();
-
+  const counts = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   const topCategories = CATEGORIES.map((category, index) => ({
     ...category,
     count: counts?.[index] ?? 0,

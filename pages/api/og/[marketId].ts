@@ -2,7 +2,7 @@ import { create } from "@zeitgeistpm/indexer";
 import type { FullMarketFragment, PoolWhereInput } from "@zeitgeistpm/indexer";
 import { parseAssetId } from "@zeitgeistpm/sdk";
 import Decimal from "decimal.js";
-import { graphQlEndpoint, ZTG } from "lib/constants";
+import { ZTG } from "lib/constants";
 import {
   CurrencyMetadata,
   getMetadataForCurrencyByAssetId,
@@ -12,7 +12,7 @@ import moment from "moment";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const sdkPromise = create({
-  uri: graphQlEndpoint,
+  uri: "graphQlEndpoint",
 });
 
 export type MarketImageData = {

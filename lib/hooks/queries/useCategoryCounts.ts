@@ -1,18 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { CATEGORIES } from "components/front-page/PopularCategories";
-import { getCategoryCounts } from "lib/gql/popular-categories";
-import { ZeitgeistIpfs } from "@zeitgeistpm/sdk";
-import { endpointOptions, graphQlEndpoint } from "lib/constants";
 import { create } from "lodash-es";
 
 export const categoryCountsKey = "category-counts";
 
 export const useCategoryCounts = () => {
-  const sdk = create({
-    provider: endpointOptions.map((e) => e.value),
-    indexer: graphQlEndpoint,
-    storage: ZeitgeistIpfs(),
-  });
+
 
   const query = useQuery(
     [categoryCountsKey],
@@ -28,7 +21,7 @@ export const useCategoryCounts = () => {
 
     },
     {
-      enabled: Boolean(sdk),
+      enabled: true,
       keepPreviousData: true,
       staleTime: 100_000,
     },

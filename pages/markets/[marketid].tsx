@@ -39,7 +39,7 @@ import {
   FullCmsMarketMetadata,
   getCmsFullMarketMetadataForMarket,
 } from "lib/cms/markets";
-import { ZTG, environment, graphQlEndpoint } from "lib/constants";
+import { ZTG, environment } from "lib/constants";
 import {
   MarketPageIndexedData,
   WithCmsEdits,

@@ -63,23 +63,6 @@ export const endpoints: EndpointOption[] = [
   // },
 ];
 
-export const graphQlEndpoints: EndpointOption[] = [
-  {
-    value: "https://processor.bsr.zeitgeist.pm/graphql",
-    label: "Battery Park (Testnet)",
-    environment: "staging",
-  },
-  {
-    value: "https://zeitgeist-squid-mainnet.stellate.sh/",
-    label: "Solana (Live)",
-    environment: "production",
-  },
-  // {
-  //   value: "http://localhost:4350/graphql",
-  //   label: "Custom",
-  // },
-];
-
 const getEnvironment = (): Environment => {
   const environments = ["production", "staging"];
   const env = process.env.NEXT_PUBLIC_VERCEL_ENV;
@@ -94,13 +77,6 @@ const getEnvironment = (): Environment => {
 };
 
 export const environment = getEnvironment();
-
-const getGraphQlEndpoint = (): string => {
-  const endpoint = graphQlEndpoints.find((e) => e.environment === environment);
-  return endpoint!.value;
-};
-
-export const graphQlEndpoint = getGraphQlEndpoint();
 
 const getEndpointOptions = (env: Environment): EndpointOption[] => {
   return endpoints.filter((e) => e.environment === env);

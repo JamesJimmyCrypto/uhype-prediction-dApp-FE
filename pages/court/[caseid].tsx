@@ -18,7 +18,7 @@ import { AddressDetails } from "components/markets/MarketAddresses";
 import { MarketDescription } from "components/markets/MarketDescription";
 import { HeaderStat } from "components/markets/MarketHeader";
 import { getCmsFullMarketMetadataForMarket } from "lib/cms/markets";
-import { endpointOptions, graphQlEndpoint } from "lib/constants";
+import { endpointOptions } from "lib/constants";
 import { lookupAssetImagePath } from "lib/constants/foreign-asset";
 import { useMarketCmsMetadata } from "lib/hooks/queries/cms/useMarketCmsMetadata";
 import { useCaseMarketId } from "lib/hooks/queries/court/useCaseMarketId";
@@ -63,7 +63,7 @@ export async function getStaticProps({
 }) {
   const sdk = await create({
     provider: endpointOptions.map((e) => e.value),
-    indexer: graphQlEndpoint,
+    indexer: "",
     storage: ZeitgeistIpfs(),
   });
 

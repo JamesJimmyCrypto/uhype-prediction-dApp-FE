@@ -41,11 +41,13 @@ import { getExplorerUrl } from "@/lib/util";
 const BuyForm = ({
   marketId,
   market,
+  answerKey,
   initialAsset,
   onSuccess,
 }: {
   marketId: string;
   market: Market;
+  answerKey: string;
   initialAsset?: MarketOutcomeAssetId;
   onSuccess: (
     data: ISubmittableResult,
@@ -172,7 +174,7 @@ const BuyForm = ({
         voter: publicKey,
         marketKey: market.marketKey, // replace with actual market ID
         betAmount: new BN(0.1), // amount to bet
-        answerKey: market.answers[0].answerKey, // outcome for the bet
+        answerKey: answerKey, // outcome for the bet
       });
       // console.log("Bet placed successfully with signature:", signature);
 
@@ -267,17 +269,14 @@ const BuyForm = ({
           loading={false}
         >
           <div>
-            <div className="text-center h-[24px]  flex items-center justify-center">
-              <div className="font-bold text-[24px] ">
-                Buy
-              </div>
+            <div className="flex h-[24px]  items-center justify-center text-center">
+              <div className="text-[24px] font-bold ">Buy</div>
             </div>
-      
           </div>
         </FormTransactionButton>
         <div className="center h-[20px] text-ztg-12-120 font-normal">
-              Network fee: {formatNumberCompact(0)} {"SOL"}
-            </div>
+          Network fee: {formatNumberCompact(0)} {"SOL"}
+        </div>
       </form>
     </div>
   );

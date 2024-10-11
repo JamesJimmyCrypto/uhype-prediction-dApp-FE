@@ -11,7 +11,7 @@ import {
   getCmsTopicHeaders,
   marketsForTopic,
 } from "lib/cms/topics";
-import { endpointOptions, graphQlEndpoint, environment } from "lib/constants";
+import { endpointOptions, environment } from "lib/constants";
 import { MarketStats } from "lib/gql/markets-stats";
 import { NextPage } from "next";
 import Image from "next/image";
