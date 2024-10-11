@@ -267,12 +267,17 @@ const BuyForm = ({
           loading={false}
         >
           <div>
-            <div className="center h-[20px] font-normal">Buy</div>
-            <div className="center h-[20px] text-ztg-12-120 font-normal">
-              Network fee: {formatNumberCompact(0)} {"SOL"}
+            <div className="text-center h-[24px]  flex items-center justify-center">
+              <div className="font-bold text-[24px] ">
+                Buy
+              </div>
             </div>
+      
           </div>
         </FormTransactionButton>
+        <div className="center h-[20px] text-ztg-12-120 font-normal">
+              Network fee: {formatNumberCompact(0)} {"SOL"}
+            </div>
       </form>
     </div>
   );
