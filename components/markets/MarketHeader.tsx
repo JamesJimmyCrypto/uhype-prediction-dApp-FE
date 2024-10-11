@@ -45,8 +45,6 @@ import { MarketPromotionCallout } from "./PromotionCallout";
 import Link from "next/link";
 import { Market } from "@/src/types";
 
-
-
 export const QuillViewer = dynamic(
   () => import("../../components/ui/QuillViewer"),
   {
@@ -358,9 +356,10 @@ const MarketHeader: FC<{
   const categories: string[] = [];
   const status = false;
   const period = {
-    start: "31313131",
-    end: "3131313",
+    start: new Date("2024-10-11").getTime().toString(), // 11th October 2024
+    end: new Date("2024-10-31").getTime().toString(), // 31st October 2024
   };
+
   const [showMarketHistory, setShowMarketHistory] = useState(false);
   const starts = Number(period.start);
   const ends = Number(period.end);
