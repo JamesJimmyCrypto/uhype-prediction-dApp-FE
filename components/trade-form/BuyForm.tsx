@@ -1,6 +1,6 @@
 import { ISubmittableResult } from "@polkadot/types/types";
 import { OrderStatus } from "@zeitgeistpm/indexer";
-import { MarketOutcomeAssetId, parseAssetId, ZTG } from "@zeitgeistpm/sdk";
+import { MarketOutcomeAssetId, parseAssetId } from "@zeitgeistpm/sdk";
 // import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
 
 import FormTransactionButton from "components/ui/FormTransactionButton";
@@ -81,7 +81,7 @@ const BuyForm = ({
   //   status_eq: OrderStatus.Placed,
   // });
 
-  const swapFee = pool?.swapFee.div(ZTG);
+  const swapFee = pool?.swapFee;
   const creatorFee = new Decimal(perbillToNumber(0));
 
   // const outcomeAssets = market?.outcomeAssets.map(
@@ -96,7 +96,7 @@ const BuyForm = ({
 
   const amountIn = new Decimal(
     formAmount && formAmount !== "" ? formAmount : 0,
-  ).mul(ZTG);
+  );
   // const assetReserve =
   //   pool?.reserves && lookupAssetReserve(pool?.reserves, selectedAsset);
 
@@ -156,7 +156,6 @@ const BuyForm = ({
         setValue(
           "percentage",
           new Decimal(value.amount)
-            .mul(ZTG)
             .div(maxSpendableBalance)
             .mul(100)
             .toString(),
@@ -200,7 +199,7 @@ const BuyForm = ({
       >
         <div className="flex w-full items-center justify-center rounded-md p-2">
           <div className="mr-4 font-mono">
-            {amountOut.div(ZTG).abs().toFixed(3)}
+            {/* {amountOut.div().abs().toFixed(3)} */}
           </div>
           <div>
             {/* {market && selectedAsset && (
@@ -216,7 +215,7 @@ const BuyForm = ({
             )} */}
           </div>
         </div>
-        <div className="text-sm">For</div>
+        {/* <div className="text-sm">For</div> */}
         <div className="center relative h-[56px] w-full rounded-md bg-white text-ztg-18-150 font-normal">
           <Input
             type="number"
@@ -251,10 +250,10 @@ const BuyForm = ({
           <div className="h-[16px] text-xs text-vermilion">
             <>{formState.errors["amount"]?.message}</>
           </div>
-          <div className="flex w-full justify-between">
+          {/* <div className="flex w-full justify-between">
             <div>Max profit:</div>
             <div className="text-black">{maxProfit.toFixed(2)}</div>
-          </div>
+          </div> */}
           <div className="flex w-full justify-between">
             <div>Price after trade:</div>
             <div className="text-black">
