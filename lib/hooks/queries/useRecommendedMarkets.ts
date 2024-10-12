@@ -11,42 +11,45 @@ export const recommendedMarketsRootKey = "recommended-markets";
 
 export const useRecommendedMarkets = (marketId?: string, limit = 2) => {
   const { useGetMarketsQuery, useGetMarketQuery } = useMarketProgram();
-  const { data: market } = useGetMarketQuery(marketId?.toString());
+  // const { data: market } = useGetMarketQuery(marketId);
 
   const { data: markets, isLoading, error } = useGetMarketsQuery();
-
+  console.log("markets", markets, marketId);
+  // Check if marketId and market exist before running the query
   const query = useQuery(
-    [recommendedMarketsRootKey, market?.publicKey.toString()],
+    [marketId],  // Using marketId as the query key
     async () => {
+      // if (!market || !markets) {
+      //   return {
+      //     markets: [],
+      //     type: "none",
+      //   };
+      // }
+
       const similarMarkets = markets || [];
 
-      if (market?.title && similarMarkets.length > 0) {
-        return {
-          markets: similarMarkets
-            .filter((m) => m.title !== market.title)
-            .slice(0, limit),
-          type: "similar" as const,
-        };
-      } else {
-        const popularMarkets = similarMarkets
+      return similarMarkets
 
-        /// => popular mentric
-        //   m.status === MarketStatus.Active &&
-        // m.marketId !== marketId &&
-        // m.volume > 0 &&
-        // m.scoringRule !== ScoringRule.Parimutuel &&
-        // m.disputeMechanism !== null &&
-        // WHITELISTED_TRUSTED_CREATORS.includes(m.creator)
-        return {
-          markets: popularMarkets,
-          type: "popular" as const,
-        };
-      }
+      // if (market?.title && similarMarkets.length > 0) {
+      //   return {
+      //     markets: similarMarkets
+      //       .filter((m) => m.title !== market.title)
+      //       .slice(0, limit),
+      //     type: "similar" as const,
+      //   };
+      // } else {
+      //   const popularMarkets = similarMarkets
+      //   // Add your filtering logic here for popular markets
+      //   return {
+      //     markets: popularMarkets,
+      //     type: "popular" as const,
+      //   };
+      // }
     },
     {
-      enabled: Boolean(market),
+      enabled: !!marketId,  // Only run the query if market exists
       staleTime: Infinity,
-    },
+    }
   );
 
   return query;
