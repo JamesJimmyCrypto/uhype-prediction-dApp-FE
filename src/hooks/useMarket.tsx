@@ -5,7 +5,14 @@ import { PublicKey, Transaction, Keypair } from "@solana/web3.js";
 import marketIDL from "../idl/dehype.json";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { SystemProgram } from "@solana/web3.js";
-import { Answer, Market, MarketAccount, MarketResponse } from "src/types/index";
+import {
+  Answer,
+  AnswerAccount,
+  Market,
+  MarketAccount,
+  MarketResponse,
+  MarketStats,
+} from "src/types/index";
 import { ComputeBudgetProgram, SendTransactionError } from "@solana/web3.js";
 import { useNotifications } from "@/lib/state/notifications";
 import { getExplorerUrl } from "@/lib/util";
@@ -39,7 +46,6 @@ export function useMarketProgram() {
       serviceFeePercentage: BN; // u64
     }) => {
       const marketKey = new BN(Math.floor(Math.random() * 10000));
-      console.log({ connection, publicKey, signTransaction });
       if (!publicKey) throw new Error("Wallet not connected");
       const [marketPDA] = PublicKey.findProgramAddressSync(
         [Buffer.from("market"), marketKey.toArrayLike(Buffer, "le", 8)],
@@ -358,7 +364,6 @@ export function useMarketProgram() {
     answerKey: string;
   }): Promise<string> => {
     if (!publicKey) throw new Error("Wallet not connected");
-
     // Create the transaction to place the bet
     const transaction = await program.methods
       .bet(answerKey, betAmount)
@@ -465,6 +470,61 @@ export function useMarketProgram() {
     },
   });
 
+  async function fetchMarketStats(marketKey: PublicKey) {
+    // Fetch the MarketAccount
+
+    const marketAccount = (await program.account.marketAccount.fetch(
+      marketKey,
+    )) as MarketAccount;
+
+    const totalVolume = marketAccount.marketTotalTokens;
+
+    // Fetch the AnswerAccount
+    const [answerPDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("answer"),
+        marketAccount.marketKey.toArrayLike(Buffer, "le", 8),
+      ],
+      program.programId,
+    );
+    const answerAccount = (await program.account.answerAccount.fetch(
+      answerPDA,
+    )) as unknown as AnswerAccount;
+    // Calculate percentages for each answer
+    const answerStats = answerAccount.answers.map((answer) => {
+      const percentage =
+        (answer.answerTotalTokens.toNumber() / totalVolume.toNumber()) * 100;
+      console.log(
+        answer,
+        { answerTotalTokens: answer.answerTotalTokens },
+        { totalVolume: totalVolume.toString() },
+        { percentage },
+        "answer",
+      );
+      return {
+        name: answer.name,
+        totalTokens: answer.answerTotalTokens,
+        totalVolume,
+        percentage: percentage.toFixed(2),
+      };
+    });
+
+    return {
+      totalVolume: totalVolume.toNumber(),
+      answerStats,
+    };
+  }
+
+  const useMarketStats = (marketKey: PublicKey | undefined) => {
+    return useQuery<MarketStats>(
+      ["marketStats", marketKey?.toString()], // Query key, using optional chaining for marketKey
+      () => fetchMarketStats(marketKey!), // Non-null assertion since it is guaranteed to be valid when the query runs
+      {
+        enabled: !!marketKey, // Query only runs if marketKey is valid
+      },
+    );
+  };
+
   return {
     program,
     getMarket,
@@ -476,6 +536,8 @@ export function useMarketProgram() {
     getMarketAnswers,
     answerPDA,
     mutateBet: useMutateBet.mutate,
+    fetchMarketStats,
+    useMarketStats,
   };
 }
 

@@ -129,7 +129,7 @@ const Amm2TradeForm = ({
                   <BuyForm
                     marketId={marketId}
                     market={market}
-                    answerKey={answers[0].answerKey}
+                    answerKey={answers[0].answerKey.toString()}
                     initialAsset={initialAsset}
                     onSuccess={(data, asset, amount) => {
                       handleSuccess(data);
@@ -142,7 +142,7 @@ const Amm2TradeForm = ({
                   <BuyForm
                     marketId={marketId}
                     market={market}
-                    answerKey={answers[1].answerKey}
+                    answerKey={answers[1].answerKey.toString()}
                     initialAsset={initialAsset}
                     onSuccess={(data, asset, amount) => {
                       handleSuccess(data);

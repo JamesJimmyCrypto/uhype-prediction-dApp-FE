@@ -43,7 +43,8 @@ import { AddressDetails } from "./MarketAddresses";
 import { MarketTimer, MarketTimerSkeleton } from "./MarketTimer";
 import { MarketPromotionCallout } from "./PromotionCallout";
 import Link from "next/link";
-import { Market } from "@/src/types";
+import { Market, MarketStats } from "@/src/types";
+import { useMarketProgram } from "@/src/hooks";
 
 export const QuillViewer = dynamic(
   () => import("../../components/ui/QuillViewer"),
@@ -325,6 +326,7 @@ const MarketHistory: FC<
 
 const MarketHeader: FC<{
   market: Market;
+  marketStats: MarketStats;
   report?: MarketReport;
   disputes?: MarketDispute;
   resolvedOutcome?: string;
@@ -334,6 +336,7 @@ const MarketHeader: FC<{
   promotionData?: PromotedMarket | null;
 }> = ({
   market,
+  marketStats,
   report,
   disputes,
   resolvedOutcome,
@@ -363,7 +366,6 @@ const MarketHeader: FC<{
   const [showMarketHistory, setShowMarketHistory] = useState(false);
   const starts = Number(period.start);
   const ends = Number(period.end);
-  const volume = new Decimal(0).toNumber();
 
   // const { outcome, by } = getMarketStatusDetails(
   //   marketType,
@@ -378,12 +380,8 @@ const MarketHeader: FC<{
     market.publicKey.toString(),
   );
 
-  const { data: stats, isLoading: isStatsLoading } = useMarketsStats([
-    market.publicKey.toString(),
-  ]);
-
-  const liquidity = stats?.[0].liquidity;
-  const participants = stats?.[0].participants;
+  const totalVolume = marketStats?.totalVolume ?? 0; // Default to 0 if marketStats is undefined
+  const isStatsLoading = !marketStats;
 
   const oracleReported = marketHistory?.reported?.by === oracle;
 
@@ -455,30 +453,30 @@ const MarketHeader: FC<{
               </HeaderStat>
             )} */}
             {token ? (
-              <HeaderStat label="Volume">
-                {formatNumberCompact(volume)}
+              <HeaderStat label="Total Volume">
+                {formatNumberCompact(new Decimal(totalVolume ?? 0).toNumber())}
                 &nbsp;
                 {token}
               </HeaderStat>
             ) : (
               <Skeleton width="150px" height="20px" />
             )}
-            {isStatsLoading === false && token ? (
+            {/* {isStatsLoading === false && token ? (
               <HeaderStat label="Liquidity" border={true}>
-                {formatNumberCompact(new Decimal(liquidity ?? 0).toNumber())}
+                {formatNumberCompact(new Decimal(totalVolume ?? 0).toNumber())}
                 &nbsp;
                 {token}
               </HeaderStat>
             ) : (
               <Skeleton width="150px" height="20px" />
-            )}
-            {isStatsLoading === false && token ? (
+            )} */}
+            {/* {isStatsLoading === false && token ? (
               <HeaderStat label="Traders" border={false}>
                 {formatNumberCompact(participants ?? 0)}
               </HeaderStat>
             ) : (
               <Skeleton width="150px" height="20px" />
-            )}
+            )} */}
           </div>
         </div>
       </div>

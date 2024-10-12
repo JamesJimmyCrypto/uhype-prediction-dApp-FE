@@ -9,10 +9,15 @@ export interface ConfigAccount {
   serviceFeeAccount: PublicKey;
 }
 
+export type AnswerAccount = {
+  bump: number;
+  answers: Answer[];
+  marketKey: string;
+};
 export type Answer = {
-  answerKey: string;              // Unique key for the answer
+  answerKey: BN;              // Unique key for the answer
   name: string;                   // Display name of the answer
-  answerTotalTokens: string;      // Total tokens associated with the answer
+  answerTotalTokens: BN;      // Total tokens associated with the answer
   outcomeTokenName: string;       // Name of the outcome token
   outcomeTokenLogo: string;       // URL of the outcome token logo
 };
@@ -41,12 +46,17 @@ export type MarketResponse = {
   account: MarketAccount;
 };
 
-export type AnswerAccount = {
-  bump: number;                   // u8
-  answers: Answer[];              // vector of `Answer` type
-  marketKey: BN;                  // u64 (BN for large numbers)
+export type AnswerStat = {
+  name: string;
+  totalTokens: BN;  // Assuming totalTokens is a BN (Big Number) type
+  totalVolume: BN;  // Assuming totalVolume is also a BN type
+  percentage: string;
 };
 
+export type MarketStats = {
+  totalVolume: number;
+  answerStats: AnswerStat[];
+};
 
 export type Dehype = {
   "version": "0.1.0",
