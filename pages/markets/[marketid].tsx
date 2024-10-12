@@ -1,5 +1,4 @@
 import { Disclosure, Tab, Transition } from "@headlessui/react";
-import { useQuery } from "@tanstack/react-query";
 import { FullMarketFragment, MarketStatus } from "@zeitgeistpm/indexer";
 import {
   MarketOutcomeAssetId,
@@ -33,13 +32,11 @@ import ReferendumSummary from "components/ui/ReferendumSummary";
 import Skeleton from "components/ui/Skeleton";
 import { ChartSeries } from "components/ui/TimeSeriesChart";
 import Toggle from "components/ui/Toggle";
-import { GraphQLClient } from "graphql-request";
 import { PromotedMarket } from "lib/cms/get-promoted-markets";
 import {
   FullCmsMarketMetadata,
   getCmsFullMarketMetadataForMarket,
 } from "lib/cms/markets";
-import { ZTG, environment } from "lib/constants";
 import {
   MarketPageIndexedData,
   WithCmsEdits,
@@ -217,7 +214,7 @@ const Market = () => {
   const router = useRouter();
   const { marketid } = router.query;
   const marketIdString = Array.isArray(marketid) ? marketid[0] : marketid;
-  const { useGetMarketQuery } = useMarketProgram();
+  const { useGetMarketQuery, useMarketStats } = useMarketProgram();
   const { publicKey } = useWallet();
   const [showLiquidity, setShowLiquidity] = useState(false);
   const [showTwitchChat, setShowTwitchChat] = useState(true);
@@ -227,7 +224,9 @@ const Market = () => {
   // });
 
   // const tradeItem = useTradeItem();
-
+  const { data: marketStats } = useMarketStats(
+    marketIdString ? new PublicKey(marketIdString) : undefined,
+  );
   const {
     data: market,
     isLoading,
@@ -364,13 +363,16 @@ const Market = () => {
             <div className="flex-1 overflow-hidden">
               <MarketMeta market={market} />
 
-              <MarketHeader
-                market={market}
-                resolvedOutcome={undefined}
-                token={token}
-                promotionData={null}
-                rejectReason={undefined}
-              />
+              {marketStats && (
+                <MarketHeader
+                  market={market}
+                  marketStats={marketStats}
+                  resolvedOutcome={undefined}
+                  token={token}
+                  promotionData={null}
+                  rejectReason={undefined}
+                />
+              )}
 
               <div className="mt-4">
                 {/* Tab.Group and other commented out code removed for brevity */}
@@ -380,6 +382,7 @@ const Market = () => {
                 <MarketAssetDetails
                   marketId={marketIdString}
                   answers={market.answers}
+                  marketStats={marketStats}
                 />
               </div>
 
@@ -420,7 +423,7 @@ const Market = () => {
             </div>
           </>
         ) : (
-          <div>Market not found</div>
+          <NotFoundPage backText="Back To Markets" backLink="/" />
         )}
       </div>
 

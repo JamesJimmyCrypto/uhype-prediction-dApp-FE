@@ -14,17 +14,18 @@ import { useMarketSpotPrices } from "lib/hooks/queries/useMarketSpotPrices";
 import { useAssetUsdPrice } from "lib/hooks/queries/useAssetUsdPrice";
 import { parseAssetIdString } from "lib/util/parse-asset-id";
 import dynamic from "next/dynamic";
-import { Answer } from "@/src/types";
+import { Answer, MarketStats } from "@/src/types";
+import { m } from "framer-motion";
 
 const columns: TableColumn[] = [
   { header: "Outcome", accessor: "outcome", type: "text" },
-  // {
-  //   header: "Implied %",
-  //   accessor: "pre",
-  //   type: "percentage",
-  //   collapseOrder: 1,
-  // },
-  // { header: "Price", accessor: "totalValue", type: "currency" },
+  {
+    header: "Percentage(%)",
+    accessor: "percentage",
+    type: "percentage",
+    collapseOrder: 1,
+  },
+  { header: "Total Value", accessor: "totalValue", type: "currency" },
   // {
   //   header: "24Hr Change",
   //   accessor: "change",
@@ -37,9 +38,11 @@ const columns: TableColumn[] = [
 const MarketAssetDetails = ({
   marketId,
   answers,
+  marketStats,
 }: {
   marketId: string;
   answers?: Answer[];
+  marketStats?: MarketStats;
 }) => {
   // const { data: market } = useMarket({ marketId });
   // const baseAsset = parseAssetIdString(market?.baseAsset);
@@ -50,25 +53,28 @@ const MarketAssetDetails = ({
 
   const totalAssetPrice = 0;
 
-  const tableData: TableData[] | undefined = answers?.map((answer, index) => {
-    const outcomeName = answer.name;
-    const currentPrice = new Decimal(0);
-    // const priceChange = priceChanges?.get(index);
+  const answerStats = marketStats?.answerStats;
 
-    return {
-      // assetId: market?.pool?.weights[index]?.assetId,
-      id: index,
-      outcome: outcomeName,
-      // totalValue: {
-      //   value: 0,
-      //   usdValue: new Decimal(
-      //     currentPrice ? (usdPrice?.mul(currentPrice) ?? 0) : 0,
-      //   ).toNumber(),
-      // },
-      pre: null,
-      // change: priceChange,
-    };
-  });
+  const tableData: TableData[] | undefined = answerStats?.map(
+    (answer, index) => {
+      const outcomeName = answer.name;
+      const percentage = answer.percentage;
+      const totalTokens = answer.totalTokens;
+      // const priceChange = priceChanges?.get(index);
+
+      return {
+        // assetId: market?.pool?.weights[index]?.assetId,
+        id: index,
+        outcome: outcomeName,
+        totalValue: {
+          value: totalTokens.toNumber() / 1e9,
+          usdValue: totalTokens.toNumber(),
+        },
+        percentage: percentage,
+        // change: priceChange,
+      };
+    },
+  );
 
   return <Table columns={columns} data={tableData} />;
 };

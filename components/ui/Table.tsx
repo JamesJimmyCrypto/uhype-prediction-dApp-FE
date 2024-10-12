@@ -212,14 +212,17 @@ const Cell = ({
         return (
           <td className={`${base} `} onClick={onClick} style={style}>
             <div className="mb-0.5 text-sm">
-              {formatNumberLocalized(value.value)}
+              {formatNumberLocalized(value.value)} SOL
             </div>
-            <div className="text-xs font-light text-sky-600">
+
+            {/*
+            TODO: Fetch SOL price in USD
+             <div className="text-xs font-light text-sky-600">
               $
               {(
-                value.usdValue ?? (ztgPrice?.toNumber() ?? 0) * value.value
+                value.usdValue ?? (solPriceInUSD?.toNumber() ?? 0) * value.value
               ).toFixed(2)}
-            </div>
+            </div> */}
           </td>
         );
       } else {

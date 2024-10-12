@@ -168,11 +168,13 @@ const BuyForm = ({
 
   const handlePlaceBet = async () => {
     if (!publicKey) return;
+    const betAmount = amountIn.greaterThan(0) ? amountIn.toNumber() : 0;
+    const betAmountInLamports = betAmount * 1e9;
     try {
       await mutateBet({
         voter: publicKey,
         marketKey: market.marketKey, // replace with actual market ID
-        betAmount: new BN(0.1), // amount to bet
+        betAmount: new BN(betAmountInLamports), // amount to bet
         answerKey: answerKey, // outcome for the bet
       });
       // console.log("Bet placed successfully with signature:", signature);
@@ -180,7 +182,7 @@ const BuyForm = ({
       // Optionally call onSuccess if you want to perform further actions
       // onSuccess(signature, market.answers[0].answerKey, new Decimal(0.1));
     } catch (error) {
-      console.error("Error placing bet:", error);
+      // console.error("Error placing bet:", error);
       notificationStore.pushNotification("Failed to place bet.", {
         autoRemove: true,
         type: "Error",
