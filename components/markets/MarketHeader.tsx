@@ -26,7 +26,7 @@ import { useMarketImage } from "lib/hooks/useMarketImage";
 import { MarketReport } from "lib/types";
 import { isMarketImageBase64Encoded } from "lib/types/create-market";
 import { MarketDispute } from "lib/types/markets";
-import { shortenAddress } from "lib/util";
+import { lamportsToSol, shortenAddress } from "lib/util";
 import { estimateMarketResolutionDate } from "lib/util/estimate-market-resolution";
 import { formatNumberCompact } from "lib/util/format-compact";
 import { formatScalarOutcome } from "lib/util/format-scalar-outcome";
@@ -454,7 +454,9 @@ const MarketHeader: FC<{
             )} */}
             {token ? (
               <HeaderStat label="Total Volume">
-                {formatNumberCompact(new Decimal(totalVolume ?? 0).toNumber())}
+                {formatNumberCompact(
+                  new Decimal(lamportsToSol(totalVolume) ?? 0).toNumber(),
+                )}
                 &nbsp;
                 {token}
               </HeaderStat>

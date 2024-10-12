@@ -58,7 +58,8 @@ const MarketAssetDetails = ({
   const tableData: TableData[] | undefined = answerStats?.map(
     (answer, index) => {
       const outcomeName = answer.name;
-      const percentage = answer.percentage;
+      const percentage = answer.percentage ?? 0;
+  console.log({percentage})
       const totalTokens = answer.totalTokens;
       // const priceChange = priceChanges?.get(index);
 
@@ -70,7 +71,7 @@ const MarketAssetDetails = ({
           value: totalTokens.toNumber() / 1e9,
           usdValue: totalTokens.toNumber(),
         },
-        percentage: percentage,
+        percentage: percentage ?? 0,
         // change: priceChange,
       };
     },
