@@ -492,20 +492,33 @@ export function useMarketProgram() {
     )) as unknown as AnswerAccount;
     // Calculate percentages for each answer
     const answerStats = answerAccount.answers.map((answer) => {
-      const percentage =
-        (answer.answerTotalTokens.toNumber() / totalVolume.toNumber()) * 100;
+      const totalTokens = answer.answerTotalTokens.toNumber();
+      const totalVolumeNum = totalVolume.toNumber();
+
+      let percentage = 0;
+      if (totalVolumeNum > 0) {
+        percentage = (totalTokens / totalVolumeNum) * 100;
+      }
+
+      // Set a threshold for displaying small percentages
+      const displayPercentage =
+        percentage >= 1
+          ? percentage.toFixed(2)
+          : Math.floor(percentage).toString();
+
       console.log(
         answer,
-        { answerTotalTokens: answer.answerTotalTokens },
-        { totalVolume: totalVolume.toString() },
-        { percentage },
+        { answerTotalTokens: totalTokens },
+        { totalVolume: totalVolumeNum.toString() },
+        { displayPercentage },
         "answer",
       );
+
       return {
         name: answer.name,
         totalTokens: answer.answerTotalTokens,
         totalVolume,
-        percentage: percentage.toFixed(2),
+        percentage: displayPercentage,
       };
     });
 
