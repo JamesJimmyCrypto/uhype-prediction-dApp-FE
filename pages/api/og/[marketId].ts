@@ -11,12 +11,9 @@ import { getCurrentPrediction } from "lib/util/assets";
 import moment from "moment";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-const sdkPromise = create({
-  uri: "graphQlEndpoint",
-});
 
 export type MarketImageData = {
-  market: FullMarketFragment;
+  market: any;
   prediction: ReturnType<typeof getCurrentPrediction>;
   volume: string;
   ends: string;
@@ -27,14 +24,32 @@ export default async function (
   request: NextApiRequest,
   response: NextApiResponse,
 ) {
-  const sdk = await sdkPromise;
   const { marketId } = request.query;
 
-  const { markets } = await sdk.markets({
-    where: {
-      marketId_eq: Number(marketId),
-    },
-  });
+  const markets = [
+    {
+      id: "0",
+      period: {
+        end: "1635734400000",
+      },
+      assets: [
+        {
+          amount: "100000000000000000000",
+          asset: "SOL"
+        }
+      ],
+      baseAsset: "SOL",
+      volume: "100000000000000000000",
+      pool: {
+        id: "0",
+        assets: [
+          {
+            amount: "100000000000000000000",
+            asset: "SOL"
+          }
+        ]
+      }
+    }];
 
   const market = markets[0];
 
@@ -53,8 +68,8 @@ export default async function (
     price: 0,
   };
 
-  if (market.pool || market.neoPool) {
-    prediction = getCurrentPrediction(market.assets as any, market);
+  if (market.pool) {
+    // prediction = getCurrentPrediction(market.assets as any, market);
   }
 
   const volume = new Decimal(market?.volume ?? 0).div(ZTG).toFixed(2);
