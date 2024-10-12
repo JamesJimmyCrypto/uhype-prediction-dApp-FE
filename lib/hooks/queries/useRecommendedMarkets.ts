@@ -30,6 +30,7 @@ export const useRecommendedMarkets = (marketId?: string, limit = 2) => {
 
       return {
         markets: similarMarkets,
+        type: "similar"
       }
 
       // if (market?.title && similarMarkets.length > 0) {
