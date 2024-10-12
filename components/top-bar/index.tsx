@@ -145,22 +145,22 @@ const TopBar = () => {
                         )}
                       </Menu.Item>
 
-                      <div className="block md:hidden">
+                      {/* <div className="block md:hidden">
                         <Menu.Item>
                           {({ active }) => (
                             <Link href="/leaderboard/year" onClick={close}>
                               <button
                                 className={`group mb-4 flex w-full  items-center gap-3 px-2 py-2 text-sm`}
                               >
-                                {/* <div className="relative h-6 w-6">
+                                <div className="relative h-6 w-6">
                                   <FiAward size={"100%"} />
-                                </div> */}
+                                </div>
                                 <h3 className="bold text-sm">Leaderboard</h3>
                               </button>
                             </Link>
                           )}
                         </Menu.Item>
-                      </div>
+                      </div> */}
 
                       <CategoriesMenuItem onSelect={close} />
 
