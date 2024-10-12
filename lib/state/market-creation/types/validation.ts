@@ -4,7 +4,6 @@ import { ChainTime } from "@zeitgeistpm/utility/dist/time";
 import { defaultTags } from "lib/constants/markets";
 import {
   MarketDeadlineConstants,
-  useMarketDeadlineConstants,
 } from "lib/hooks/queries/useMarketDeadlineConstants";
 import { useChainTime } from "lib/state/chaintime";
 import { isNaN, isNumber } from "lodash-es";
@@ -154,16 +153,25 @@ export const createMarketFormValidator = ({
 export const useMarketCreationFormValidator = (
   form: Partial<MarketFormData>,
 ): ReturnType<typeof createMarketFormValidator> | undefined => {
-  const { data: deadlineConstants } = useMarketDeadlineConstants();
   const chainTime = useChainTime();
 
-  if (!deadlineConstants || !chainTime) {
-    return;
-  }
+  // if (!deadlineConstants || !chainTime) {
+  //   return;
+  // }
   return createMarketFormValidator({
     form,
-    deadlineConstants,
-    chainTime,
+    deadlineConstants: {
+      minDisputeDuration: 3600,
+      minOracleDuration: 300,
+      maxDisputeDuration: 216000,
+      maxOracleDuration: 100800,
+      maxGracePeriod: 2628000,
+    },
+    chainTime: {
+      now: +new Date(),
+      period: 0,
+      block: 0,
+    }
   });
 };
 

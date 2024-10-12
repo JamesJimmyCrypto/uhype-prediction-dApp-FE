@@ -3,7 +3,6 @@ import Toggle from "components/ui/Toggle";
 import WizardStepper from "components/wizard/WizardStepper";
 import { nextStepFrom, prevStepFrom } from "components/wizard/types";
 import { useChainConstants } from "lib/hooks/queries/useChainConstants";
-import { useMarketDeadlineConstants } from "lib/hooks/queries/useMarketDeadlineConstants";
 import { useChainTime } from "lib/state/chaintime";
 import {
   disputePeriodOptions,
@@ -65,7 +64,6 @@ export const MarketEditor = () => {
     mergeFormData,
   } = editor;
 
-  const { isFetched } = useMarketDeadlineConstants();
   const constants = useChainConstants();
 
   const timezone = form?.timeZone;
@@ -99,7 +97,7 @@ export const MarketEditor = () => {
   const showLiquidityWarning = false;
   // fieldsState.liquidity.isTouched && form.liquidity?.deploy && isWizard;
 
-  const isLoaded = Boolean(isFetched);
+  const isLoaded = Boolean(true);
 
   type FormValue = {
     currency: string;
