@@ -239,11 +239,7 @@ const Market = () => {
     return <NotFoundPage backText="Back To Markets" backLink="/" />;
   }
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error || !market) {
+  if (error || (!isLoading && !market)) {
     return <NotFoundPage backText="Back To Markets" backLink="/" />;
   }
 
@@ -361,275 +357,71 @@ const Market = () => {
   return (
     <div className="mt-6">
       <div className="relative flex flex-auto gap-12 md:flex-row">
-        <div className="flex-1 overflow-hidden">
-          <MarketMeta market={market} />
+        {isLoading ? (
+          <Skeleton height={200} />
+        ) : market ? (
+          <>
+            <div className="flex-1 overflow-hidden">
+              <MarketMeta market={market} />
 
-          <MarketHeader
-            market={market}
-            resolvedOutcome={undefined}
-            // report={report}
-            // disputes={lastDispute}
-            token={token}
-            // marketStage={marketStage ?? undefined}
-            promotionData={null}
-            rejectReason={undefined}
-          />
+              <MarketHeader
+                market={market}
+                resolvedOutcome={undefined}
+                token={token}
+                promotionData={null}
+                rejectReason={undefined}
+              />
 
-          {/* // {market?.rejectReason && market.rejectReason.length > 0 && (
-          //   <div className="mt-[10px] text-ztg-14-150">
-          //     Market rejected: {market.rejectReason}
-          //   </div>
-          // )} */}
+              <div className="mt-4">
+                {/* Tab.Group and other commented out code removed for brevity */}
+              </div>
 
-          <div className="mt-4">
-            {/* <Tab.Group defaultIndex={hasLiveTwitchStream ? 1 : 0}>
-              <Tab.List
-                className={`flex gap-2 text-sm ${
-                  activeTabsCount < 2 ? "hidden" : ""
-                }`}
-              >
-                <Tab
-                  key="chart"
-                  className="rounded-md border-1 border-gray-400 px-2 py-1 ui-selected:border-transparent ui-selected:bg-gray-300"
-                >
-                  Chart
-                </Tab>
+              <div className="my-8">
+                <MarketAssetDetails
+                  marketId={marketIdString}
+                  answers={market.answers}
+                />
+              </div>
 
-                <Tab
-                  key="twitch"
-                  className="flex items-center gap-2 rounded-md border-1 border-twitch-purple px-2 py-1 text-twitch-purple ui-selected:border-transparent ui-selected:bg-twitch-purple ui-selected:text-twitch-gray"
-                >
-                  <FaTwitch size={16} />
-                  Twitch Stream
-                  {hasLiveTwitchStream && (
-                    <div className="flex items-center gap-1 text-orange-400">
-                      <div className="animate-pulse-scale">
-                        <CgLivePhoto />
-                      </div>
-                      Live!
-                    </div>
-                  )}
-                </Tab>
-                <div className="flex flex-1 items-center">
-                  <button className="ml-auto flex items-center gap-1">
-                    <Toggle
-                      className="w-6"
-                      checked={showTwitchChat}
-                      onChange={(checked) => {
-                        setShowTwitchChat(checked);
-                      }}
-                      activeClassName="bg-twitch-purple"
-                    />
-                    <BsFillChatSquareTextFill
-                      size={18}
-                      className={
-                        showTwitchChat ? "text-twitch-purple" : "text-gray-400"
-                      }
-                    />
-                  </button>
+              <div className="mb-12 max-w-[90vw]">
+                <MarketDescription market={market} />
+              </div>
+
+              {marketHasPool === true && (
+                <div className="mt-10 flex flex-col gap-4">
+                  <h3 className="mb-5 text-2xl">Latest Trades</h3>
+                  <Link
+                    className="w-full text-center text-ztg-blue"
+                    href={`/latest-trades?marketId=${marketid}`}
+                  >
+                    View more
+                  </Link>
                 </div>
-              </Tab.List>
-
-              <Tab.Panels className="mt-2">
-                {hasChart ? (
-                  <Tab.Panel key="chart">
-                    {indexedMarket.scalarType === "number" ? (
-                      <ScalarMarketChart
-                        marketId={indexedMarket.marketId}
-                        poolCreationDate={poolCreationDate}
-                        marketStatus={indexedMarket.status}
-                        resolutionDate={new Date(resolutionTimestamp)}
-                      />
-                    ) : (
-                      <CategoricalMarketChart
-                        marketId={indexedMarket.marketId}
-                        chartSeries={chartSeries}
-                        baseAsset={
-                          indexedMarket.pool?.baseAsset ??
-                          indexedMarket.neoPool?.collateral
-                        }
-                        poolCreationDate={poolCreationDate}
-                        marketStatus={indexedMarket.status}
-                        resolutionDate={new Date(resolutionTimestamp)}
-                      />
-                    )}
-                  </Tab.Panel>
-                ) : (
-                  <></>
-                )}
-
-                {hasTwitchStream && twitchStreamChannelName ? (
-                  <Tab.Panel key="twitch">
-                    <div className="h-[500px]">
-                      <TwitchPlayer
-                        channel={twitchStreamChannelName}
-                        autoplay
-                        muted
-                        withChat={showTwitchChat}
-                        darkMode={false}
-                        hideControls={false}
-                        width={"100%"}
-                        height={"100%"}
-                      />
-                    </div>
-                  </Tab.Panel>
-                ) : (
-                  <></>
-                )}
-              </Tab.Panels>
-            </Tab.Group> */}
-          </div>
-          {/* {publicKey &&
-            isOrdersLoading === false &&
-            (orders?.length ?? 0) > 0 && (
-              <div className="mt-3 flex flex-col gap-y-3">
-                <div>My Orders</div>
-                <OrdersTable
-                  where={{
-                    marketId_eq: marketId,
-                    makerAccountId_eq: pubKey,
-                  }}
-                />
-              </div>
-            )} */}
-          {/* {isLoading === false && (
-            <div className="flex h-ztg-22 items-center rounded-ztg-5 bg-vermilion-light p-ztg-20 text-vermilion">
-              <div className="h-ztg-20 w-ztg-20">
-                <AlertTriangle size={20} />
-              </div>
-              <div
-                className="ml-ztg-10 text-ztg-12-120 "
-                data-test="liquidityPoolMessage"
-              >
-                This market doesn't have a liquidity pool and therefore cannot
-                be traded
-              </div>
-            </div>
-          )} */}
-          <div className="my-8">
-            {/* {indexedMarket?.marketType?.scalar !== null && (
-              <div className="mx-auto mb-8 max-w-[800px]">
-                {marketIsLoading ||
-                (!spotPrices?.get(1) && indexedMarket.status !== "Proposed") ||
-                (!spotPrices?.get(0) && indexedMarket.status !== "Proposed") ? (
-                  <Skeleton height="40px" width="100%" />
-                ) : (
-                  <ScalarPriceRange
-                    className="rounded-lg"
-                    scalarType={indexedMarket.scalarType}
-                    lowerBound={new Decimal(indexedMarket.marketType.scalar[0])
-                      .div(ZTG)
-                      .toNumber()}
-                    upperBound={new Decimal(indexedMarket.marketType.scalar[1])
-                      .div(ZTG)
-                      .toNumber()}
-                    shortPrice={spotPrices?.get(1)?.toNumber()}
-                    longPrice={spotPrices?.get(0)?.toNumber()}
-                    status={indexedMarket.status}
-                  />
-                )}
-              </div>
-            )} */}
-            <MarketAssetDetails marketId={marketIdString} answers={market.answers} />
-          </div>
-
-          <div className="mb-12 max-w-[90vw]">
-            <MarketDescription market={market} />
-          </div>
-
-          {/* <AddressDetails title="Oracle" address={market.oracle} /> */}
-          {marketHasPool === true && (
-            <div className="mt-10 flex flex-col gap-4">
-              <h3 className="mb-5 text-2xl">Latest Trades</h3>
-              {/* <LatestTrades limit={3} marketId={marketId} /> */}
-              <Link
-                className="w-full text-center text-ztg-blue"
-                href={`/latest-trades?marketId=${marketid}`}
-              >
-                View more
-              </Link>
-            </div>
-          )}
-
-          {/* {marketHasPool === false && (
-            <PoolDeployer
-              marketId={marketId}
-              onPoolDeployed={handlePoolDeployed}
-            />
-          )} 
-              {market && marketHasPool && (
-            <div className="my-12">
-              <div
-                className="mb-8 flex cursor-pointer items-center text-mariner"
-                onClick={() => toggleLiquiditySection()}
-              >
-                <div>Show Liquidity</div>
-                <ChevronDown
-                  size={12}
-                  viewBox="6 6 12 12"
-                  className={`box-content px-2 ${
-                    showLiquidity && "rotate-180"
-                  }`}
-                />
-              </div>
-
-              <Transition
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 "
-                enterTo="transform opacity-100 "
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 "
-                leaveTo="transform opacity-0 "
-                show={showLiquidity && Boolean(marketHasPool)}
-              >
-                <MarketLiquiditySection poll={poolDeployed} market={market} /> 
-              </Transition>
-            </div>
-          )}
-           */}
-        </div>
-        <div className="hidden md:-mr-6 md:block md:w-[320px] lg:mr-auto lg:w-[460px]">
-          <div className="sticky top-28">
-            <div
-              className="mb-12 animate-pop-in rounded-lg  opacity-0 shadow-lg"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(49, 125, 194, 0.2) 0%, rgba(225, 210, 241, 0.2) 100%)",
-              }}
-            >
-              <Amm2TradeForm marketId={marketIdString} market={market} />
-
-              {/* {market?.status === MarketStatus.Active ? (
-                <>
-                </>
-              ) : market?.status === MarketStatus.Closed && canReport ? (
-                <>
-                  <ReportForm market={market} />
-                </>
-              ) : market?.status === MarketStatus.Reported ? (
-                <>
-                  <DisputeForm market={market} />
-                </>
-              ) : market?.status === MarketStatus.Disputed &&
-                market?.disputeMechanism === "Court" ? (
-                <CourtCaseContext market={market} />
-              ) : (
-                <></>
               )}
             </div>
-            {referendumIndex != null && (
-              <div className="mb-12 animate-pop-in opacity-0">
-                <ReferendumSummary referendumIndex={referendumIndex} />
+
+            <div className="hidden md:-mr-6 md:block md:w-[320px] lg:mr-auto lg:w-[460px]">
+              <div className="sticky top-28">
+                <div
+                  className="mb-12 animate-pop-in rounded-lg opacity-0 shadow-lg"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, rgba(49, 125, 194, 0.2) 0%, rgba(225, 210, 241, 0.2) 100%)",
+                  }}
+                >
+                  <Amm2TradeForm marketId={marketIdString} market={market} />
+
+                  <SimilarMarketsSection
+                    market={market ?? undefined}
+                    size="large"
+                  />
+                </div>
               </div>
-            )} */}
-              <SimilarMarketsSection
-                market={market ?? undefined}
-                size="large"
-              />
             </div>
-          </div>
-        </div>
-        {/* {market && <MobileContextButtons market={market} />} */}
+          </>
+        ) : (
+          <div>Market not found</div>
+        )}
       </div>
 
       {/* Mobile Sidebar */}

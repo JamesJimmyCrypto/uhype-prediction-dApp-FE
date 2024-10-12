@@ -9,6 +9,7 @@ import { HeroBanner } from "components/front-page/HeroBanner";
 import NetworkStats from "components/front-page/NetworkStats";
 import MarketScroll from "components/markets/MarketScroll";
 import MarketCard from "components/markets/market-card";
+import Skeleton from "@/components/ui/Skeleton";
 
 const IndexPage: NextPage = () => {
   const router = useRouter();
@@ -17,7 +18,6 @@ const IndexPage: NextPage = () => {
   const { useGetMarketsQuery } = useMarketProgram();
   const { data: markets, isLoading, error } = useGetMarketsQuery();
 
-  if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading market data</p>;
 
   return (
@@ -45,15 +45,20 @@ const IndexPage: NextPage = () => {
         />
       </div>
 
-      {markets?.length && markets.length > 0 && (
-        <div className="mb-12">
-          <MarketScroll
-            title="Featured Markets"
-            cta="Go to Markets"
-            markets={markets}
-            link="markets"
-          />
-        </div>
+      {isLoading ? (
+        <Skeleton height={200} />
+      ) : (
+        markets?.length &&
+        markets.length > 0 && (
+          <div className="mb-12">
+            <MarketScroll
+              title="Featured Markets"
+              cta="Go to Markets"
+              markets={markets}
+              link="markets"
+            />
+          </div>
+        )
       )}
 
       {/* <div className="mb-12">
