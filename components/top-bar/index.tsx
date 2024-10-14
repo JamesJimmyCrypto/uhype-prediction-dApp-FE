@@ -84,7 +84,7 @@ const TopBar = () => {
                     leaveFrom="transform opacity-100 translate-y-0 md:scale-100"
                     leaveTo="transform opacity-0 translate-y-2 md:translate-y-0 md:scale-95"
                   >
-                    <Menu.Items className="fixed left-0 mt-4 h-full w-full origin-top-right bg-white px-5 py-3 ring-1 ring-gray-200 focus:outline-none md:absolute md:mt-8 md:h-auto md:w-64 md:rounded-md">
+                    <Menu.Items className="fixed left-0 mt-4 h-full w-full origin-top-right bg-dark px-5 py-3 text-white ring-1 focus:outline-none md:absolute md:mt-8 md:h-auto md:w-64 md:rounded-md">
                       <Menu.Item>
                         {({ active, close }) => (
                           <Link
@@ -312,7 +312,7 @@ const CategoriesMenu = ({ onSelect }: { onSelect: () => void }) => {
     .slice(0, 9);
 
   return (
-    <div className="grid grid-flow-row-dense grid-cols-2 md:h-full md:grid-cols-3">
+    <div className="grid grid-flow-row-dense grid-cols-2 bg-background-page md:h-full md:grid-cols-3">
       {topCategories.map((category, index) => (
         <Link
           key={index}
@@ -373,7 +373,7 @@ const CategoriesMenuItem = ({ onSelect }: { onSelect: () => void }) => {
         leaveFrom="transform opacity-100 translate-x-0 md:scale-100"
         leaveTo="transform opacity-0 translate-x-6 md:scale-95"
       >
-        <div className="fixed left-0 top-0 z-50 h-full w-full bg-white px-5 py-3 ring-1 ring-gray-200 md:absolute md:-right-4 md:left-auto md:ml-4 md:w-[600px] md:translate-x-[100%] md:rounded-md">
+        <div className="fixed left-0 top-0 z-50 h-full w-full bg-background-page px-5 py-3 ring-1 ring-gray-200 md:absolute md:-right-4 md:left-auto md:ml-4 md:w-[600px] md:translate-x-[100%] md:rounded-md">
           <div
             className="mb-6 flex cursor-pointer items-center gap-3 border-b-1 border-gray-300 py-4 pl-2 md:hidden"
             onClick={() => setCategoriesOpen(false)}
