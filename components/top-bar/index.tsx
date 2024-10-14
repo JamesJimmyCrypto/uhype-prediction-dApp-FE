@@ -206,15 +206,15 @@ const TopBar = () => {
 
           <div className="h-1 w-full bg-blue-500"></div>
 
-          <Link
+          {/* <Link
             className="md:center relative hidden gap-2 font-light text-white md:flex"
             href="/leaderboard/year"
           >
-            {/* <div className="relative h-6 w-6">
+            <div className="relative h-6 w-6">
               <FiAward size={"100%"} />
-            </div> */}
+            </div>
             <div className="bold">Leaderboard</div>
-          </Link>
+          </Link> */}
         </div>
         <MarketSearch />
         <div className="center relative ml-auto gap-3">
