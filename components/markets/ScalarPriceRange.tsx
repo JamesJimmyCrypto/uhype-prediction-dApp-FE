@@ -62,7 +62,7 @@ const ScalarPriceRange = ({
 
   return (
     <div
-      className={`relative flex h-[30px]  w-full items-center overflow-hidden bg-gray-200 p-2 transition-all ${className}`}
+      className={`relative flex h-[30px]  w-full items-center overflow-hidden bg-background-page p-2 transition-all ${className}`}
       ref={ref}
     >
       <span className="z-10 text-xs font-semibold text-gray-400">

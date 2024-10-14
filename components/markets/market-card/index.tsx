@@ -142,13 +142,13 @@ export const MarketCard = ({
 
   // const { data: cmsMetadata } = useMarketCmsMetadata(marketKey);
 
-  const img_Size = size === "medium" ? '32px' : '54px';
+  const img_Size = size === "medium" ? "32px" : "54px";
 
   return (
     <MarketCardContext.Provider value={{ baseAsset: "SOL" }}>
       <div
         data-testid={`marketCard-${marketKey}`}
-        className={`ztg-transition group relative flex min-w-full flex-col rounded-[10px] bg-white p-5 md:min-w-[calc(50%-8px)] md:hover:scale-[1.015] lg:min-w-[calc(100%/3-9.67px)] ${className}`}
+        className={`ztg-transition group relative flex min-w-full flex-col rounded-[10px] bg-dark p-5 md:min-w-[calc(50%-8px)] md:hover:scale-[1.015] lg:min-w-[calc(100%/3-9.67px)] ${className}`}
       >
         <Link
           href={`/markets/${publicKey}`}

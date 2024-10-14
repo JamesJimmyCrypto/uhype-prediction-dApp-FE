@@ -54,7 +54,7 @@ export const HeroBanner = ({
             </Link>
             <Link
               href="/create-account"
-              className="flex-1 rounded-md border-2 border-black bg-transparent px-6 py-3 text-black sm:flex-none"
+              className="flex-1 rounded-md border-2 border-black bg-dark px-6 py-3 text-white sm:flex-none"
               style={{
                 fontWeight: "bold", // Đảm bảo sử dụng camelCase
               }}
