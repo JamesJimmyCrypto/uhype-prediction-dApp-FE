@@ -50,7 +50,7 @@ const BuyForm = ({ marketId, market, answerKey }: BuyFormProps) => {
   const watchAmount = watch("amount");
 
   // Simulating a max balance for demonstration
-  const maxBalance = 100;
+  const maxBalance = solBalance;
 
   const handlePlaceBet = async (data) => {
     setLoading(true);
