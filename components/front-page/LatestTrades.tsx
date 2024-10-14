@@ -1,8 +1,8 @@
+import { useMarketProgram } from "@/src/hooks";
+import { PublicKey } from "@solana/web3.js";
 import Table, { TableColumn, TableData } from "components/ui/Table";
 import Link from "next/link";
 import { formatNumberLocalized } from "lib/util";
-import { useLatestTrades } from "lib/hooks/queries/useLatestTrades";
-import { ZTG } from "@zeitgeistpm/sdk";
 import moment from "moment";
 import Avatar from "components/ui/Avatar";
 
@@ -10,11 +10,6 @@ const columns: TableColumn[] = [
   {
     header: "Trader",
     accessor: "trader",
-    type: "component",
-  },
-  {
-    header: "Market",
-    accessor: "question",
     type: "component",
   },
   {
@@ -28,13 +23,8 @@ const columns: TableColumn[] = [
     type: "text",
   },
   {
-    header: "Cost",
-    accessor: "cost",
-    type: "text",
-  },
-  {
-    header: "Price",
-    accessor: "price",
+    header: "Amount",
+    accessor: "amount",
     type: "text",
   },
   {
@@ -44,50 +34,49 @@ const columns: TableColumn[] = [
   },
 ];
 
-const LatestTrades = ({
-  limit = 3,
-  marketId,
+const BettingHistoryComponent = ({
+  limit = 10,
+  marketKey,
 }: {
   limit?: number;
-  marketId?: string;
+  marketKey: PublicKey;
 }) => {
-  const { data: trades } = useLatestTrades(limit, marketId);
+  const { useGetBettingHistoryQuery } = useMarketProgram();
+  const {
+    data: bettingHistory,
+    isLoading,
+    error,
+  } = useGetBettingHistoryQuery(marketKey);
+
   const now = moment();
 
-  const tableData: TableData[] | undefined = trades?.map((trade) => {
-    return {
-      trader: (
-        <Link href={`/portfolio/${trade.traderAddress}`} className="">
-          <Avatar address={trade.traderAddress} />
-        </Link>
-      ),
-      question: (
-        <Link href={`/markets/${trade.marketId}`} className="text-[14px]">
-          {trade?.question}
-        </Link>
-      ),
-      outcome: trade.outcomeName,
-      trade: trade.type === "buy" ? "Buy" : "Sell",
-      cost: `${formatNumberLocalized(trade.cost.div(ZTG).toNumber())} ${
-        trade.costSymbol
-      }`,
-      price: formatNumberLocalized(trade.outcomePrice.toNumber()),
-      time: `${moment.duration(now.diff(trade.time)).humanize()} ago`,
-    };
-  });
+  const tableData: TableData[] | undefined = bettingHistory
+    ?.slice(0, limit)
+    .map((bet) => {
+      return {
+        trader: (
+          <Link href={`/portfolio/${bet.voter}`} className="">
+            <Avatar address={bet.voter.toString()} />
+          </Link>
+        ),
+        outcome: bet.answerKey.toString(), // You might want to map this to a human-readable outcome name
+        trade: "Buy", // Assuming all bets are "Buy". Adjust if you have different types of bets
+        amount: bet.tokens.toString(),
+        time: `${moment.duration(now.diff(moment(bet.createTime.toNumber() * 1000))).humanize()} ago`,
+      };
+    });
 
   return (
-    <div className="">
-      <div className="rounded-xl shadow-lg">
-        <Table
-          columns={columns}
-          data={tableData}
-          noDataMessage="No trades"
-          loadingNumber={limit}
-        />
-      </div>
+    <div className="rounded-xl shadow-lg">
+      <Table
+        columns={columns}
+        data={tableData}
+        noDataMessage="No bets"
+        loadingNumber={limit}
+      />
+      {/* {error && <div>Error fetching betting history: {error.message}</div>} */}
     </div>
   );
 };
 
-export default LatestTrades;
+export default BettingHistoryComponent;

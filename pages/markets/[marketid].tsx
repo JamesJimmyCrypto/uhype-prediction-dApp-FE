@@ -393,6 +393,7 @@ const Market = () => {
               {marketHasPool === true && (
                 <div className="mt-10 flex flex-col gap-4">
                   <h3 className="mb-5 text-2xl">Latest Trades</h3>
+                  <LatestTrades marketKey={new PublicKey(marketIdString)} />
                   <Link
                     className="w-full text-center text-ztg-blue"
                     href={`/latest-trades?marketId=${marketid}`}
