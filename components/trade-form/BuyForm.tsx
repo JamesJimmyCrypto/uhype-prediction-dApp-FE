@@ -46,7 +46,7 @@ const BuyForm = ({
 }: {
   marketId: string;
   market: Market;
-  answerKey: string;
+  answerKey: BN;
   initialAsset?: MarketOutcomeAssetId;
   onSuccess: (
     data: ISubmittableResult,

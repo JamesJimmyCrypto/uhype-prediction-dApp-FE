@@ -17,7 +17,6 @@ import {
 import { ComputeBudgetProgram, SendTransactionError } from "@solana/web3.js";
 import { useNotifications } from "@/lib/state/notifications";
 import { getExplorerUrl } from "@/lib/util";
-import bs58 from "bs58";
 export function useMarketProgram() {
   const provider = useAnchorProvider();
   const { publicKey, sendTransaction, signTransaction } = useWallet();
@@ -278,14 +277,15 @@ export function useMarketProgram() {
     voter: PublicKey;
     marketKey: BN;
     betAmount: BN;
-    answerKey: string;
+    answerKey: BN;
   }): Promise<string> => {
     if (!publicKey) throw new Error("Wallet not connected");
-    // Create the transaction to place the bet
-    const transaction = await program.methods
-      .bet(answerKey, betAmount)
-      .accounts({
-        voter: voter,
+
+    try {
+      // Create the transaction to place the bet
+      console.log("here");
+      console.log({
+        publicKey,
         marketAccount: PublicKey.findProgramAddressSync(
           [Buffer.from("market"), marketKey.toArrayLike(Buffer, "le", 8)],
           program.programId,
@@ -307,49 +307,85 @@ export function useMarketProgram() {
           ],
           program.programId,
         )[0],
-        systemProgram: SystemProgram.programId,
-      })
-      .transaction();
+      });
 
-    const { blockhash } = await connection.getLatestBlockhash();
-    transaction.recentBlockhash = blockhash;
-    transaction.feePayer = publicKey;
+      const transaction = await program.methods
+        .bet(answerKey, betAmount)
+        .accounts({
+          voter: voter,
+          marketAccount: PublicKey.findProgramAddressSync(
+            [Buffer.from("market"), marketKey.toArrayLike(Buffer, "le", 8)],
+            program.programId,
+          )[0],
+          vaultAccount: PublicKey.findProgramAddressSync(
+            [
+              Buffer.from("market_vault"),
+              marketKey.toArrayLike(Buffer, "le", 8),
+            ],
+            program.programId,
+          )[0],
+          answerAccount: PublicKey.findProgramAddressSync(
+            [Buffer.from("answer"), marketKey.toArrayLike(Buffer, "le", 8)],
+            program.programId,
+          )[0],
+          betAccount: PublicKey.findProgramAddressSync(
+            [
+              Buffer.from("betting"),
+              voter.toBuffer(),
+              marketKey.toArrayLike(Buffer, "le", 8),
+              new BN(answerKey).toArrayLike(Buffer, "le", 8),
+            ],
+            program.programId,
+          )[0],
+          systemProgram: SystemProgram.programId,
+        })
+        .transaction();
 
-    // Sign the transaction
-    if (!signTransaction) {
-      throw new Error(
-        "Wallet not connected or signTransaction method is not available.",
-      );
-    }
+      console.log("txn");
 
-    const signedTransaction = await signTransaction(transaction);
+      const { blockhash } = await connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = publicKey;
 
-    if (!signedTransaction) {
-      throw new Error("Failed to sign the transaction with the wallet.");
-    }
-
-    try {
-      // Serialize the signed transaction
-      const serializedTransaction = signedTransaction.serialize();
-
-      // Send the raw transaction to the Solana network
-      const signature = await connection.sendRawTransaction(
-        serializedTransaction,
-      );
-
-      // Confirm the transaction
-      await connection.confirmTransaction(signature, "confirmed");
-
-      console.log("Transaction Signature:", signature);
-      return signature; // You might want to return the signature or the transaction
-    } catch (error) {
-      if (error instanceof SendTransactionError) {
-        // If the error is a SendTransactionError, get logs
-        console.error("Transaction logs:", await error.getLogs(connection));
+      // Sign the transaction
+      if (!signTransaction) {
+        throw new Error(
+          "Wallet not connected or signTransaction method is not available.",
+        );
       }
 
-      console.error("Transaction Error:", error);
-      throw error;
+      const signedTransaction = await signTransaction(transaction);
+
+      if (!signedTransaction) {
+        throw new Error("Failed to sign the transaction with the wallet.");
+      }
+
+      try {
+        // Serialize the signed transaction
+        const serializedTransaction = signedTransaction.serialize();
+
+        // Send the raw transaction to the Solana network
+        const signature = await connection.sendRawTransaction(
+          serializedTransaction,
+        );
+
+        // Confirm the transaction
+        await connection.confirmTransaction(signature, "confirmed");
+
+        console.log("Transaction Signature:", signature);
+        return signature; // You might want to return the signature or the transaction
+      } catch (error) {
+        if (error instanceof SendTransactionError) {
+          // If the error is a SendTransactionError, get logs
+          console.error("Transaction logs:", await error.getLogs(connection));
+        }
+
+        console.error("Transaction Error:", error);
+        throw error;
+      }
+    } catch (err) {
+      console.error("Error in placeBet: ", err);
+      throw err; // Propagate the error to the calling function
     }
   };
 
