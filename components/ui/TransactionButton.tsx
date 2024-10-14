@@ -8,7 +8,7 @@ import { useState } from "react";
 
 interface TransactionButtonProps {
   preventDefault?: boolean;
-  onClick?: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClick?: () => void;
   disabled?: boolean;
   className?: string;
   dataTest?: string;
@@ -38,13 +38,14 @@ const TransactionButton: FC<PropsWithChildren<TransactionButtonProps>> = ({
   const [isHovered, setIsHovered] = useState(false);
 
   const click = (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    onClick?.();
     if (preventDefault) {
       event?.preventDefault();
     }
     if (!pubKey) {
       accountModals.openWalletSelect();
     } else {
-      onClick && onClick(event);
+      onClick && onClick();
     }
   };
 
@@ -76,25 +77,25 @@ const TransactionButton: FC<PropsWithChildren<TransactionButtonProps>> = ({
   return (
     <>
       {publicKey && (
-         <button
-         type={type}
-         className={`ztg-transition h-[48px] w-[128px] rounded-xl
+        <button
+          type={type}
+          className={`ztg-transition h-[48px] w-[128px] rounded-xl
            focus:outline-none disabled:cursor-default ${
              !isDisabled ? "active:scale-95" : ""
-           } ${className} h-[54px] w-[248px] px-[12px] py-[12px] text-[14px] font-bold disabled:!bg-slate-300`}
-         style={{
-           backgroundColor: "#00fc81", // Màu nền xanh lá cây
-           color: "#00794c", // Màu chữ xanh lá đậm
-           opacity: isHovered ? 0.8 : 1, // Thay đổi độ mờ khi hover
-         }}
-         onMouseEnter={() => setIsHovered(true)} // Khi di chuột vào
-         onMouseLeave={() => setIsHovered(false)} // Khi di chuột ra
-         onClick={(e) => click(e)}
-         disabled={isDisabled}
-         data-test={dataTest}
-       >
-         {getButtonChildren()}
-       </button>
+           } ${className} disabled:!bg-dark-300 h-[54px] w-[248px] px-[12px] py-[12px] text-[14px] font-bold`}
+          style={{
+            backgroundColor: "#00fc81", // Màu nền xanh lá cây
+            color: "#00794c", // Màu chữ xanh lá đậm
+            opacity: isHovered ? 0.8 : 1, // Thay đổi độ mờ khi hover
+          }}
+          onMouseEnter={() => setIsHovered(true)} // Khi di chuột vào
+          onMouseLeave={() => setIsHovered(false)} // Khi di chuột ra
+          onClick={(e) => click(e)}
+          disabled={isDisabled}
+          data-test={dataTest}
+        >
+          {getButtonChildren()}
+        </button>
       )}
     </>
   );

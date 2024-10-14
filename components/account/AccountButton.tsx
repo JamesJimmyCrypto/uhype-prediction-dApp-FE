@@ -105,7 +105,7 @@ const AccountButton: FC<{
           <UnifiedWalletButton />
 
           {hovering === true && locationAllowed !== true ? (
-            <div className="absolute bottom-0 right-0 rounded bg-white text-sm font-bold text-black">
+            <div className="absolute bottom-0 right-0 rounded bg-dark text-sm font-bold text-black">
               Your jurisdiction is not authorised to trade
             </div>
           ) : (
@@ -176,7 +176,7 @@ const AccountButton: FC<{
                   leaveFrom="transform opacity-100 translate-y-0 md:scale-100"
                   leaveTo="transform opacity-0 translate-y-2 md:translate-y-0 md:scale-95"
                 >
-                  <Menu.Items className="fixed left-0 z-40 mt-3 h-full w-full origin-top-right divide-y divide-gray-100 overflow-hidden bg-white py-3 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:absolute md:left-auto md:right-0 md:mt-6 md:h-auto md:w-64 md:rounded-md">
+                  <Menu.Items className="fixed left-0 z-40 mt-3 h-full w-full origin-top-right divide-y divide-gray-100 overflow-hidden bg-dark py-3 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:absolute md:left-auto md:right-0 md:mt-6 md:h-auto md:w-64 md:rounded-md">
                     <div className="">
                       <div className="mb-3 flex flex-col gap-2 border-b-2 px-6 py-2">
                         {/* <BalanceRow
