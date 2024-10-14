@@ -46,12 +46,7 @@ const DefaultLayout: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <div
-      className={`relative min-h-screen justify-evenly ${
-        greyBackgroundPageRoutes.includes(router.pathname) ||
-        router.pathname.match("topics")
-          ? "bg-light-gray"
-          : ""
-      }`}
+      className={`relative min-h-screen justify-evenly bg-background-page text-white`}
     >
       <TradeItemContext.Provider value={{ data: tradeItem, set: setTradeItem }}>
         <div ref={contentRef} className={`flex-grow`}>

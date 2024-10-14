@@ -29,7 +29,7 @@ const HorizontalScroll: FC<HorizontalScrollProps> = ({
       {link && (
         <Link
           href={link}
-          className="w-full rounded-ztg-100 bg-mystic px-[15px] text-center text-ztg-14-150 leading-[40px] sm:w-fit"
+          className="w-full rounded-ztg-100 bg-dark px-[15px] text-center text-ztg-14-150 leading-[40px] sm:w-fit"
         >
           {cta}
         </Link>
@@ -39,7 +39,7 @@ const HorizontalScroll: FC<HorizontalScrollProps> = ({
         className={`ztg-transition ml-[12px] mr-[8px] hidden h-[40px] w-[40px] items-center justify-center rounded-full sm:flex ${
           leftDisabled
             ? "bg-sky-600 text-pastel-blue opacity-30"
-            : "bg-pastel-blue text-white"
+            : "bg-dark text-white"
         }`}
         disabled={leftDisabled}
       >
@@ -50,7 +50,7 @@ const HorizontalScroll: FC<HorizontalScrollProps> = ({
         className={`ztg-transition hidden h-[40px] w-[40px] items-center justify-center rounded-full sm:flex  ${
           rightDisabled
             ? "bg-sky-600 text-pastel-blue opacity-30"
-            : "bg-pastel-blue text-white"
+            : "bg-dark text-white"
         }`}
         disabled={rightDisabled}
       >
