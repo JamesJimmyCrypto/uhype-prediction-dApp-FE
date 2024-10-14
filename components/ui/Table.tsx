@@ -398,7 +398,7 @@ const Table = ({
       ) : (
         <>
           <table
-            className="w-full border-separate rounded-lg shadow-xl shadow-gray-100 "
+            className="w-full divide-y divide-[#EAECF0]/10 rounded-lg shadow-xl"
             ref={tableRef}
             style={
               isOverflowing === true
@@ -411,13 +411,11 @@ const Table = ({
             }
           >
             <thead>
-              <tr className="h-12 bg-light-gray">
+              <tr className="h-12 divide-y divide-[#EAECF0]/10 bg-dark">
                 {renderColumns.map((column, index) => (
                   <th
                     key={index}
-                    className={`${getHeaderClass(column)} border-b-2 ${
-                      index == 0 ? "rounded-tl-xl" : ""
-                    } ${index == columns.length - 1 ? "rounded-tr-xl" : ""}
+                    className={`${getHeaderClass(column)} ${index == columns.length - 1 ? "rounded-tr-xl" : ""}
                     ${column.hideMobile ? "hidden sm:table-cell" : ""}
                     `}
                     style={column.width ? { width: column.width } : {}}
@@ -465,7 +463,7 @@ const Table = ({
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-[#EAECF0]/10">
               {rows.map((row, index) => {
                 prepareRow(row);
 
@@ -474,8 +472,8 @@ const Table = ({
                     ref={index === loadMoreThresholdIndex ? loadMoreRef : null}
                     key={row.id}
                     className={`
-                      group
-                      border-t-1 border-gray-200
+                      group border-t-1
+                      bg-background-page
                       transition-colors duration-100 ease-in-out
                       ${
                         showHighlight === true

@@ -12,6 +12,7 @@ import { Button } from "src/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "src/components/ui/form";
 import { Input } from "src/components/ui/input";
 import FormTransactionButton from "../ui/FormTransactionButton";
+import { useSolBalance } from "@/lib/util";
 
 export type BuyFormProps = {
   marketId: string;
@@ -27,6 +28,8 @@ export type BuyFormProps = {
 const BuyForm = ({ marketId, market, answerKey }: BuyFormProps) => {
   const { mutateBet } = useMarketProgram();
   const { publicKey } = useWallet();
+  const { data: solBalance = 0, isLoading: isLoadingBalance } =
+    useSolBalance(publicKey);
   const notificationStore = useNotifications();
   const [loading, setLoading] = useState(false);
 
@@ -47,14 +50,16 @@ const BuyForm = ({ marketId, market, answerKey }: BuyFormProps) => {
   const watchAmount = watch("amount");
 
   // Simulating a max balance for demonstration
-  const maxBalance = 100;
+  const maxBalance = solBalance;
 
   const handlePlaceBet = async (data) => {
-    if (!publicKey) return;
     setLoading(true);
+    if (!publicKey) return;
+
     const betAmount = new Decimal(data.amount);
     const betAmountInLamports = betAmount.mul(1e9).toNumber();
     try {
+      console.log("vcl");
       await mutateBet({
         voter: publicKey,
         marketKey: new BN(market.marketKey),
@@ -192,6 +197,10 @@ const BuyForm = ({ marketId, market, answerKey }: BuyFormProps) => {
             disabled={!publicKey || watchAmount <= 0}
             disableFeeCheck={true}
             loading={false}
+            onClick={() => {
+              console.log("vcl");
+              handleSubmit(handlePlaceBet);
+            }}
           >
             {loading ? "Buying..." : "Buy"}
           </FormTransactionButton>
