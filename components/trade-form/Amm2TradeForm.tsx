@@ -130,12 +130,11 @@ const Amm2TradeForm = ({
                     marketId={marketId}
                     market={market}
                     answerKey={answers[0].answerKey}
-                    initialAsset={initialAsset}
-                    onSuccess={(data, asset, amount) => {
-                      handleSuccess(data);
-                      setOutcomeAsset(asset);
-                      setAmountIn(amount);
-                    }}
+                    // onSuccess={(data, asset, amount) => {
+                    //   handleSuccess(data);
+                    //   setOutcomeAsset(asset);
+                    //   setAmountIn(amount);
+                    // }}
                   />
                 </Tab.Panel>
                 <Tab.Panel>
@@ -143,12 +142,12 @@ const Amm2TradeForm = ({
                     marketId={marketId}
                     market={market}
                     answerKey={answers[1].answerKey}
-                    initialAsset={initialAsset}
-                    onSuccess={(data, asset, amount) => {
-                      handleSuccess(data);
-                      setOutcomeAsset(asset);
-                      setAmountIn(amount);
-                    }}
+                    // initialAsset={initialAsset}
+                    // onSuccess={(data, asset, amount) => {
+                    //   handleSuccess(data);
+                    //   setOutcomeAsset(asset);
+                    //   setAmountIn(amount);
+                    // }}
                   />
                 </Tab.Panel>
               </>

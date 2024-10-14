@@ -1,284 +1,206 @@
-import { ISubmittableResult } from "@polkadot/types/types";
-import { OrderStatus } from "@zeitgeistpm/indexer";
-import { MarketOutcomeAssetId, parseAssetId } from "@zeitgeistpm/sdk";
-// import MarketContextActionOutcomeSelector from "components/markets/MarketContextActionOutcomeSelector";
-
-import FormTransactionButton from "components/ui/FormTransactionButton";
-import Input from "components/ui/Input";
-import Decimal from "decimal.js";
-import { DEFAULT_SLIPPAGE_PERCENTAGE } from "lib/constants";
-import {
-  lookupAssetReserve,
-  useAmm2Pool,
-} from "lib/hooks/queries/amm2/useAmm2Pool";
-import { useOrders } from "lib/hooks/queries/orderbook/useOrders";
-import { useAssetMetadata } from "lib/hooks/queries/useAssetMetadata";
-import { useBalance } from "lib/hooks/queries/useBalance";
-import { useMarket } from "lib/hooks/queries/useMarket";
-import { useNotifications } from "lib/state/notifications";
-import { useWallet } from "@solana/wallet-adapter-react";
-import {
-  approximateMaxAmountInForBuy,
-  calculateSpotPrice,
-  calculateSpotPriceAfterBuy,
-  calculateSwapAmountOutForBuy,
-  isValidBuyAmount,
-} from "lib/util/amm2";
-import { assetsAreEqual } from "lib/util/assets-are-equal";
-import { formatNumberCompact } from "lib/util/format-compact";
-import { selectOrdersForMarketBuy } from "lib/util/order-selection";
-import { parseAssetIdString } from "lib/util/parse-asset-id";
-import { perbillToNumber } from "lib/util/perbill-to-number";
-import { useEffect, useMemo, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useMarketProgram } from "@/src/hooks";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
+import Decimal from "decimal.js";
+import { useMarketProgram } from "@/src/hooks";
+import { useNotifications } from "lib/state/notifications";
 import { Market } from "@/src/types";
-import { getExplorerUrl } from "@/lib/util";
+import { formatNumberCompact } from "lib/util/format-compact";
+import { Button } from "src/components/ui/button";
+import { Form, FormControl, FormField, FormItem } from "src/components/ui/form";
+import { Input } from "src/components/ui/input";
+import FormTransactionButton from "../ui/FormTransactionButton";
 
-const BuyForm = ({
-  marketId,
-  market,
-  answerKey,
-  initialAsset,
-  onSuccess,
-}: {
+export type BuyFormProps = {
   marketId: string;
   market: Market;
   answerKey: BN;
-  initialAsset?: MarketOutcomeAssetId;
-  onSuccess: (
-    data: ISubmittableResult,
-    outcomeAsset: MarketOutcomeAssetId,
-    amountIn: Decimal,
-  ) => void;
-}) => {
+  // initialAsset?: MarketOutcomeAssetId;
+  // onSuccess: (
+  //   data: ISubmittableResult,
+  //   outcomeAsset: MarketOutcomeAssetId,
+  //   amountIn: Decimal,
+  // ) => void;
+};
+const BuyForm = ({ marketId, market, answerKey }: BuyFormProps) => {
   const { mutateBet } = useMarketProgram();
+  const { publicKey } = useWallet();
+  const notificationStore = useNotifications();
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm({
+    defaultValues: {
+      amount: 0,
+    },
+  });
+
   const {
     register,
     handleSubmit,
-    getValues,
-    formState,
     watch,
     setValue,
-    trigger,
-  } = useForm({
-    reValidateMode: "onChange",
-    mode: "onChange",
-  });
-  const notificationStore = useNotifications();
-  const { publicKey } = useWallet();
-  const pubKey = publicKey?.toString() ?? "";
-  // const baseAsset = parseAssetIdString(market?.baseAsset);
-  // const { data: assetMetadata } = useAssetMetadata(baseAsset);
-  // const baseSymbol = assetMetadata?.symbol;
-  // const { data: baseAssetBalance } = useBalance(pubKey, baseAsset);
-  const { data: pool } = useAmm2Pool(marketId);
-  // const { data: orders } = useOrders({
-  //   marketId_eq: marketId,
-  //   status_eq: OrderStatus.Placed,
-  // });
+    formState: { errors },
+  } = form;
 
-  const swapFee = pool?.swapFee;
-  const creatorFee = new Decimal(perbillToNumber(0));
+  const watchAmount = watch("amount");
 
-  // const outcomeAssets = market?.outcomeAssets.map(
-  //   (assetIdString) =>
-  //     parseAssetId(assetIdString).unwrap() as MarketOutcomeAssetId,
-  // );
-  // const [selectedAsset, setSelectedAsset] = useState<
-  //   MarketOutcomeAssetId | undefined
-  // >(initialAsset ?? outcomeAssets?.[0]);
+  // Simulating a max balance for demonstration
+  const maxBalance = 100;
 
-  const formAmount = getValues("amount");
-
-  const amountIn = new Decimal(
-    formAmount && formAmount !== "" ? formAmount : 0,
-  );
-  // const assetReserve =
-  //   pool?.reserves && lookupAssetReserve(pool?.reserves, selectedAsset);
-
-  const validBuy = useMemo(() => {
-    return swapFee;
-  }, [pool?.liquidity, amountIn]);
-
-  const maxAmountIn = useMemo(() => {
-    return pool;
-  }, [pool?.liquidity]);
-
-  const { amountOut, spotPrice, newSpotPrice, priceImpact, maxProfit } =
-    useMemo(() => {
-      const amountOut = new Decimal(0);
-
-      // const spotPrice =
-      //   assetReserve && calculateSpotPrice(assetReserve, pool?.liquidity);
-
-      // const newSpotPrice =
-      //   pool?.liquidity &&
-      //   assetReserve &&
-      //   swapFee &&
-      //   calculateSpotPriceAfterBuy(
-      //     assetReserve,
-      //     pool.liquidity,
-      //     amountOut,
-      //     amountIn,
-      //     swapFee,
-      //     creatorFee,
-      //   );
-
-      const priceImpact = new Decimal(0);
-
-      const maxProfit = amountOut.minus(amountIn);
-
-      return {
-        amountOut,
-        spotPrice: new Decimal(0),
-        newSpotPrice: new Decimal(0),
-        priceImpact,
-        maxProfit,
-      };
-    }, [amountIn, pool?.liquidity]);
-
-  const maxSpendableBalance = 0;
-
-  useEffect(() => {
-    const subscription = watch((value, { name, type }) => {
-      const changedByUser = type != null;
-
-      if (!changedByUser || !maxSpendableBalance || !maxAmountIn) return;
-
-      if (name === "percentage") {
-        const max = maxAmountIn;
-        // setValue("amount", Number(Decimal.ROUND_DOWN)));
-      } else if (name === "amount" && value.amount !== "") {
-        setValue(
-          "percentage",
-          new Decimal(value.amount)
-            .div(maxSpendableBalance)
-            .mul(100)
-            .toString(),
-        );
-      }
-      trigger("amount");
-    });
-    return () => subscription.unsubscribe();
-  }, [watch, maxSpendableBalance, maxAmountIn]);
-
-  const handlePlaceBet = async () => {
+  const handlePlaceBet = async (data) => {
     if (!publicKey) return;
-    const betAmount = amountIn.greaterThan(0) ? amountIn.toNumber() : 0;
-    const betAmountInLamports = betAmount * 1e9;
+    setLoading(true);
+    const betAmount = new Decimal(data.amount);
+    const betAmountInLamports = betAmount.mul(1e9).toNumber();
     try {
       await mutateBet({
         voter: publicKey,
-        marketKey: market.marketKey, // replace with actual market ID
-        betAmount: new BN(betAmountInLamports), // amount to bet
-        answerKey: answerKey, // outcome for the bet
+        marketKey: new BN(market.marketKey),
+        betAmount: new BN(betAmountInLamports),
+        answerKey: answerKey,
       });
-      // console.log("Bet placed successfully with signature:", signature);
-
-      // Optionally call onSuccess if you want to perform further actions
-      // onSuccess(signature, market.answers[0].answerKey, new Decimal(0.1));
+      console.log(new BN(betAmountInLamports), "lamport", betAmount, "sol");
+      // notificationStore.pushNotification("Bet placed successfully!", {
+      //   type: "Success",
+      //   autoRemove: true,
+      //   lifetime: 5,
+      // });
+      setLoading(false);
     } catch (error) {
-      // console.error("Error placing bet:", error);
       notificationStore.pushNotification("Failed to place bet.", {
-        autoRemove: true,
         type: "Error",
+        autoRemove: true,
         lifetime: 15,
       });
+      setLoading(false);
     }
   };
-  const onSubmit = () => {
-    handlePlaceBet();
+
+  const setAmount = (amount) => {
+    setValue("amount", amount);
   };
+
   return (
-    <div className="flex w-full flex-col items-center gap-8 text-ztg-18-150 font-semibold">
+    <Form {...form}>
       <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full flex-col items-center gap-y-4"
+        onSubmit={handleSubmit(handlePlaceBet)}
+        className="flex flex-col justify-center space-y-4"
       >
-        <div className="flex w-full items-center justify-center rounded-md p-2">
-          <div className="mr-4 font-mono">
-            {/* {amountOut.div().abs().toFixed(3)} */}
-          </div>
-          <div>
-            {/* {market && selectedAsset && (
-              // <MarketContextActionOutcomeSelector
-              //   market={market}
-              //   selected={selectedAsset}
-              //   options={outcomeAssets}
-              //   onChange={(assetId) => {
-              //     setSelectedAsset(assetId);
-              //     trigger();
-              //   }}
-              // />
-            )} */}
-          </div>
-        </div>
-        {/* <div className="text-sm">For</div> */}
-        <div className="center relative h-[56px] w-full rounded-md bg-white text-ztg-18-150 font-normal">
-          <Input
-            type="number"
-            className="w-full bg-transparent font-mono outline-none"
-            step="any"
-            {...register("amount", {
-              value: 0,
-              required: {
-                value: true,
-                message: "Value is required",
-              },
-              validate: (value) => {
-                if (value <= 0) {
-                  return "Value cannot be zero or less";
-                } else if (value == 0) {
-                  return `Maximum amount of that can be traded `;
-                } else if (validBuy) {
-                  return "OK";
-                }
-              },
-            })}
-          />
-          {/* <div className="absolute right-0 mr-[10px]">{baseSymbol}</div> */}
-        </div>
-        {/* <input
-          className="mb-[10px] mt-[30px] w-full"
-          type="range"
-          disabled={!maxSpendableBalance}
-          {...register("percentage", { value: "0" })}
-        /> */}
-        <div className="mb-[10px] flex w-full flex-col items-center gap-2 text-xs font-normal text-sky-600 ">
-          <div className="h-[16px] text-xs text-vermilion">
-            <>{formState.errors["amount"]?.message}</>
-          </div>
-          {/* <div className="flex w-full justify-between">
-            <div>Max profit:</div>
-            <div className="text-black">{maxProfit.toFixed(2)}</div>
-          </div> */}
-          <div className="flex w-full justify-between">
-            <div>Price after trade:</div>
-            <div className="text-black">
-              {newSpotPrice?.toFixed(2)} ({priceImpact?.toFixed(2)}%)
+        <div className="focus-within:border-v2-primary/50 focus-within:shadow-swap-input-dark bg-uiv2 relative flex min-h-[124px] flex-col space-y-3 rounded-xl border border-transparent p-4">
+          <div className="flex items-center justify-between">
+            <span className="text-v2-lily text-sm font-medium">
+              You're Buying
+            </span>
+            <div className="flex space-x-2">
+              <div className="flex items-center space-x-1">
+                <div className="text-v2-lily/50 whitespace-nowrap text-xs font-normal">
+                  <span translate="no">{watchAmount}</span> <span>SOL</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between space-x-1">
+                <button
+                  type="button"
+                  onClick={() => setAmount(maxBalance / 2)}
+                  className="bg-v2-background-page text-v2-lily/50 hover:border-v2-primary hover:text-v2-primary cursor-pointer rounded-md border border-transparent !px-[6px] !py-1 !text-[10px] font-medium leading-4"
+                >
+                  HALF
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAmount(maxBalance)}
+                  className="bg-v2-background-page text-v2-lily/50 hover:border-v2-primary hover:text-v2-primary cursor-pointer rounded-md border border-transparent !px-[6px] !py-1 !text-[10px] font-medium leading-4"
+                >
+                  MAX
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <FormTransactionButton
-          className="w-full max-w-[250px]"
-          disabled={formState.isValid}
-          disableFeeCheck={true}
-          loading={false}
-        >
-          <div>
-            <div className="flex h-[24px]  items-center justify-center text-center">
-              <div className="text-[24px] font-bold ">Buy</div>
+          <div className="flex flex-1 items-center space-x-2">
+            <div className="group/select flex items-center justify-between">
+              <button
+                type="button"
+                className="bg-v2-background-page group-hover/select:border-v2-primary/50 group-hover/select:shadow-swap-input-dark flex h-10 items-center space-x-3 rounded-lg border border-transparent px-3 py-2 group-hover/select:bg-[rgba(199,242,132,0.2)]"
+              >
+                <div className="rounded-full">
+                  <span className="relative">
+                    <img
+                      src="/currencies/solana.png"
+                      alt="SOL"
+                      width="24"
+                      height="24"
+                      className="rounded-full object-cover"
+                      style={{ maxWidth: "24px", maxHeight: "24px" }}
+                    />
+                  </span>
+                </div>
+                <div className="text-sm font-semibold" translate="no">
+                  SOL
+                </div>
+                <div className="group-hover/select:text-v2-primary fill-current text-white/25">
+                  <svg
+                    width="10"
+                    height="6"
+                    viewBox="0 0 10 6"
+                    fill="inherit"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M0.292893 0.292893C0.683416 -0.097631 1.31658 -0.097631 1.7071 0.292893L4.99999 3.58579L8.29288 0.292893C8.6834 -0.0976311 9.31657 -0.0976311 9.70709 0.292893C10.0976 0.683417 10.0976 1.31658 9.70709 1.70711L5.7071 5.70711C5.31657 6.09763 4.68341 6.09763 4.29289 5.70711L0.292893 1.70711C-0.0976309 1.31658 -0.0976309 0.683417 0.292893 0.292893Z"
+                      fill="inherit"
+                    ></path>
+                  </svg>
+                </div>
+              </button>
             </div>
+            <span className="flex-1 text-right">
+              <div className="flex h-full flex-col text-right">
+                <FormField
+                  control={form.control}
+                  name="amount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="0.00"
+                          className="text-v2-lily h-full w-full bg-transparent text-right text-xl font-semibold outline-none placeholder:text-white/25 disabled:cursor-not-allowed disabled:text-black disabled:opacity-100"
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(parseFloat(e.target.value) || 0);
+                            console.log(e.target.value);
+                          }}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <div className="text-white-35 text-xs">
+                  <div className="text-v2-lily/50 !text-xs text-xs font-normal"></div>
+                </div>
+              </div>
+            </span>
           </div>
-        </FormTransactionButton>
-        <div className="center h-[20px] text-ztg-12-120 font-normal">
-          Network fee: {formatNumberCompact(0)} {"SOL"}
+        </div>
+
+        <div className="flex justify-center">
+          <FormTransactionButton
+            className="w-full max-w-[250px]"
+            disabled={!publicKey || watchAmount <= 0}
+            disableFeeCheck={true}
+            loading={false}
+          >
+            {loading ? "Buying..." : "Buy"}
+          </FormTransactionButton>
+        </div>
+        <div className="text-center text-sm text-gray-500">
+          Network fee: {formatNumberCompact(0)} SOL
         </div>
       </form>
-    </div>
+    </Form>
   );
 };
 
