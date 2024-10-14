@@ -57,7 +57,7 @@ const DefaultLayout: FC<PropsWithChildren> = ({ children }) => {
         <div ref={contentRef} className={`flex-grow`}>
           <TopBar />
           <main
-            className="container-fluid mb-12 mt-16"
+            className="container-fluid bg-background-pagee mb-12 mt-16 text-white"
             ref={mainRef}
             style={{ minHeight: "calc(100vh - 300px)" }}
           >

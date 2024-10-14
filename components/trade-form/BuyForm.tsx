@@ -88,7 +88,7 @@ const BuyForm = ({ marketId, market, answerKey }: BuyFormProps) => {
         onSubmit={handleSubmit(handlePlaceBet)}
         className="flex flex-col justify-center space-y-4"
       >
-        <div className="focus-within:border-v2-primary/50 focus-within:shadow-swap-input-dark bg-uiv2 relative flex min-h-[124px] flex-col space-y-3 rounded-xl border border-transparent p-4">
+        <div className="focus-within:border-v2-primary/50 focus-within:shadow-swap-input-dark relative flex min-h-[124px] flex-col space-y-3 rounded-xl border border-transparent bg-dark p-4 text-white">
           <div className="flex items-center justify-between">
             <span className="text-v2-lily text-sm font-medium">
               You're Buying

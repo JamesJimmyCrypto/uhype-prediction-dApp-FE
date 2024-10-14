@@ -203,7 +203,7 @@ const AccountButton: FC<{
                           )}
                         </Menu.Item>
                       </div>
-                      <Menu.Item>
+                      {/* <Menu.Item>
                         {({ active }) => (
                           <div
                             className="mb-3 flex items-center px-6 hover:bg-slate-100"
@@ -217,7 +217,7 @@ const AccountButton: FC<{
                             </button>
                           </div>
                         )}
-                      </Menu.Item>
+                      </Menu.Item> */}
                       <Menu.Item>
                         {({ active }) => (
                           <Link href={`/portfolio/${publicKey}`}>
