@@ -8,6 +8,7 @@ import { SystemProgram } from "@solana/web3.js";
 import {
   Answer,
   AnswerAccount,
+  BettingAccount,
   Market,
   MarketAccount,
   MarketResponse,
@@ -16,6 +17,7 @@ import {
 import { ComputeBudgetProgram, SendTransactionError } from "@solana/web3.js";
 import { useNotifications } from "@/lib/state/notifications";
 import { getExplorerUrl } from "@/lib/util";
+import bs58 from "bs58";
 export function useMarketProgram() {
   const provider = useAnchorProvider();
   const { publicKey, sendTransaction, signTransaction } = useWallet();
@@ -120,75 +122,6 @@ export function useMarketProgram() {
     },
   });
 
-  // const createMarket = useMutation({
-  //   mutationKey: ["createMarket"],
-  //   mutationFn: async ({
-  //     eventName,
-  //     outcomeOptions,
-  //   }: {
-  //     eventName: string;
-  //     outcomeOptions: string[];
-  //   }) => {
-  //     if (!publicKey) return;
-  //     const seed = new BN(randomBytes(8));
-
-  //     const marketKeypair = Keypair.generate();
-
-  //     const transaction = await program.methods
-  //       .createMarket(eventName, outcomeOptions)
-  //       .accounts({
-  //         market: marketKeypair.publicKey,
-  //         user: publicKey,
-  //         systemProgram: SystemProgram.programId,
-  //       })
-  //       .signers([marketKeypair])
-  //       .transaction();
-
-  //     // const [market] = PublicKey.findProgramAddressSync(
-  //     //   [
-  //     //     Buffer.from("market"),
-  //     //     publicKey.toBuffer(),
-  //     //     seed.toArrayLike(Buffer, "le", 8),
-  //     //   ],
-  //     //   program.programId,
-  //     // );
-  //     // console.log("Market PDA:", market.toBase58());
-  //     // // Construct the transaction
-  //     // const transaction = await program.methods
-  //     //   .createMarket(eventName, outcomeOptions)
-  //     //   .accounts({
-  //     //     market,
-  //     //     user: publicKey,
-  //     //     systemProgram: SystemProgram.programId,
-  //     //   })
-  //     //   .transaction();
-
-  //     const { blockhash } = await connection.getLatestBlockhash();
-  //     transaction.recentBlockhash = blockhash;
-  //     transaction.feePayer = publicKey;
-
-  //     // Log the transaction details
-  //     console.log("Transaction:", JSON.stringify(transaction));
-
-  //     try {
-  //       // Send the transaction using the wallet's sendTransaction method
-  //       const signature = await sendTransaction(transaction, connection, {
-  //         skipPreflight: true, // Skip preflight checks
-  //         preflightCommitment: "confirmed", // Set preflight commitment level
-  //       });
-
-  //       console.log("Transaction Signature:", signature);
-  //       return signature;
-  //     } catch (error) {
-  //       console.error("Transaction Error:", error);
-  //       throw error;
-  //     }
-  //   },
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["getMarketAccounts"] });
-  //   },
-  // });
-
   const getMarkets = async (): Promise<Market[]> => {
     try {
       const responses =
@@ -261,22 +194,6 @@ export function useMarketProgram() {
       enabled: !!publicKey, // Only run the query if the publicKey is available
     });
   };
-
-  // const getMyMarketAccounts = async (): Promise<MarketAccount[]> => {
-  //   if (!publicKey) {
-  //     return []; // Return an empty array if publicKey is not defined
-  //   }
-
-  //   try {
-  //     const responses = await program.account.marketAccount.all();
-  //     // Filter or process accounts if needed
-  //     // const myMarkets = responses.filter(account => account.account.owner.equals(publicKey));
-  //     // return myMarkets;
-  //   } catch (error) {
-  //     console.error("Error fetching my markets:", error);
-  //     throw error;
-  //   }
-  // };
 
   const resolveMarket = useMutation({
     mutationKey: ["resolveMarket"],
@@ -538,6 +455,47 @@ export function useMarketProgram() {
     );
   };
 
+  const getBettingHistory = async (
+    marketPublicKey: PublicKey,
+  ): Promise<BettingAccount[]> => {
+    try {
+      const marketAccount = (await program.account.marketAccount.fetch(
+        marketPublicKey,
+      )) as MarketAccount;
+
+      // Fetch the AnswerAccount
+      const [bettingPDA] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("betting"),
+          marketAccount.marketKey.toArrayLike(Buffer, "le", 8),
+        ],
+        program.programId,
+      );
+      console.log(bettingPDA, "bettingPDA", marketAccount, "marketAccount");
+      // Fetch all BettingAccounts for the given market
+      const bettingAccounts = await program.account.bettingAccount.all();
+
+      console.log(bettingAccounts, "bettingAccounts");
+
+      // Filter out non-existent bets and sort by creation time (newest first)
+      return bettingAccounts
+        .map((account) => account.account as BettingAccount)
+        .filter((account) => account.marketKey.eq(marketAccount.marketKey))
+        .sort((a, b) => b.createTime.toNumber() - a.createTime.toNumber());
+    } catch (error) {
+      console.error("Error fetching betting history:", error);
+      throw error;
+    }
+  };
+
+  const useGetBettingHistoryQuery = (marketKey?: PublicKey) => {
+    return useQuery({
+      queryKey: ["getBettingHistory", marketKey?.toString()],
+      queryFn: () => getBettingHistory(marketKey!),
+      enabled: !!marketKey,
+    });
+  };
+
   return {
     program,
     getMarket,
@@ -551,6 +509,8 @@ export function useMarketProgram() {
     mutateBet: useMutateBet.mutate,
     fetchMarketStats,
     useMarketStats,
+    getBettingHistory,
+    useGetBettingHistoryQuery,
   };
 }
 

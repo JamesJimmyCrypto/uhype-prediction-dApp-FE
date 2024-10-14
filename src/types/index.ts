@@ -9,6 +9,21 @@ export interface ConfigAccount {
   serviceFeeAccount: PublicKey;
 }
 
+export type BettingAccount = {
+  bump: number;
+  marketKey: BN;
+  answerKey: BN;
+  voter: PublicKey;
+  tokens: BN;
+  createTime: BN;
+  exist: boolean;
+};
+
+export type BettingResponse = {
+  publicKey: PublicKey;
+  account: BettingAccount;
+}
+
 export type AnswerAccount = {
   bump: number;
   answers: Answer[];
