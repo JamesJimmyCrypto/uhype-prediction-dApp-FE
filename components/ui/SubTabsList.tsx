@@ -9,8 +9,8 @@ const SubTabsList = ({ titles }: { titles: string[] }) => {
             <div
               className={
                 selected
-                  ? "font-semibold text-black transition-all"
-                  : "text-sky-600 transition-all"
+                  ? "text-white-200 font-semibold transition-all"
+                  : "text-white-600 transition-all"
               }
             >
               {title}

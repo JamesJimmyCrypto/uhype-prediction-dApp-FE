@@ -106,8 +106,8 @@ const Portfolio: NextPageWithLayout = () => {
                     <div
                       className={`${
                         selected
-                          ? "font-semibold text-black transition-all"
-                          : "text-sky-600 transition-all"
+                          ? "font-bold text-white transition-all"
+                          : "text-white-100 font-thin transition-all"
                       } ${index === 0 ? "px-0 pr-4" : "px-4"}`}
                     >
                       {title}
