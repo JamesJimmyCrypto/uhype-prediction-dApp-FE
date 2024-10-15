@@ -198,7 +198,6 @@ const BuyForm = ({ marketId, market, answerKey }: BuyFormProps) => {
             disableFeeCheck={true}
             loading={false}
             onClick={() => {
-              console.log("vcl");
               handleSubmit(handlePlaceBet);
             }}
           >
