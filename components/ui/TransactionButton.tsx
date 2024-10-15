@@ -38,6 +38,7 @@ const TransactionButton: FC<PropsWithChildren<TransactionButtonProps>> = ({
   const [isHovered, setIsHovered] = useState(false);
 
   const click = (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    console.log("vcl");
     onClick?.();
     if (preventDefault) {
       event?.preventDefault();

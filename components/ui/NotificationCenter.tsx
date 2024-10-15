@@ -34,15 +34,9 @@ const NotificationCard: FC<{
   }, [timer, lifetime]);
 
   return (
-    <div
-      className={`relative flex flex-1 gap-4 rounded-md  px-5 ${getBgColor(
-        type,
-      )}`}
-    >
+    <div className={`relative flex flex-1 gap-4 rounded-md  bg-dark px-5`}>
       <div
-        className={`absolute left-0 top-0  z-20 h-1 w-full overflow-hidden rounded-t-md ${getBgColor(
-          type,
-        )}`}
+        className={`absolute left-0 top-0  z-20 h-1 w-full overflow-hidden rounded-t-md bg-dark`}
       >
         <div
           className={`${getTopBarColor(
@@ -58,8 +52,8 @@ const NotificationCard: FC<{
           )} absolute left-0 top-0 z-40 h-full  w-full opacity-10`}
         />
       </div>
-      <div className="flex justify-center py-6 text-white">
-        <div className={`center ${getBgColor(type)}`}>
+      <div className="flex justify-center py-6 text-black">
+        <div className={`center bg-dark`}>
           <Loader
             loading={Boolean(lifetime)}
             lineThrough={type === "Error"}

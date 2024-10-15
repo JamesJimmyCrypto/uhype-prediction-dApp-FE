@@ -54,11 +54,11 @@ const onSdkChange = () => {
   sub = new Subscription();
 
   // Example: Poll the chain time every 10 seconds
-  const intervalId = setInterval(fetchChainTime, 30000);
+  // const intervalId = setInterval(fetchChainTime, 30000);
 
   // Add to the subscription so it can be unsubscribed later
   sub.add({
-    unsubscribe: () => clearInterval(intervalId),
+    unsubscribe: () => { },
   });
 };
 
