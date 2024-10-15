@@ -66,7 +66,7 @@ const CourtExitButton = ({ className }: { className?: string }) => {
         </div>
         {!canExit && (
           <div className="mb-1 w-full">
-            <div className="h-[3px] w-full rounded-lg bg-gray-100 bg-opacity-25">
+            <div className="h-[3px] w-full rounded-lg bg-dark bg-opacity-25">
               <div
                 className={`h-full rounded-lg bg-blue-400 transition-all`}
                 style={{ width: `${percentage}%` }}

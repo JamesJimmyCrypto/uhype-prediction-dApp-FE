@@ -58,7 +58,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     <>
       {isFirefox ? (
         <div
-          className={`center flex overflow-hidden rounded-full bg-gray-100 transition-all ${
+          className={`center flex overflow-hidden rounded-full bg-dark transition-all ${
             isValid && "!bg-nyanza-base"
           } ${className}`}
         >
@@ -79,7 +79,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       ) : (
         <button
           type="button"
-          className={`center flex rounded-full  bg-gray-100 transition-all active:scale-95  ${
+          className={`center flex rounded-full  bg-dark transition-all active:scale-95  ${
             isValid && "!bg-nyanza-base"
           } ${className}`}
           onClick={() => {

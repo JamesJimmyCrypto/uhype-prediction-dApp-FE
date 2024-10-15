@@ -185,6 +185,8 @@ module.exports = {
 				'560px': '560px'
 			},
 			colors: {
+				"primary-bg": "#c7f2821a",
+				"primary": "#c7f284",
 				"background-page": "#1c2936",
 				"dark": "#131b24",
 				success: '#E8FFE4',

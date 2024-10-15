@@ -127,7 +127,7 @@ export const BlockPeriodPicker: React.FC<BlockPeriodPickerProps> = ({
           <button
             key={index}
             type="button"
-            className={`center flex rounded-full bg-gray-100 px-6 py-3 transition-all active:scale-95 ${
+            className={`center flex rounded-full bg-dark px-6 py-3 transition-all active:scale-95 ${
               value?.type === "duration" &&
               value?.preset === option.preset &&
               "bg-nyanza-base"
@@ -233,7 +233,7 @@ const DurationInput = ({
     <div className={`flex ${className}`}>
       <div
         className={`relative flex flex-1 flex-shrink rounded-md transition-all duration-200 ${
-          isSelected ? "bg-nyanza-base" : "bg-gray-100"
+          isSelected ? "bg-nyanza-base" : "bg-dark"
         }`}
       >
         <Input
@@ -246,11 +246,7 @@ const DurationInput = ({
 
         <div
           className={`flex flex-1 items-center justify-center gap-2 rounded-full rounded-r-md px-6 py-3 transition-all duration-200
-          ${
-            isSelected
-              ? "bg-gray-100 bg-opacity-50"
-              : "bg-black bg-opacity-[3%]"
-          }
+          ${isSelected ? "bg-dark bg-opacity-50" : "bg-black bg-opacity-[3%]"}
         `}
         >
           <select

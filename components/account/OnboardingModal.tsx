@@ -99,7 +99,7 @@ const TextSection = ({
         <div className="flex h-[56px] w-full gap-x-5 font-medium">
           {leftButton && (
             <button
-              className={`w-full rounded-[100px] bg-mystic hover:bg-gray-100 ${
+              className={`w-full rounded-[100px] bg-mystic hover:bg-dark ${
                 leftButton.disabled === true
                   ? "cursor-default bg-gray-light-2"
                   : "border"
@@ -135,7 +135,7 @@ export const ButtonList: React.FC<ButtonListProps> = ({ buttonList }) => {
           key={index}
           disabled={button.disabled}
           onClick={button.onClick}
-          className={`flex min-h-[56px] w-full items-center justify-center rounded-lg bg-mystic p-2 text-center hover:bg-gray-100 ${
+          className={`flex min-h-[56px] w-full items-center justify-center rounded-lg bg-mystic p-2 text-center hover:bg-dark ${
             button.disabled === true ? "bg-gray-light-2" : "border"
           }`}
         >
@@ -158,7 +158,7 @@ export const ResourceList: React.FC<ButtonListProps> = ({ buttonList }) => {
             key={index}
             disabled={resource.disabled}
             onClick={resource.onClick}
-            className={`col-span-3 flex min-h-[56px] w-full items-center justify-center rounded-lg bg-mystic p-2 text-center hover:bg-gray-100 ${
+            className={`col-span-3 flex min-h-[56px] w-full items-center justify-center rounded-lg bg-mystic p-2 text-center hover:bg-dark ${
               resource.disabled === true ? "bg-gray-light-2" : "border"
             }`}
           >

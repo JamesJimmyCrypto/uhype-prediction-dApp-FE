@@ -24,7 +24,7 @@
 .ql-editor[contenteditable="true"] {
   resize: vertical;
   min-height: 18em;
-  @apply bg-gray-100;
+  @apply bg-dark;
   @apply !rounded-b-lg;
 }
 
@@ -81,3 +81,29 @@
 .quill .ql-editor {
   @apply font-sans text-base leading-8;
 } */
+
+.ql-container {
+  color: white;
+}
+
+.ql-editor {
+  color: white;
+}
+
+.ql-toolbar {
+  color: white;
+}
+
+.ql-container.ql-snow {
+  background-color: transparent; /* optional if you want a transparent background */
+}
+
+.ql-toolbar.ql-snow {
+  background-color: #333; /* Dark background for the toolbar */
+  border: none; /* Optional to remove borders */
+}
+
+.ql-editor {
+  min-height: 150px; /* Adjust as needed */
+  background-color: transparent; /* Make editor background transparent */
+}

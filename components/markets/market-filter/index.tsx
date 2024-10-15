@@ -146,7 +146,7 @@ const MarketFilterSelection = ({
         open={mobileDialogOpen}
         setOpen={setMobileDialogOpen}
       ></MobileDialog>
-      <div className="sticky top-topbar-height z-20 mb-4 flex w-full flex-col justify-center bg-light-gray py-2 [&>*:not(:last-child)]:mb-3">
+      <div className="sticky top-topbar-height z-20 mb-4 flex w-full flex-col justify-center bg-dark py-2 [&>*:not(:last-child)]:mb-3">
         {portalRef.current ? (
           <div className="hidden md:flex md:items-center md:gap-2">
             <MarketFiltersDropdowns className="flex items-center gap-2"></MarketFiltersDropdowns>

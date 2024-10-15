@@ -100,7 +100,7 @@ export const ScalarAnswersInput = ({
           {value?.numberType === "date" ? (
             <DateTimePicker
               name="lower-bound"
-              className={`rounded-md bg-gray-100`}
+              className={`rounded-md bg-dark`}
               value={new Date(value?.answers[0]).toString()}
               onChange={handleDateChange(0, onChange)}
               onBlur={handleDateChange(0, onBlur)}
@@ -109,7 +109,7 @@ export const ScalarAnswersInput = ({
             <Input
               type="number"
               inputMode="numeric"
-              className={`w-full flex-1 rounded-md bg-gray-100 px-5 py-3 outline-none`}
+              className={`w-full flex-1 rounded-md bg-dark px-5 py-3 outline-none`}
               value={value?.answers[0]}
               onChange={handleNumberChange(0, onChange)}
               onBlur={handleNumberChange(0, onBlur)}
@@ -121,7 +121,7 @@ export const ScalarAnswersInput = ({
         <div className="">
           {value?.numberType === "date" ? (
             <DateTimePicker
-              className={`rounded-md bg-gray-100`}
+              className={`rounded-md bg-dark`}
               name="upper-bound"
               value={new Date(value?.answers[1]).toString()}
               onChange={handleDateChange(1, onChange)}
@@ -131,7 +131,7 @@ export const ScalarAnswersInput = ({
             <Input
               type="number"
               inputMode="numeric"
-              className={` w-full flex-1 rounded-md bg-gray-100 px-5 py-3 outline-none`}
+              className={` w-full flex-1 rounded-md bg-dark px-5 py-3 outline-none`}
               value={value?.answers[1]}
               onChange={handleNumberChange(1, onChange)}
               onBlur={handleNumberChange(1, onBlur)}

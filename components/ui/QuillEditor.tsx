@@ -52,7 +52,7 @@ const QuillEditor = ({
 
   return (
     <ReactQuill
-      className={className}
+      className={`${className} text-white`}
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}

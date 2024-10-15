@@ -68,7 +68,7 @@ export const MarketEditor = () => {
 
   const timezone = form?.timeZone;
 
-  const currencyMetadata = getMetadataForCurrency(form?.currency ?? "DHP");
+  // const currencyMetadata = getMetadataForCurrency(form?.currency ?? "DHP");
 
   const back = () => {
     const prevStep = prevStepFrom(steps, currentStep);
@@ -152,7 +152,7 @@ export const MarketEditor = () => {
     <>
       {isLoaded === false && (
         <div
-          className="flex items-center justify-center bg-white "
+          className="flex items-center justify-center bg-dark "
           style={{ height: "calc(100vh - 100px)" }}
         >
           <Loader
@@ -177,7 +177,7 @@ export const MarketEditor = () => {
         >
           <div className="relative items-center justify-center md:flex">
             Create Market
-            <EditorResetButton editor={editor} />
+            {/* <EditorResetButton editor={editor} />  */}
           </div>
         </h2>
 
@@ -237,7 +237,6 @@ export const MarketEditor = () => {
               </div>
             )}
           </MarketFormSection>
-
           <MarketFormSection
             wizard={isWizard}
             isCurrent={currentStep.label == "Question"}
@@ -255,8 +254,8 @@ export const MarketEditor = () => {
                   className={`mb-4 h-12 w-full rounded-md px-4 py-7 text-center md:w-2/3
                   ${
                     !fieldsState.question.isValid
-                      ? "border-vermilion bg-gray-100"
-                      : "bg-nyanza-base "
+                      ? "border-vermilion bg-dark text-white"
+                      : "bg-primary/10 text-primary"
                   }
                 `}
                   placeholder="Ask a question that is specific and has a timeframe."
@@ -303,13 +302,6 @@ export const MarketEditor = () => {
                   <p className="mb-4 text-left font-light">
                     Outcomes will create a categorical market from the options
                     you specify.{" "}
-                    <a
-                      className="text-ztg-blue"
-                      href="https://docs.zeitgeist.pm/docs/learn/prediction-markets#categorical-prediction-markets"
-                      target="_blank"
-                    >
-                      Learn more.
-                    </a>
                   </p>
                   <h4 className="mb-1 text-left text-base">Scalar</h4>
                   <p className="mb-4 text-left">
@@ -355,17 +347,12 @@ export const MarketEditor = () => {
             isCurrent={currentStep.label == "Time Period"}
             onClickNext={next}
             onClickBack={back}
-            nextDisabled={
-              !fieldsState.endDate.isValid
-
-              //   || !fieldsState.reportingPeriod.isValid ||
-              // !fieldsState.disputePeriod.isValid
-            }
+            nextDisabled={!fieldsState.endDate.isValid}
           >
             <div className="mb-4 text-center md:mb-8">
               <h2 className="text-base">When does the market end?</h2>
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <div className="center mb-3 flex">
                 <DateTimePicker
                   timezone={timezone}
@@ -378,7 +365,7 @@ export const MarketEditor = () => {
               <div className="center flex h-5  text-xs text-red-400">
                 <ErrorMessage field={fieldsState.endDate} />
               </div>
-            </div>
+            </div> */}
 
             <div>
               {/* <div className="mb-6">
@@ -487,7 +474,7 @@ export const MarketEditor = () => {
             </div>
           </MarketFormSection>
 
-          <MarketFormSection
+          {/* <MarketFormSection
             wizard={isWizard}
             isCurrent={currentStep.label == "Oracle"}
             onClickNext={next}
@@ -525,9 +512,9 @@ export const MarketEditor = () => {
                 </div>
               </div>
             </div>
-          </MarketFormSection>
+          </MarketFormSection> */}
 
-          <MarketFormSection
+          {/* <MarketFormSection
             wizard={isWizard}
             isCurrent={currentStep.label == "Description"}
             onClickNext={next}
@@ -551,7 +538,7 @@ export const MarketEditor = () => {
                 </div>
               </div>
             </div>
-          </MarketFormSection>
+          </MarketFormSection> */}
 
           {/* <MarketFormSection
             wizard={isWizard}
@@ -707,7 +694,7 @@ export const MarketEditor = () => {
               </>
             )}
           </MarketFormSection> */}
-
+          {/* 
           <MarketFormSection
             wizard={isWizard}
             isCurrent={currentStep.label == "Summary"}
@@ -716,11 +703,11 @@ export const MarketEditor = () => {
             <div className="center flex">
               <MarketSummary creationParams={creationParams} editor={editor} />
             </div>
-          </MarketFormSection>
+          </MarketFormSection> */}
 
-          {(!editor.isWizard || currentStep.label == "Summary") && (
+          {/* {(!editor.isWizard || currentStep.label == "Summary") && (
             <Publishing creationParams={creationParams} editor={editor} />
-          )}
+          )} */}
         </form>
       </Transition>
     </>

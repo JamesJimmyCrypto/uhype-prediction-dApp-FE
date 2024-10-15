@@ -81,7 +81,7 @@ export const OracleInput = forwardRef(
           className={`mb-2 h-12 w-full rounded-md px-4 py-8 text-center transition-all duration-300
                   ${
                     !fieldState.isTouched || !fieldState.isValid
-                      ? "bg-gray-100"
+                      ? "bg-dark"
                       : "!bg-nyanza-base "
                   }`}
           placeholder="0x78e0e162...D3FFd434F7"
@@ -96,7 +96,7 @@ export const OracleInput = forwardRef(
                 onClick={handleUseConnectedAccount}
                 className={`
             
-            relative flex items-center justify-center rounded-full border-2 border-gray-300 border-transparent bg-gray-100 text-sm transition-all 
+            relative flex items-center justify-center rounded-full border-2 border-gray-300 border-transparent bg-dark text-sm transition-all 
             duration-200 ease-in-out
             ${!isSelectedAccount && " border-orange-300"}
           `}
@@ -117,8 +117,8 @@ export const OracleInput = forwardRef(
                 </div>
 
                 <div
-                  className={`center gap-2 rounded-full bg-gray-200 px-3 py-2 ${
-                    isSelectedAccount ? "bg-nyanza-base" : "bg-gray-200"
+                  className={`center gap-2 rounded-full bg-dark px-3 py-2 ${
+                    isSelectedAccount ? "bg-dark" : "bg-background-page"
                   }`}
                 >
                   {publicKey && (
@@ -146,7 +146,7 @@ export const OracleInput = forwardRef(
             <button
               type="button"
               onClick={() => accountModals.openWalletSelect()}
-              className="flex rounded-full border-gray-300 bg-gray-100 text-sm transition-all active:scale-95"
+              className="flex rounded-full border-gray-300 bg-dark text-sm transition-all active:scale-95"
             >
               <div className="px-4 py-2 text-gray-600">
                 Connect to use wallet account

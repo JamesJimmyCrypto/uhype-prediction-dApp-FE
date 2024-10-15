@@ -38,7 +38,7 @@ export const MarketTimer = ({ stage }: MarketTimerProps) => {
           <div className="text-right text-xs text-sky-600">
             {percentage.toFixed(0)}%
           </div>
-          <div className="h-1.5 w-full rounded-lg bg-gray-100">
+          <div className="h-1.5 w-full rounded-lg bg-dark">
             <div
               className={`h-full rounded-lg transition-all ${
                 copy[stage.type].color
@@ -69,7 +69,7 @@ export const MarketTimerSkeleton = () => {
       </div>
       <div className="w-full">
         <div className="flex h-4 justify-end text-right text-sm text-gray-500"></div>
-        <div className="h-2 w-full rounded-lg bg-gray-100">
+        <div className="h-2 w-full rounded-lg bg-dark">
           <div
             className={`h-full rounded-lg bg-gray-400 transition-all`}
             style={{ width: `10%` }}
