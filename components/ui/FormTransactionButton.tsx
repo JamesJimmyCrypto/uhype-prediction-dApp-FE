@@ -25,7 +25,7 @@ const FormTransactionButton: FC<PropsWithChildren<TransactionButtonProps>> = ({
     <TransactionButton
       type={type}
       disabled={disabled}
-      className={className}
+      className={`${className} opacity-60`}
       dataTest={dataTest}
       disableFeeCheck={disableFeeCheck}
       loading={loading}

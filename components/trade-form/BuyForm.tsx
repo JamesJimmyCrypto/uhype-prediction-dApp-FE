@@ -89,10 +89,7 @@ const BuyForm = ({ marketId, market, answerKey }: BuyFormProps) => {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={handleSubmit(handlePlaceBet)}
-        className="flex flex-col justify-center space-y-4"
-      >
+      <div className="flex flex-col justify-center space-y-4">
         <div className="focus-within:border-v2-primary/50 focus-within:shadow-swap-input-dark relative flex min-h-[124px] flex-col space-y-3 rounded-xl border border-transparent bg-dark p-4 text-white">
           <div className="flex items-center justify-between">
             <span className="text-v2-lily text-sm font-medium">
@@ -194,12 +191,10 @@ const BuyForm = ({ marketId, market, answerKey }: BuyFormProps) => {
         <div className="flex justify-center">
           <FormTransactionButton
             className="w-full max-w-[250px]"
-            disabled={!publicKey || watchAmount <= 0}
+            disabled={!publicKey}
             disableFeeCheck={true}
             loading={false}
-            onClick={() => {
-              handleSubmit(handlePlaceBet);
-            }}
+            onClick={handleSubmit(handlePlaceBet)}
           >
             {loading ? "Buying..." : "Buy"}
           </FormTransactionButton>
@@ -207,7 +202,7 @@ const BuyForm = ({ marketId, market, answerKey }: BuyFormProps) => {
         <div className="text-center text-sm text-gray-500">
           Network fee: {formatNumberCompact(0)} SOL
         </div>
-      </form>
+      </div>
     </Form>
   );
 };
