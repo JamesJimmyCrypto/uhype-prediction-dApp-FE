@@ -74,7 +74,7 @@ const AccountButton: FC<{
   avatarDeps?: any[];
 }> = ({ connectButtonClassname, autoClose, avatarDeps }) => {
   const accountModals = useAccountModals();
-  const { locationAllowed } = useUserLocation();
+  // const { locationAllowed } = useUserLocation();
   const [hovering, setHovering] = useState<boolean>(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showGetZtgModal, setShowGetZtgModal] = useState(false);
@@ -104,13 +104,13 @@ const AccountButton: FC<{
         >
           <UnifiedWalletButton />
 
-          {hovering === true && locationAllowed !== true ? (
+          {/* {hovering === true && locationAllowed !== true ? (
             <div className="absolute bottom-0 right-0 rounded bg-dark text-sm font-bold text-black">
               Your jurisdiction is not authorised to trade
             </div>
           ) : (
             <></>
-          )}
+          )} */}
         </div>
       ) : (
         <div className="relative ml-auto">

@@ -20,12 +20,12 @@ export const AnswersInput = ({
   fieldState,
 }: AnswersInputProps) => {
   const handleSelectType = (type: Answers["type"]) => () => {
-    const newValue: Answers =
-      type === "yes/no"
-        ? { type: "yes/no", answers: ["Yes", "No"] }
-        : { type: "categorical", answers: ["", ""] }
+    const newValue: Answers = { type: "yes/no", answers: ["Yes", "No"] };
+    // type === "yes/no"
+    //   ? { type: "yes/no", answers: ["Yes", "No"] }
+    //   : { type: "categorical", answers: ["", ""] };
 
-          // : { type: "scalar", numberType: "number", answers: [0, 1] };
+    // : { type: "scalar", numberType: "number", answers: [0, 1] };
 
     onChange({ target: { name, value: newValue }, type: "change" });
   };
@@ -44,28 +44,28 @@ export const AnswersInput = ({
         <button
           type="button"
           className={`rounded-full px-6 py-3 text-sm transition-all active:scale-95 md:px-8 md:py-4  ${
-            value?.type === "yes/no" ? "bg-nyanza-base" : "bg-gray-100"
+            value?.type === "yes/no" ? "bg-dark" : "bg-background-page"
           }`}
           onClick={handleSelectType("yes/no")}
         >
           Yes/No
         </button>
 
-        <button
+        {/* <button
           type="button"
           className={`rounded-full px-6 py-3 text-sm transition-all active:scale-95 md:px-8 md:py-4 ${
             value?.type === "categorical"
               ? `${
                   fieldState.isTouched && fieldState.isValid
-                    ? "bg-nyanza-base"
-                    : "bg-fog-of-war text-white"
+                    ? "bg-dark"
+                    : "bg-background-page text-white"
                 }`
-              : "bg-gray-100"
+              : "bg-background-page"
           }`}
           onClick={handleSelectType("categorical")}
         >
           Categorical
-        </button>
+        </button> */}
 
         {/* <button
           type="button"
@@ -76,7 +76,7 @@ export const AnswersInput = ({
                     ? "bg-nyanza-base"
                     : "bg-fog-of-war text-white"
                 }`
-              : "bg-gray-100"
+              : "bg-dark"
           }`}
           onClick={handleSelectType("scalar")}
         >

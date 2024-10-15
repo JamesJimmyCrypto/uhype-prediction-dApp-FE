@@ -36,7 +36,7 @@ export const CurrencySelect = ({
             className={`
               mb-4 flex min-h-[150px] w-full flex-1 cursor-pointer flex-col justify-center rounded-md p-6 
               transition-all active:scale-95 md:min-h-[300px] md:max-w-xs
-              ${currency.name === value ? "bg-nyanza-base" : "bg-gray-100"}
+              ${currency.name === value ? "bg-dark" : "bg-background-page"}
             `}
             onClick={handleSelect(currency.name)}
           >

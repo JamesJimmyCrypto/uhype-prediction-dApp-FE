@@ -267,7 +267,7 @@ const MarketCardPredictionBar = ({
           <span className="text-gray-500">No liquidity in this market</span>
           <span className="text-gray-500">0%</span>
         </div>
-        <div className="h-1.5 w-full rounded-lg bg-gray-100"></div>
+        <div className="h-1.5 w-full rounded-lg bg-dark"></div>
       </>
     );
   }

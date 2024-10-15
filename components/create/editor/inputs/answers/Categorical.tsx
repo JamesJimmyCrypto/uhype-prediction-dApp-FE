@@ -208,7 +208,7 @@ const AnswerInput = ({
   return (
     <div
       style={style}
-      className={`relative mb-3 w-full flex-1 rounded-md bg-gray-100 px-5 py-3 md:min-w-[520px] md:max-w-[420px]`}
+      className={`relative mb-3 w-full flex-1 rounded-md bg-dark px-5 py-3 md:min-w-[520px] md:max-w-[420px]`}
     >
       <Input
         disabled={disabled}
@@ -224,7 +224,7 @@ const AnswerInput = ({
         <div className="absolute right-8 top-[50%] z-10 flex translate-y-[-50%] gap-2">
           <button
             type="button"
-            className=" rounded-md bg-white px-2 py-1"
+            className=" rounded-md px-2 py-1"
             onClick={onClear}
           >
             Remove

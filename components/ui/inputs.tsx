@@ -19,7 +19,7 @@ interface InputProps {
 }
 
 const inputClasses =
-  "bg-gray-100 dark:bg-black text-ztg-14-150 w-full rounded-lg h-ztg-40 p-ztg-8 focus:outline-none dark:border-black text-black dark:text-white";
+  "bg-dark dark:bg-black text-ztg-14-150 w-full rounded-lg h-ztg-40 p-ztg-8 focus:outline-none dark:border-black text-black dark:text-white";
 const invalidClasses = "!border-vermilion !text-vermilion";
 
 // Remove FC since forwardRef already handles function component typing
@@ -85,7 +85,7 @@ const rdtpInput = (
         readOnly
       />
       <div
-        className="center h-ztg-40 w-ztg-40 flex-shrink-0 cursor-pointer rounded-r-ztg-5 border-l-1 bg-gray-100 dark:bg-black"
+        className="center h-ztg-40 w-ztg-40 flex-shrink-0 cursor-pointer rounded-r-ztg-5 border-l-1 bg-dark dark:bg-black"
         data-test="calendarIcon"
         onClick={openCalendar}
       >

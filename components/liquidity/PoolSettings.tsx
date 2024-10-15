@@ -79,7 +79,7 @@ const PriceSetter = ({
     <div className="flex items-center">
       <div className="mt-[10px] flex flex-col">
         <Input
-          className={`h-ztg-32 w-[100px] rounded-ztg-5 bg-gray-100 p-ztg-8 text-right focus:outline-none ${
+          className={`h-ztg-32 w-[100px] rounded-ztg-5 bg-dark p-ztg-8 text-right focus:outline-none ${
             disabled && "!bg-transparent"
           }`}
           value={price}
@@ -97,7 +97,7 @@ const PriceSetter = ({
         </div>
       </div>
       <button
-        className="ml-auto flex h-[30px] w-[30px] flex-grow-0 items-center justify-center rounded-full bg-gray-100"
+        className="ml-auto flex h-[30px] w-[30px] flex-grow-0 items-center justify-center rounded-full bg-dark"
         onClick={handleLockClick}
         disabled={disabled}
       >
@@ -247,7 +247,7 @@ const PoolSettings: FC<{
           <div className="relative inline-block">
             <Input
               type="number"
-              className="font-base w-64 rounded-md bg-gray-100 py-4 pl-5 pr-28 text-right text-base outline-none"
+              className="font-base w-64 rounded-md bg-dark py-4 pl-5 pr-28 text-right text-base outline-none"
               value={`${parseFloat(baseAssetAmount)}`}
               onChange={(event) => {
                 const value = parseFloat(event.target.value);

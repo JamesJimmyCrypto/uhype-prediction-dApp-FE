@@ -33,7 +33,7 @@ const TransactionButton: FC<PropsWithChildren<TransactionButtonProps>> = ({
   const { publicKey } = useWallet();
   const pubKey = publicKey?.toString() ?? "";
   const accountModals = useAccountModals();
-  const { locationAllowed } = useUserLocation();
+  // const { locationAllowed } = useUserLocation();
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -50,13 +50,11 @@ const TransactionButton: FC<PropsWithChildren<TransactionButtonProps>> = ({
   };
 
   const isDisabled = useMemo(() => {
-    if (locationAllowed !== true) {
-      return true;
-    } else if (!publicKey) {
+    if (!publicKey) {
       return false;
     }
     return disabled;
-  }, [locationAllowed, pubKey]);
+  }, [pubKey]);
 
   const colorClass = "bg-vermilion";
 

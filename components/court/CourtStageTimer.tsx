@@ -79,7 +79,7 @@ export const CourtStageTimer = ({
             <div className="text-right text-xs text-sky-600">
               {percentage.toFixed(0)}%
             </div>
-            <div className="h-1.5 w-full rounded-lg bg-gray-100">
+            <div className="h-1.5 w-full rounded-lg bg-dark">
               <div
                 className={`h-full rounded-lg transition-all ${
                   courtStageCopy[stage.type].color
