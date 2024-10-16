@@ -477,7 +477,7 @@ const Table = ({
                       transition-colors duration-100 ease-in-out
                       ${
                         showHighlight === true
-                          ? " hover:border-blue-300 hover:bg-blue-lighter "
+                          ? " hover:border-blue-300 hover:bg-dark "
                           : ""
                       }
                     ${rowColorClass}

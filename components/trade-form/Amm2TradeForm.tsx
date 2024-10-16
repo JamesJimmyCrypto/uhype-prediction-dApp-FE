@@ -96,7 +96,7 @@ const Amm2TradeForm = ({
         >
           <div className="flex">
             <Tab.List
-              className={`h-[51px] w-[75%] text-center text-ztg-18-150 font-medium ${
+              className={`h-[51px] w-full text-center text-ztg-18-150 font-medium ${
                 showTabs ? "flex" : "hidden"
               }`}
             >
@@ -115,12 +115,12 @@ const Amm2TradeForm = ({
                 {answers[1].name.toString()}
               </Tab>
             </Tab.List>
-            <OrderTypeSelector
+            {/* <OrderTypeSelector
               onTypeSelected={(type) => {
                 setOrderType(type);
               }}
               value={orderType}
-            />
+            /> */}
           </div>
           <Tab.Panels className="p-[30px]">
             {orderType === "market" ? (
