@@ -90,7 +90,7 @@ const BuyForm = ({ marketId, market, answerKey }: BuyFormProps) => {
   return (
     <Form {...form}>
       <div className="flex flex-col justify-center space-y-4">
-        <div className="focus-within:border-v2-primary/50 focus-within:shadow-swap-input-dark relative flex min-h-[124px] flex-col space-y-3 rounded-xl border border-transparent bg-dark p-4 text-white">
+        <div className="focus-within:shadow-swap-input-dark relative flex min-h-[124px] flex-col space-y-3 rounded-xl border border-transparent bg-dark p-4 text-white focus-within:border-primary/50">
           <div className="flex items-center justify-between">
             <span className="text-v2-lily text-sm font-medium">
               You're Buying
@@ -102,20 +102,20 @@ const BuyForm = ({ marketId, market, answerKey }: BuyFormProps) => {
                 </div>
               </div>
               <div className="flex items-center justify-between space-x-1">
-                <button
+                <Button
                   type="button"
                   onClick={() => setAmount(maxBalance / 2)}
-                  className="bg-v2-background-page text-v2-lily/50 hover:border-v2-primary hover:text-v2-primary cursor-pointer rounded-md border border-transparent !px-[6px] !py-1 !text-[10px] font-medium leading-4"
+                  className="text-v2-lily/50 hover: cursor-pointer rounded-md border border-transparent bg-background-page !px-[8px] !text-[10px] font-medium leading-4 hover:border-primary hover:text-primary"
                 >
                   HALF
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
                   onClick={() => setAmount(maxBalance)}
-                  className="bg-v2-background-page text-v2-lily/50 hover:border-v2-primary hover:text-v2-primary cursor-pointer rounded-md border border-transparent !px-[6px] !py-1 !text-[10px] font-medium leading-4"
+                  className="text-v2-lily/50 hover:text-v2-primary cursor-pointer rounded-md border border-transparent bg-background-page !px-[8px] !text-[10px] font-medium leading-4 hover:border-primary"
                 >
                   MAX
-                </button>
+                </Button>
               </div>
             </div>
           </div>
